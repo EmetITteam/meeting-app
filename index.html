@@ -3,51 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Менеджер</title>
+    <title>CRM EMET Встречи</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; }
         .meeting-card { height: 100%; }
         .toast-container { z-index: 1100; }
-        /* Стиль для логотипа */
         .app-logo {
-            max-height: 50px; /* Максимальная высота лого */
+            max-height: 50px;
             width: auto;
         }
     </style>
 </head>
 <body>
-<div class="container my-3 my-md-4">
-    <div id="login-screen">
-       </div>
-
-    <div id="main-app" class="d-none">
-        <header class="text-center mb-4 pb-3 border-bottom">
-            <div class="app-branding mb-4">
-                <img src="URL_ВАШЕГО_ЛОГОТИПА" alt="Логотип" class="app-logo">
-                <h1 class="h3 mt-2">CRM - Встречи</h1>
-            </div>
-
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center w-100">
-                <h2 id="manager-header" class="h5 mb-3 mb-md-0"></h2>
-                <div class="d-flex gap-2 justify-content-center">
-                    <button id="show-add-form-btn" class="btn btn-primary">Создать встречу</button>
-                    <button id="logout-btn" class="btn btn-secondary">Выйти</button>
-                </div>
-            </div>
-        </header>
-        
-        <main id="view-meetings">
-            <div class="row g-3 mb-4 p-3 bg-light border rounded-3 align-items-end">
-                </div>
-            <div id="meetings-list" class="row g-3"></div>
-        </main>
-
-        <section id="form-section" class="d-none mt-4">
-            </section>
-    </div>
-</div>
-
 <div class="toast-container position-fixed top-0 end-0 p-3">
     <div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div>
@@ -58,7 +26,7 @@
     <div id="main-app" class="d-none">
         <header class="text-center mb-4 pb-3 border-bottom">
             <div class="app-branding mb-4">
-                <img src="https://links.emet.in.ua/wp-content/uploads/2025/07/avatar-you-tube-5.png" alt="Логотип" class="app-logo">
+                <img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" class="app-logo">
                 <h1 class="h3 mt-2">CRM - Встречи</h1>
             </div>
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center w-100">
@@ -89,7 +57,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbwo3MoCjGM291Xa9UfzSZ28rITgr4a-GCfzTsfKI9fpr2gAKX5YrO69yJlQBFfbEndG/exec";
-    // ... (весь JavaScript остается без изменений) ...
     const HIDDEN_CLASS = 'd-none'; 
     let currentUser = null, allMeetings = [], currentEditingMeeting = null;
     let meetingToReschedule = null; 
@@ -98,7 +65,22 @@
     const cancelConfirmModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
     const appToast = new bootstrap.Toast(document.getElementById('appToast'));
 
-    document.addEventListener('DOMContentLoaded', () => { document.getElementById('login-form').addEventListener('submit', handleLogin); document.getElementById('logout-btn').addEventListener('click', () => window.location.reload()); document.getElementById('show-add-form-btn').addEventListener('click', showAddForm); document.getElementById('meeting-form').addEventListener('submit', handleFormSubmit); document.getElementById('cancel-btn').addEventListener('click', handleCancelClick); document.getElementById('get-location-btn').addEventListener('click', handleGetLocationClick); document.getElementById('saveRescheduleBtn').addEventListener('click', handleSaveReschedule); document.getElementById('confirmCancelBtn').addEventListener('click', () => { cancelConfirmModal.hide(); showForm(false); }); document.getElementById('searchInput').addEventListener('input', filterAndGroupMeetings); document.getElementById('dateFilter').addEventListener('change', (e) => loadInitialData(e.target.value)); document.getElementById('resetFiltersBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; document.getElementById('dateFilter').value = getTodayDateString(); loadInitialData(); }); document.getElementById('todayBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTodayDateString()); document.getElementById('tomorrowBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTomorrowDateString()); });
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('login-form').addEventListener('submit', handleLogin);
+        document.getElementById('logout-btn').addEventListener('click', () => window.location.reload());
+        document.getElementById('show-add-form-btn').addEventListener('click', showAddForm);
+        document.getElementById('meeting-form').addEventListener('submit', handleFormSubmit);
+        document.getElementById('cancel-btn').addEventListener('click', handleCancelClick);
+        document.getElementById('get-location-btn').addEventListener('click', handleGetLocationClick);
+        document.getElementById('saveRescheduleBtn').addEventListener('click', handleSaveReschedule);
+        document.getElementById('confirmCancelBtn').addEventListener('click', () => { cancelConfirmModal.hide(); showForm(false); });
+        document.getElementById('searchInput').addEventListener('input', filterAndGroupMeetings);
+        document.getElementById('dateFilter').addEventListener('change', (e) => loadInitialData(e.target.value));
+        document.getElementById('resetFiltersBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; document.getElementById('dateFilter').value = getTodayDateString(); loadInitialData(); });
+        document.getElementById('todayBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTodayDateString());
+        document.getElementById('tomorrowBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTomorrowDateString());
+    });
+
     function getTodayDateString() { const today = new Date(); return today.toISOString().split('T')[0]; }
     function getTomorrowDateString() { const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); return tomorrow.toISOString().split('T')[0]; }
     async function callApi(action, payload) { const response = await fetch(API_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, payload }) }); try { const result = await response.json(); if (result.status === 'error') { throw new Error(result.message); } return result.data; } catch (e) { if (response.ok) { return {}; } throw new Error('Ошибка сети или ответа сервера.'); } }
