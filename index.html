@@ -3,15 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM EMET Встречи</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>EMET CRM Встречи</title>
+    <link href="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" rel="stylesheet">
     <style>
         body { background-color: #f8f9fa; }
         .meeting-card { height: 100%; }
         .toast-container { z-index: 1100; }
+        .app-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Центрирование по умолчанию, можно изменить при необходимости */
+            margin-bottom: 15px;
+        }
         .app-logo {
-            max-height: 50px;
+            max-height: 60px;
             width: auto;
+            margin-right: 20px; /* Отступ между логотипом и названием */
+        }
+        .app-title {
+            font-size: 1.5em;
+            margin-bottom: 0;
         }
     </style>
 </head>
@@ -25,9 +36,9 @@
     <div id="login-screen"><div class="row justify-content-center"><div class="col-12 col-md-8 col-lg-6"><div class="card shadow-sm border-0"><div class="card-body p-4"><h1 class="card-title text-center h3 mb-4">Вход в систему</h1><form id="login-form"><div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div><div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div><button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button><p id="login-error" class="text-danger text-center mt-3 d-none"></p></form></div></div></div></div></div>
     <div id="main-app" class="d-none">
         <header class="text-center mb-4 pb-3 border-bottom">
-            <div class="app-branding mb-4">
-                <img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" class="app-logo">
-                <h1 class="h3 mt-2">CRM - Встречи</h1>
+            <div class="app-branding">
+                <img src="http://googleusercontent.com/file_content/0" alt="Логотип" class="app-logo">
+                <h1 class="app-title">Рабочий стол.Встречи</h1>
             </div>
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center w-100">
                 <h2 id="manager-header" class="h5 mb-3 mb-md-0"></h2>
