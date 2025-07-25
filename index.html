@@ -14,38 +14,68 @@
     </style>
 </head>
 <body>
-<div class="toast-container position-fixed top-0 end-0 p-3"></div>
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div>
+    </div>
+</div>
 <div class="container my-3 my-md-4">
-    <div id="login-screen"><div class="row justify-content-center"><div class="col-12 col-md-8 col-lg-6"><div class="card shadow-sm border-0"><div class="card-body p-4"><h1 class="card-title text-center h3 mb-4">Вход в систему</h1><form id="login-form"><div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div><div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div><button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button><p id="login-error" class="text-danger text-center mt-3 d-none"></p></form></div></div></div></div></div>
+    <div id="login-screen">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h1 class="card-title text-center h3 mb-4">Вход в систему</h1>
+                        <form id="login-form">
+                            <div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div>
+                            <div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div>
+                            <button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button>
+                            <p id="login-error" class="text-danger text-center mt-3 d-none"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div id="main-app" class="d-none">
-        <header class="mb-4 pb-3 border-bottom"></header>
+        <header class="mb-4 pb-3 border-bottom">
+            <div class="text-center mb-4">
+                <img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" class="app-logo">
+                <h1 class="h4 mt-2 mb-0">Рабочий стол. Встречи</h1>
+            </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <h2 id="manager-header" class="h5 mb-3 mb-md-0"></h2>
+                <div class="d-flex gap-2 justify-content-center">
+                    <button id="show-add-form-btn" class="btn btn-primary">Создать встречу</button>
+                    <button id="logout-btn" class="btn btn-secondary">Выйти</button>
+                </div>
+            </div>
+        </header>
         <main id="view-meetings">
             <div class="row g-3 mb-4 p-3 bg-light border rounded-3 align-items-end">
-                <div class="col-lg-5">
-                    <label for="searchInput" class="form-label">Поиск по клиенту</label>
-                    <input type="text" id="searchInput" class="form-control">
-                </div>
-                <div class="col-lg-5">
-                    <label for="dateRangeFilter" class="form-label">Период</label>
-                    <input type="text" id="dateRangeFilter" class="form-control">
-                </div>
-                <div class="col-lg-2">
-                    <button id="resetFiltersBtn" class="btn btn-outline-secondary w-100 mt-3 mt-lg-0">Сегодня</button>
-                </div>
+                <div class="col-lg-5"><label for="searchInput" class="form-label">Поиск по клиенту</label><input type="text" id="searchInput" class="form-control"></div>
+                <div class="col-lg-5"><label for="dateRangeFilter" class="form-label">Период</label><input type="text" id="dateRangeFilter" class="form-control"></div>
+                <div class="col-lg-2"><button id="resetFiltersBtn" class="btn btn-outline-secondary w-100 mt-3 mt-lg-0">Сегодня</button></div>
             </div>
             <div id="meetings-list" class="row g-3"></div>
         </main>
-        <section id="form-section" class="d-none mt-4"></section>
-    </div>
-</div>
-<div class="toast-container position-fixed top-0 end-0 p-3"><div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"><div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>
-<div class="container my-3 my-md-4">
-    <div id="login-screen"><div class="row justify-content-center"><div class="col-12 col-md-8 col-lg-6"><div class="card shadow-sm border-0"><div class="card-body p-4"><h1 class="card-title text-center h3 mb-4">Вход в систему</h1><form id="login-form"><div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div><div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div><button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button><p id="login-error" class="text-danger text-center mt-3 d-none"></p></form></div></div></div></div></div>
-    <div id="main-app" class="d-none">
-        <header class="mb-4 pb-3 border-bottom"><div class="text-center mb-4"><img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" class="app-logo"><h1 class="h4 mt-2 mb-0">Рабочий стол. Встречи</h1></div><div class="d-flex flex-column flex-md-row justify-content-between align-items-center"><h2 id="manager-header" class="h5 mb-3 mb-md-0"></h2><div class="d-flex gap-2 justify-content-center"><button id="show-add-form-btn" class="btn btn-primary">Создать встречу</button><button id="logout-btn" class="btn btn-secondary">Выйти</button></div></div></header>
-        <main id="view-meetings"><div class="row g-3 mb-4 p-3 bg-light border rounded-3 align-items-end"><div class="col-lg-5"><label for="searchInput" class="form-label">Поиск по клиенту</label><input type="text" id="searchInput" class="form-control"></div><div class="col-lg-5"><label for="dateRangeFilter" class="form-label">Период</label><input type="text" id="dateRangeFilter" class="form-control"></div><div class="col-lg-2"><button id="resetFiltersBtn" class="btn btn-outline-secondary w-100 mt-3 mt-lg-0">Сегодня</button></div></div><div id="meetings-list" class="row g-3"></div></main>
-        <section id="form-section" class="d-none mt-4"><h2 id="form-title" class="h3 mb-3 text-center">Новая встреча</h2><form id="meeting-form" class="p-4 bg-light border rounded-3"><input type="hidden" id="meeting-id"><div class="row g-3"><div class="col-12"><label for="meeting-date" class="form-label">Дата:</label><div class="input-group"><input type="date" id="meeting-date" class="form-control" required><button type="button" class="btn btn-outline-secondary" id="todayBtn">Сегодня</button><button type="button" class="btn btn-outline-secondary" id="tomorrowBtn">Завтра</button></div></div><div class="col-12"><label for="meeting-time" class="form-label">Время:</label><input type="time" id="meeting-time" class="form-control" required></div><div class="col-12"><label for="client-name" class="form-label">Клиент:</label><input type="text" id="client-name" class="form-control" required></div><div class="col-12"><label for="purpose" class="form-label">Цель:</label><select id="purpose" class="form-select" required></select></div><div class="col-md-6"><label for="phone" class="form-label">Телефон:</label><input type="tel" id="phone" class="form-control" required></div><div class="col-md-6"><label for="status" class="form-label">Статус:</label><select id="status" class="form-select"><option value="В работе">В работе</option><option value="Завершена">Завершена</option><option value="Перенос">Перенос</option><option value="Отмена">Отмена</option></select></div><div class="col-12"><label for="location" class="form-label">Геолокация:</label><div class="input-group"><input type="text" id="location" class="form-control"><button class="btn btn-outline-secondary" type="button" id="get-location-btn">📍 Определить</button></div></div></div><div class="d-flex gap-2 mt-4"><button type="submit" id="save-button" class="btn btn-primary">Сохранить</button><button type="button" id="cancel-btn" class="btn btn-secondary">Отмена</button></div></form></section>
+        <section id="form-section" class="d-none mt-4">
+            <h2 id="form-title" class="h3 mb-3 text-center">Новая встреча</h2>
+            <form id="meeting-form" class="p-4 bg-light border rounded-3">
+                <input type="hidden" id="meeting-id">
+                <div class="row g-3">
+                    <div class="col-12"><label for="meeting-date" class="form-label">Дата:</label><div class="input-group"><input type="date" id="meeting-date" class="form-control" required><button type="button" class="btn btn-outline-secondary" id="todayBtn">Сегодня</button><button type="button" class="btn btn-outline-secondary" id="tomorrowBtn">Завтра</button></div></div>
+                    <div class="col-12"><label for="meeting-time" class="form-label">Время:</label><input type="time" id="meeting-time" class="form-control" required></div>
+                    <div class="col-12"><label for="client-name" class="form-label">Клиент:</label><input type="text" id="client-name" class="form-control" required></div>
+                    <div class="col-12"><label for="purpose" class="form-label">Цель:</label><select id="purpose" class="form-select" required></select></div>
+                    <div class="col-md-6"><label for="phone" class="form-label">Телефон:</label><input type="tel" id="phone" class="form-control" required></div>
+                    <div class="col-md-6"><label for="status" class="form-label">Статус:</label><select id="status" class="form-select"><option value="В работе">В работе</option><option value="Завершена">Завершена</option><option value="Перенос">Перенос</option><option value="Отмена">Отмена</option></select></div>
+                    <div class="col-12"><label for="location" class="form-label">Геолокация:</label><div class="input-group"><input type="text" id="location" class="form-control"><button class="btn btn-outline-secondary" type="button" id="get-location-btn">📍 Определить</button></div></div>
+                </div>
+                <div class="d-flex gap-2 mt-4"><button type="submit" id="save-button" class="btn btn-primary">Сохранить</button><button type="button" id="cancel-btn" class="btn btn-secondary">Отмена</button></div>
+            </form>
+        </section>
     </div>
 </div>
 <div class="modal fade" id="rescheduleModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h1 class="modal-title fs-5">Перенос встречи</h1><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><p>Укажите новую дату и время.</p><div class="mb-3"><label for="newMeetingDate" class="form-label">Новая дата</label><input type="date" class="form-control" id="newMeetingDate" required></div><div><label for="newMeetingTime" class="form-label">Новое время</label><input type="time" class="form-control" id="newMeetingTime" required></div><div id="rescheduleError" class="text-danger mt-2 d-none"></div></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button><button type="button" class="btn btn-primary" id="saveRescheduleBtn">Перенести</button></div></div></div></div>
@@ -53,7 +83,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js"></script>
-
 <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbyqT7xoF4dGUJRPWEg5GnxwpO_9DDQAOHZYPaOiW0ga3SN-kVVnFxoZf1VXISd2XcvW/exec";
     const HIDDEN_CLASS = 'd-none'; 
@@ -63,25 +92,10 @@
     const rescheduleModal = new bootstrap.Modal(document.getElementById('rescheduleModal'));
     const cancelConfirmModal = new bootstrap.Modal(document.getElementById('cancelConfirmModal'));
     const appToast = new bootstrap.Toast(document.getElementById('appToast'));
-    let datePicker = null; // Переменная для нашего календаря
+    let datePicker = null;
 
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Инициализация календаря Litepicker ---
-        datePicker = new Litepicker({
-            element: document.getElementById('dateRangeFilter'),
-            singleMode: false,
-            format: 'DD.MM.YYYY',
-            lang: 'ru-RU',
-            setup: (picker) => {
-                picker.on('selected', (date1, date2) => {
-                    const startDate = date1.toJSDate().toISOString().split('T')[0];
-                    const endDate = date2.toJSDate().toISOString().split('T')[0];
-                    loadInitialData(startDate, endDate);
-                });
-            }
-        });
-
-        // --- Остальные обработчики событий ---
+        datePicker = new Litepicker({ element: document.getElementById('dateRangeFilter'), singleMode: false, format: 'DD.MM.YYYY', lang: 'ru-RU', setup: (picker) => { picker.on('selected', (date1, date2) => { const startDate = date1.toJSDate().toISOString().split('T')[0]; const endDate = date2.toJSDate().toISOString().split('T')[0]; loadInitialData(startDate, endDate); }); } });
         document.getElementById('login-form').addEventListener('submit', handleLogin);
         document.getElementById('logout-btn').addEventListener('click', () => window.location.reload());
         document.getElementById('show-add-form-btn').addEventListener('click', showAddForm);
@@ -91,15 +105,11 @@
         document.getElementById('saveRescheduleBtn').addEventListener('click', handleSaveReschedule);
         document.getElementById('confirmCancelBtn').addEventListener('click', () => { cancelConfirmModal.hide(); showForm(false); });
         document.getElementById('searchInput').addEventListener('input', filterAndGroupMeetings);
-        document.getElementById('resetFiltersBtn').addEventListener('click', () => {
-            document.getElementById('searchInput').value = '';
-            datePicker.setDateRange(new Date(), new Date()); // Устанавливаем сегодняшнюю дату через API календаря
-        });
+        document.getElementById('resetFiltersBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; datePicker.setDateRange(new Date(), new Date()); });
         document.getElementById('todayBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTodayDateString());
         document.getElementById('tomorrowBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTomorrowDateString());
     });
 
-    // --- ИСПРАВЛЕНА ЛОГИКА ОТОБРАЖЕНИЯ ---
     function showView(viewId) {
         document.getElementById('login-screen').classList.add(HIDDEN_CLASS);
         document.getElementById('main-app').classList.add(HIDDEN_CLASS);
@@ -111,16 +121,11 @@
     function onLoginSuccess(result) {
         currentUser = result.login;
         document.getElementById('manager-header').textContent = `Менеджер: ${currentUser}`;
-        showView('main-app'); // Показываем основной интерфейс
-        datePicker.setDateRange(new Date(), new Date()); // Устанавливаем фильтр на сегодня, это вызовет loadInitialData
+        showView('main-app');
+        datePicker.setDateRange(new Date(), new Date());
     }
     
-    // --- Остальной JS без критических изменений ---
-    function loadInitialData(startDateString, endDateString) { /*...*/ }
-    function filterAndGroupMeetings() { /*...*/ }
-    // ...
-    
-    // --- Полный код JS для копирования ---
+    // --- Остальной JS без изменений ---
     function getTodayDateString() { const today = new Date(); return today.toISOString().split('T')[0]; }
     function getTomorrowDateString() { const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); return tomorrow.toISOString().split('T')[0]; }
     async function callApi(action, payload) { const response = await fetch(API_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action, payload }) }); try { const result = await response.json(); if (result.status === 'error') { throw new Error(result.message); } return result.data; } catch (e) { if (response.ok) { return {}; } throw new Error('Ошибка сети или ответа сервера.'); } }
