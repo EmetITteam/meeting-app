@@ -17,10 +17,35 @@
 <div class="toast-container position-fixed top-0 end-0 p-3"></div>
 <div class="container my-3 my-md-4">
     <div id="login-screen">
-       </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h1 class="card-title text-center h3 mb-4">Вход в систему</h1>
+                        <form id="login-form">
+                            <div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div>
+                            <div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div>
+                            <button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button>
+                            <p id="login-error" class="text-danger text-center mt-3 d-none"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div id="main-app" class="d-none">
-       </div>
+        <header class="mb-4 pb-3 border-bottom"><div class="text-center mb-4"><img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" class="app-logo"><h1 class="h4 mt-2 mb-0">Рабочий стол. Встречи</h1></div><div class="d-flex flex-column flex-md-row justify-content-between align-items-center"><h2 id="manager-header" class="h5 mb-3 mb-md-0"></h2><div class="d-flex gap-2 justify-content-center"><button id="show-add-form-btn" class="btn btn-primary">Создать встречу</button><button id="logout-btn" class="btn btn-secondary">Выйти</button></div></div></header>
+        <main id="view-meetings">
+            <div class="row g-3 mb-4 p-3 bg-light border rounded-3 align-items-end">
+                <div class="col-lg-5"><label for="searchInput" class="form-label">Поиск по клиенту</label><input type="text" id="searchInput" class="form-control"></div>
+                <div class="col-lg-5"><label for="dateRangeFilter" class="form-label">Период</label><input type="text" id="dateRangeFilter" class="form-control"></div>
+                <div class="col-lg-2"><button id="resetFiltersBtn" class="btn btn-outline-secondary w-100 mt-3 mt-lg-0">Сегодня</button></div>
+            </div>
+            <div id="meetings-list" class="row g-3"></div>
+        </main>
+        <section id="form-section" class="d-none mt-4"></section>
+    </div>
 </div>
 <div class="toast-container position-fixed top-0 end-0 p-3"><div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"><div class="d-flex"><div class="toast-body"></div><button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button></div></div></div>
 <div class="container my-3 my-md-4">
@@ -37,7 +62,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js"></script>
 <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzfh0Wtk7JKNtT_ekVsotpgqtCriZiYydv3-BE259cDZKKI_JGjCyyRGVIk1srvOb28/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxaOQWLOTQJPH8yP-bPWk0Wd97hztJFscNjw3mS_LuzY6vZ1k8tTYi45ZQ5KJ5j5d4n/exec";
     const HIDDEN_CLASS = 'd-none'; 
     let currentUser = null, allMeetings = [], currentEditingMeeting = null;
     let meetingToReschedule = null; 
@@ -63,61 +88,12 @@
         document.getElementById('tomorrowBtn').addEventListener('click', () => document.getElementById('meeting-date').value = getTomorrowDateString());
     });
 
-    // ИСПРАВЛЕНА: Прячет форму входа ПЕРЕД тем, как показать основное приложение
     function onLoginSuccess(result) {
         currentUser = result.login;
         document.getElementById('manager-header').textContent = `Менеджер: ${currentUser}`;
         document.getElementById('login-screen').classList.add(HIDDEN_CLASS);
         document.getElementById('main-app').classList.remove(HIDDEN_CLASS);
         datePicker.setDateRange(new Date(), new Date());
-    }
-    
-    // ИСПРАВЛЕНА: Восстановлена проверка комментария о переносе
-    function filterAndGroupMeetings() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = allMeetings.filter(m => m.Client.toLowerCase().includes(searchTerm));
-        const dateGroups = {};
-        filtered.forEach(m => { if (!dateGroups[m.Date]) { dateGroups[m.Date] = { 'В работе': [], 'Перенос': [], 'Завершена': [], 'Отмена': [] }; } if (dateGroups[m.Date][m.Status]) { dateGroups[m.Date][m.Status].push(m); } });
-        meetingsList.innerHTML = '';
-        const sortedDates = Object.keys(dateGroups).sort((a, b) => new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-')));
-        if (sortedDates.length === 0) { meetingsList.innerHTML = '<p class="col-12 text-center text-muted">Встречи по вашему запросу не найдены.</p>'; return; }
-        sortedDates.forEach(date => {
-            const dateTitle = document.createElement('h3');
-            dateTitle.className = 'col-12 mt-4 border-bottom pb-2';
-            dateTitle.textContent = date;
-            meetingsList.appendChild(dateTitle);
-            const groups = dateGroups[date];
-            const groupOrder = ['В работе', 'Перенос', 'Завершена', 'Отмена'];
-            groupOrder.forEach(status => {
-                if (groups[status].length > 0) {
-                    const groupTitle = document.createElement('h4');
-                    groupTitle.className = 'col-12 mt-3 text-muted';
-                    groupTitle.textContent = status;
-                    meetingsList.appendChild(groupTitle);
-                    groups[status].sort((a,b) => a.Time.localeCompare(b.Time)).forEach(m => {
-                        let actionButtons = `<button class="btn btn-sm btn-outline-secondary edit-btn" data-id="${m.ID}">Изменить</button><button class="btn btn-sm btn-outline-info geo-btn" data-id="${m.ID}">📍 Geo</button>`;
-                        if (m.Status !== 'Завершена' && m.Status !== 'Отмена') {
-                            actionButtons += `<button class="btn btn-sm btn-outline-warning reschedule-btn" data-id="${m.ID}">Перенести</button>`;
-                            actionButtons += `<button class="btn btn-sm btn-success complete-btn" data-id="${m.ID}">Завершить</button>`;
-                        }
-                        let rescheduleInfo = '';
-                        // ВОССТАНОВЛЕНА ПРОВЕРКА
-                        if (m.Status === 'Перенос' && m.Comment) {
-                            rescheduleInfo = `<p class="card-text text-danger small mt-2"><em>${m.Comment}</em></p>`;
-                        }
-                        const cardWrapper = document.createElement('div');
-                        cardWrapper.className = "col-12 col-md-6";
-                        cardWrapper.innerHTML = `<div class="card meeting-card shadow-sm"><div class="card-body d-flex flex-column"><div class="flex-grow-1"><h5 class="card-title">${m.Time} - ${m.Client}</h5><p class="card-text mb-1"><small class="text-muted">Цель: ${m.Purpose}</small></p><p class="card-text mb-1"><small class="text-muted">Адрес: ${m.Location || 'Не указан'}</small></p><p class="card-text mt-3"><strong>Статус:</strong> ${m.Status || 'Не указан'}</p>${rescheduleInfo}</div><div class="d-flex gap-2 mt-3 flex-wrap">${actionButtons}</div></div></div>`;
-                        meetingsList.appendChild(cardWrapper);
-                    });
-                }
-            });
-        });
-        document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditClick));
-        document.querySelectorAll('.complete-btn').forEach(btn => btn.addEventListener('click', handleCompleteClick));
-        document.querySelectorAll('.geo-btn').forEach(btn => btn.addEventListener('click', handleGeoClick));
-        document.querySelectorAll('.reschedule-btn').forEach(btn => btn.addEventListener('click', handleRescheduleClick));
-        window.scrollTo(0, 0);
     }
     
     // --- Остальной JS без изменений ---
@@ -130,6 +106,7 @@
     function loadInitialData(startDateString, endDateString) { meetingsList.innerHTML = '<div class="col-12 text-center"><div class="spinner-border text-primary" role="status"></div></div>'; const payload = { login: currentUser, startDateString, endDateString }; callApi('getInitialData', payload).then(onDataLoaded).catch(onFailure); }
     function onDataLoaded(data) { allMeetings = data.meetings; populatePurposes(data.purposes); filterAndGroupMeetings(); }
     function populatePurposes(purposes) { const purposeSelect = document.getElementById('purpose'); purposeSelect.innerHTML = '<option value="">-- Выберите цель --</option>'; if (purposes && Array.isArray(purposes)) { purposes.forEach(p => { purposeSelect.innerHTML += `<option value="${p.Purpose}">${p.Purpose}</option>`; }); } }
+    function filterAndGroupMeetings() { const searchTerm = document.getElementById('searchInput').value.toLowerCase(); const filtered = allMeetings.filter(m => m.Client.toLowerCase().includes(searchTerm)); const dateGroups = {}; filtered.forEach(m => { if (!dateGroups[m.Date]) { dateGroups[m.Date] = { 'В работе': [], 'Перенос': [], 'Завершена': [], 'Отмена': [] }; } if (dateGroups[m.Date][m.Status]) { dateGroups[m.Date][m.Status].push(m); } }); meetingsList.innerHTML = ''; const sortedDates = Object.keys(dateGroups).sort((a, b) => new Date(a.split('.').reverse().join('-')) - new Date(b.split('.').reverse().join('-'))); if (sortedDates.length === 0) { meetingsList.innerHTML = '<p class="col-12 text-center text-muted">Встречи по вашему запросу не найдены.</p>'; return; } sortedDates.forEach(date => { const dateTitle = document.createElement('h3'); dateTitle.className = 'col-12 mt-4 border-bottom pb-2'; dateTitle.textContent = date; meetingsList.appendChild(dateTitle); const groups = dateGroups[date]; const groupOrder = ['В работе', 'Перенос', 'Завершена', 'Отмена']; groupOrder.forEach(status => { if (groups[status].length > 0) { const groupTitle = document.createElement('h4'); groupTitle.className = 'col-12 mt-3 text-muted'; groupTitle.textContent = status; meetingsList.appendChild(groupTitle); groups[status].sort((a,b) => a.Time.localeCompare(b.Time)).forEach(m => { let actionButtons = `<button class="btn btn-sm btn-outline-secondary edit-btn" data-id="${m.ID}">Изменить</button><button class="btn btn-sm btn-outline-info geo-btn" data-id="${m.ID}">📍 Geo</button>`; if (m.Status !== 'Завершена' && m.Status !== 'Отмена') { actionButtons += `<button class="btn btn-sm btn-outline-warning reschedule-btn" data-id="${m.ID}">Перенести</button>`; actionButtons += `<button class="btn btn-sm btn-success complete-btn" data-id="${m.ID}">Завершить</button>`; } let rescheduleInfo = ''; if (m.Status === 'Перенос' && m.Comment) { rescheduleInfo = `<p class="card-text text-danger small mt-2"><em>${m.Comment}</em></p>`; } const cardWrapper = document.createElement('div'); cardWrapper.className = "col-12 col-md-6"; cardWrapper.innerHTML = `<div class="card meeting-card shadow-sm"><div class="card-body d-flex flex-column"><div class="flex-grow-1"><h5 class="card-title">${m.Time} - ${m.Client}</h5><p class="card-text mb-1"><small class="text-muted">Цель: ${m.Purpose}</small></p><p class="card-text mb-1"><small class="text-muted">Адрес: ${m.Location || 'Не указан'}</small></p><p class="card-text mt-3"><strong>Статус:</strong> ${m.Status || 'Не указан'}</p>${rescheduleInfo}</div><div class="d-flex gap-2 mt-3 flex-wrap">${actionButtons}</div></div></div>`; meetingsList.appendChild(cardWrapper); }); } }); }); document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditClick)); document.querySelectorAll('.complete-btn').forEach(btn => btn.addEventListener('click', handleCompleteClick)); document.querySelectorAll('.geo-btn').forEach(btn => btn.addEventListener('click', handleGeoClick)); document.querySelectorAll('.reschedule-btn').forEach(btn => btn.addEventListener('click', handleRescheduleClick)); window.scrollTo(0, 0); }
     function handleFormSubmit(e) { e.preventDefault(); const saveBtn = document.getElementById('save-button'); toggleButtonSpinner(saveBtn, true); const meetingId = document.getElementById('meeting-id').value; const isUpdating = !!meetingId; const data = { ID: isUpdating ? meetingId : `m${Date.now()}`, Date: document.getElementById('meeting-date').value.split('-').reverse().join('.'), Time: document.getElementById('meeting-time').value, Client: document.getElementById('client-name').value, Purpose: document.getElementById('purpose').value, Phone: document.getElementById('phone').value, Location: document.getElementById('location').value, Status: document.getElementById('status').value, ManagerLogin: currentUser, Comment: isUpdating ? currentEditingMeeting.Comment : '' }; if (isUpdating && data.Status === 'Перенос') { meetingToReschedule = data; currentEditingMeeting = allMeetings.find(m => m.ID === data.ID); rescheduleModal.show(); toggleButtonSpinner(saveBtn, false); return; } const action = isUpdating ? 'updateMeeting' : 'saveNewMeeting'; const payload = isUpdating ? { newData: data, oldData: currentEditingMeeting } : data; callApi(action, payload).then(() => { showToast("Встреча сохранена"); loadInitialData(datePicker.getStartDate()?.toJSDate().toISOString().split('T')[0], datePicker.getEndDate()?.toJSDate().toISOString().split('T')[0]); onActionComplete(); }).catch(onFailure).finally(() => { toggleButtonSpinner(saveBtn, false); }); }
     function handleRescheduleClick(event) { const meetingId = event.target.dataset.id; const meetingData = allMeetings.find(m => m.ID === meetingId); if (!meetingData) return; meetingToReschedule = { ...meetingData, Status: 'Перенос' }; currentEditingMeeting = meetingData; rescheduleModal.show(); }
     async function handleSaveReschedule() { const newDate = document.getElementById('newMeetingDate').value; const newTime = document.getElementById('newMeetingTime').value; const errorDiv = document.getElementById('rescheduleError'); if (!newDate || !newTime) { errorDiv.textContent = 'Пожалуйста, укажите дату и время.'; errorDiv.classList.remove('d-none'); return; } errorDiv.classList.add('d-none'); const saveBtn = document.getElementById('saveRescheduleBtn'); toggleButtonSpinner(saveBtn, true); try { const newDateFormatted = newDate.split('-').reverse().join('.'); meetingToReschedule.Comment = `Перенесена на ${newDateFormatted} ${newTime}`; const newMeetingData = { ...meetingToReschedule, ID: `m${Date.now()}`, Date: newDate.split('-').reverse().join('.'), Time: newTime, Status: 'В работе', Comment: '' }; const updatePromise = callApi('updateMeeting', { newData: meetingToReschedule, oldData: currentEditingMeeting }); const savePromise = callApi('saveNewMeeting', newMeetingData); await Promise.all([updatePromise, savePromise]); showToast("Встреча успешно перенесена"); rescheduleModal.hide(); onActionComplete(); loadInitialData(datePicker.getStartDate()?.toJSDate().toISOString().split('T')[0], datePicker.getEndDate()?.toJSDate().toISOString().split('T')[0]); } catch (error) { onFailure(error); } finally { toggleButtonSpinner(saveBtn, false); } }
