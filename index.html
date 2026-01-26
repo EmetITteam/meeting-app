@@ -1525,26 +1525,12 @@ async function handleSaveNewClient(e) {
  * Вспомогательная функция для обновления ссылки в бургер-меню
  * Генерирует "магическую ссылку" для системы рекламаций
  */
-function updateReclamationLink(email, password) {
-    console.log("=== ТЕСТ РЕКЛАМАЦИЙ ЗАПУЩЕН ===");
-    console.log("Данные получены:", email, password ? "Пароль есть" : "ПАРОЛЯ НЕТ");
-
-    const linkElement = document.getElementById('reclamationNavLink');
-    
-    if (!linkElement) {
-        console.error("❌ ОШИБКА: Кнопка с ID 'reclamationNavLink' не найдена в DOM!");
-        return;
-    }
-
-    try {
-        const encodedAuth = btoa(password);
-        const finalUrl = `https://reclamation-app-eight.vercel.app/?email=${encodeURIComponent(email)}&auth=${encodedAuth}`;
-        
-        linkElement.href = finalUrl;
-        console.log("✅ УСПЕХ: Ссылка установлена:", finalUrl);
-        console.log("Проверка атрибута href в DOM:", linkElement.getAttribute('href'));
-    } catch (e) {
-        console.error("❌ КРИТИЧЕСКАЯ ОШИБКА:", e);
+function updateReclamationLink(email, auth, isAlreadyEncoded = true) {
+    const navLink = document.getElementById('reclamationNavLink');
+    if (navLink && email && auth) {
+        const finalAuth = isAlreadyEncoded ? auth : btoa(auth);
+        navLink.href = `https://reclamation-app-eight.vercel.app/?email=${encodeURIComponent(email)}&auth=${finalAuth}`;
+        console.log("✅ Ссылка на рекламации активна");
     }
 }
     
