@@ -1462,33 +1462,87 @@ async function handleSaveNewClient(e) {
     }
     
     function onLoginSuccess(result) {
-        currentUser = result.login;
-        const userRole = result.role;
-        const session = { user: currentUser, role: userRole, loginTime: new Date().getTime() };
-        localStorage.setItem('crm_session', JSON.stringify(session));
+    // 1. Сохраняем данные пользователя и сессии
+    currentUser = result.login;
+    const userRole = result.role;
+    const session = { 
+        user: currentUser, 
+        role: userRole, 
+        loginTime: new Date().getTime() 
+    };
+    localStorage.setItem('crm_session', JSON.stringify(session));
 
-        document.getElementById('offcanvas-user-info').textContent = `Менеджер: ${currentUser}`;
+    // 2. Обновляем информацию в боковом меню (offcanvas)
+    const userInfoElement = document.getElementById('offcanvas-user-info');
+    if (userInfoElement) {
+        userInfoElement.textContent = `Менеджер: ${currentUser}`;
+    }
 
-        window.showMainApp(true);
-        
-        const header = document.querySelector('.app-header');
-        const main = document.querySelector('.app-main');
-        const bottomNav = document.querySelector('.app-bottom-nav');
-        const adminDashboard = document.getElementById('admin-dashboard');
+    // 3. Переключаем видимость основного приложения
+    window.showMainApp(true);
+    
+    // 4. Находим основные элементы интерфейса для управления доступом
+    const header = document.querySelector('.app-header');
+    const main = document.querySelector('.app-main');
+    const bottomNav = document.querySelector('.app-bottom-nav');
+    const adminDashboard = document.getElementById('admin-dashboard');
 
-        if (userRole === 'admin') {
-            header.classList.add('d-none');
-            main.classList.add('d-none');
-            bottomNav.classList.add('d-none');
-            adminDashboard.classList.remove('d-none');
-        } else {
-            header.classList.remove('d-none');
-            main.classList.remove('d-none');
-            bottomNav.classList.remove('d-none');
-            adminDashboard.classList.add('d-none');
+    // 5. Разделяем логику для Админа и Менеджера
+    if (userRole === 'admin') {
+        // Логика для админа: скрываем рабочие модули, показываем дашборд
+        if (header) header.classList.add('d-none');
+        if (main) main.classList.add('d-none');
+        if (bottomNav) bottomNav.classList.add('d-none');
+        if (adminDashboard) adminDashboard.classList.remove('d-none');
+    } else {
+        // Логика для менеджера: показываем рабочие модули, скрываем дашборд
+        if (header) header.classList.remove('d-none');
+        if (main) main.classList.remove('d-none');
+        if (bottomNav) bottomNav.classList.remove('d-none');
+        if (adminDashboard) adminDashboard.classList.add('d-none');
+
+        // Устанавливаем текущую дату в календаре (сегодня)
+        if (typeof datePicker !== 'undefined') {
             datePicker.setDateRange(new Date(), new Date());
         }
+
+        // --- ТОЧЕЧНОЕ ДОБАВЛЕНИЕ ДЛЯ СИСТЕМЫ РЕКЛАМАЦИЙ ---
+        // Извлекаем пароль из поля ввода, пока он не стерт
+        const passField = document.getElementById('login-password');
+        const currentPassword = passField ? passField.value : '';
+
+        // Генерируем "магическую ссылку" для бургер-меню
+        if (currentUser && currentPassword) {
+            updateReclamationLink(currentUser, currentPassword);
+        }
     }
+}
+
+/**
+ * Вспомогательная функция для обновления ссылки в бургер-меню
+ * Генерирует "магическую ссылку" для системы рекламаций
+ */
+function updateReclamationLink(email, password) {
+    const linkElement = document.getElementById('reclamationNavLink');
+    
+    if (linkElement) {
+        try {
+            // Кодируем пароль в Base64 (12345 -> MTIzNDU=)
+            const encodedAuth = btoa(password);
+            
+            // Собираем финальный URL
+            // encodeURIComponent нужен для корректной передачи символа @ в email
+            const reclamationUrl = `https://reclamation-app-eight.vercel.app/?email=${encodeURIComponent(email)}&auth=${encodedAuth}`;
+            
+            // Обновляем атрибут href кнопки в бургер-меню
+            linkElement.href = reclamationUrl;
+            
+            console.log('🔗 Ссылка на рекламации сформирована для:', email);
+        } catch (error) {
+            console.error('Ошибка при подготовке ссылки на рекламации:', error);
+        }
+    }
+}
     
     function handleLogout() {
         localStorage.removeItem('crm_session');
