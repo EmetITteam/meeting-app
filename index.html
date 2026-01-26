@@ -1531,9 +1531,22 @@ function updateReclamationLink(email, auth, isAlreadyEncoded = true) {
 }
     
     function handleLogout() {
-        localStorage.removeItem('crm_session');
-        window.showMainApp(false);
+    // 1. Очищаем сессию
+    localStorage.removeItem('crm_session');
+    
+    // 2. Скрываем основные элементы приложения (ваша текущая логика)
+    window.showMainApp(false);
+
+    // --- НОВАЯ ЛОГИКА ЗАКРЫТИЯ МЕНЮ ---
+    const sideMenuEl = document.getElementById('sideMenu');
+    // Получаем экземпляр Bootstrap Offcanvas
+    const bsOffcanvas = bootstrap.Offcanvas.getInstance(sideMenuEl);
+    
+    // Если меню открыто — закрываем его
+    if (bsOffcanvas) {
+        bsOffcanvas.hide();
     }
+}
     
     function getTodayDateString() { return formatDateToYYYYMMDD(new Date()); }
     function getTomorrowDateString() { const t = new Date(); t.setDate(t.getDate() + 1); return formatDateToYYYYMMDD(t); }
