@@ -1445,75 +1445,78 @@ async function handleSaveNewClient(e) {
     }
     
     function checkActiveSession() {
-        const savedSession = localStorage.getItem('crm_session');
-        if (!savedSession) {
-            window.showMainApp(false);
-            return;
-        };
-        const session = JSON.parse(savedSession);
-        const oneDay = 24 * 60 * 60 * 1000;
-        const isSessionExpired = (new Date().getTime() - session.loginTime) > oneDay;
-        if (isSessionExpired) {
-            localStorage.removeItem('crm_session');
-            window.showMainApp(false);
-            return;
-        }
-        onLoginSuccess({ login: session.user, role: session.role });
+    const savedSession = localStorage.getItem('crm_session');
+    if (!savedSession) {
+        window.showMainApp(false);
+        return;
+    };
+    const session = JSON.parse(savedSession);
+    const oneDay = 24 * 60 * 60 * 1000;
+    const isSessionExpired = (new Date().getTime() - session.loginTime) > oneDay;
+    if (isSessionExpired) {
+        localStorage.removeItem('crm_session');
+        window.showMainApp(false);
+        return;
     }
     
+    // ДОБАВЛЯЕМ ПЕРЕДАЧУ session.auth
+    onLoginSuccess({ 
+        login: session.user, 
+        role: session.role, 
+        auth: session.auth // Передаем уже сохраненный ключ
+    });
+}
+    
     function onLoginSuccess(result) {
-    // 1. Сохраняем данные пользователя и сессии
     currentUser = result.login;
     const userRole = result.role;
+
+    // 1. ОПРЕДЕЛЯЕМ AUTH (КЛЮЧ)
+    // Если нам его передали из сессии — берем его. Если нет — кодируем из поля ввода.
+    let encodedAuth = result.auth; 
+    if (!encodedAuth) {
+        const passField = document.getElementById('login-password');
+        encodedAuth = passField && passField.value ? btoa(passField.value) : '';
+    }
+
+    // 2. СОХРАНЯЕМ СЕССИЮ (с учетом ключа auth)
     const session = { 
         user: currentUser, 
         role: userRole, 
-        loginTime: new Date().getTime() 
+        loginTime: new Date().getTime(),
+        auth: encodedAuth // Сохраняем, чтобы не вводить пароль при F5
     };
     localStorage.setItem('crm_session', JSON.stringify(session));
 
-    // 2. Обновляем информацию в боковом меню (offcanvas)
+    // 3. НАСТРОЙКА ИНТЕРФЕЙСА
     const userInfoElement = document.getElementById('offcanvas-user-info');
-    if (userInfoElement) {
-        userInfoElement.textContent = `Менеджер: ${currentUser}`;
-    }
+    if (userInfoElement) userInfoElement.textContent = `Менеджер: ${currentUser}`;
 
-    // 3. Переключаем видимость основного приложения
     window.showMainApp(true);
     
-    // 4. Находим основные элементы интерфейса для управления доступом
     const header = document.querySelector('.app-header');
     const main = document.querySelector('.app-main');
     const bottomNav = document.querySelector('.app-bottom-nav');
     const adminDashboard = document.getElementById('admin-dashboard');
 
-    // 5. Разделяем логику для Админа и Менеджера
     if (userRole === 'admin') {
-        // Логика для админа: скрываем рабочие модули, показываем дашборд
         if (header) header.classList.add('d-none');
         if (main) main.classList.add('d-none');
         if (bottomNav) bottomNav.classList.add('d-none');
         if (adminDashboard) adminDashboard.classList.remove('d-none');
     } else {
-        // Логика для менеджера: показываем рабочие модули, скрываем дашборд
         if (header) header.classList.remove('d-none');
         if (main) main.classList.remove('d-none');
         if (bottomNav) bottomNav.classList.remove('d-none');
         if (adminDashboard) adminDashboard.classList.add('d-none');
 
-        // Устанавливаем текущую дату в календаре (сегодня)
         if (typeof datePicker !== 'undefined') {
             datePicker.setDateRange(new Date(), new Date());
         }
 
-        // --- ТОЧЕЧНОЕ ДОБАВЛЕНИЕ ДЛЯ СИСТЕМЫ РЕКЛАМАЦИЙ ---
-        // Извлекаем пароль из поля ввода, пока он не стерт
-        const passField = document.getElementById('login-password');
-        const currentPassword = passField ? passField.value : '';
-
-        // Генерируем "магическую ссылку" для бургер-меню
-        if (currentUser && currentPassword) {
-            updateReclamationLink(currentUser, currentPassword);
+        // 4. ОБНОВЛЯЕМ ССЫЛКУ РЕКЛАМАЦИЙ
+        if (currentUser && encodedAuth) {
+            updateReclamationLink(currentUser, encodedAuth, true);
         }
     }
 }
