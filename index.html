@@ -1523,24 +1523,25 @@ async function handleSaveNewClient(e) {
  * Генерирует "магическую ссылку" для системы рекламаций
  */
 function updateReclamationLink(email, password) {
+    console.log("=== ТЕСТ РЕКЛАМАЦИЙ ЗАПУЩЕН ===");
+    console.log("Данные получены:", email, password ? "Пароль есть" : "ПАРОЛЯ НЕТ");
+
     const linkElement = document.getElementById('reclamationNavLink');
     
-    if (linkElement) {
-        try {
-            // Кодируем пароль в Base64 (12345 -> MTIzNDU=)
-            const encodedAuth = btoa(password);
-            
-            // Собираем финальный URL
-            // encodeURIComponent нужен для корректной передачи символа @ в email
-            const reclamationUrl = `https://reclamation-app-eight.vercel.app/?email=${encodeURIComponent(email)}&auth=${encodedAuth}`;
-            
-            // Обновляем атрибут href кнопки в бургер-меню
-            linkElement.href = reclamationUrl;
-            
-            console.log('🔗 Ссылка на рекламации сформирована для:', email);
-        } catch (error) {
-            console.error('Ошибка при подготовке ссылки на рекламации:', error);
-        }
+    if (!linkElement) {
+        console.error("❌ ОШИБКА: Кнопка с ID 'reclamationNavLink' не найдена в DOM!");
+        return;
+    }
+
+    try {
+        const encodedAuth = btoa(password);
+        const finalUrl = `https://reclamation-app-eight.vercel.app/?email=${encodeURIComponent(email)}&auth=${encodedAuth}`;
+        
+        linkElement.href = finalUrl;
+        console.log("✅ УСПЕХ: Ссылка установлена:", finalUrl);
+        console.log("Проверка атрибута href в DOM:", linkElement.getAttribute('href'));
+    } catch (e) {
+        console.error("❌ КРИТИЧЕСКАЯ ОШИБКА:", e);
     }
 }
     
