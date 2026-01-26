@@ -1460,11 +1460,7 @@ async function handleSaveNewClient(e) {
     }
     
     // ДОБАВЛЯЕМ ПЕРЕДАЧУ session.auth
-    onLoginSuccess({ 
-        login: session.user, 
-        role: session.role, 
-        auth: session.auth // Передаем уже сохраненный ключ
-    });
+    onLoginSuccess({ login: session.user, role: session.role, auth: session.auth });
 }
     
     function onLoginSuccess(result) {
@@ -1474,19 +1470,19 @@ async function handleSaveNewClient(e) {
     // 1. ОПРЕДЕЛЯЕМ AUTH (КЛЮЧ)
     // Если нам его передали из сессии — берем его. Если нет — кодируем из поля ввода.
     let encodedAuth = result.auth; 
-    if (!encodedAuth) {
-        const passField = document.getElementById('login-password');
-        encodedAuth = passField && passField.value ? btoa(passField.value) : '';
-    }
+if (!encodedAuth) {
+    const passField = document.getElementById('password'); // ID из вашего HTML
+    encodedAuth = passField && passField.value ? btoa(passField.value) : '';
+}
 
     // 2. СОХРАНЯЕМ СЕССИЮ (с учетом ключа auth)
     const session = { 
-        user: currentUser, 
-        role: userRole, 
-        loginTime: new Date().getTime(),
-        auth: encodedAuth // Сохраняем, чтобы не вводить пароль при F5
-    };
-    localStorage.setItem('crm_session', JSON.stringify(session));
+    user: currentUser, 
+    role: userRole, 
+    loginTime: new Date().getTime(),
+    auth: encodedAuth // <--- Теперь пароль сохранится в памяти браузера
+};
+localStorage.setItem('crm_session', JSON.stringify(session));
 
     // 3. НАСТРОЙКА ИНТЕРФЕЙСА
     const userInfoElement = document.getElementById('offcanvas-user-info');
