@@ -28,164 +28,550 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/imask"></script>
 
     <style>
-        /* --- НОВЫЕ СТИЛИ МАКЕТА --- */
-        /* Блок с переменными */
+/* ═══════════════════════════════════════════
+   EMET CRM — Warm Modern Design System
+   Font: Manrope | Primary: #066aab
+═══════════════════════════════════════════ */
+* { box-sizing: border-box; }
+
 :root {
-    --header-height: 60px;
-    --bottom-nav-height: 65px;
-    /* Новая переменная для безопасной зоны снизу с запасом в 0px */
-    --safe-area-bottom: env(safe-area-inset-bottom, 0px); 
+    --primary: #066aab;
+    --primary2: #2a9fd6;
+    --grad: linear-gradient(135deg, #066aab 0%, #2a9fd6 100%);
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #eef0f6;
+    --border: #e4e7f0;
+    --text: #181c2e;
+    --text2: #52587a;
+    --text3: #9398b0;
+    --green: #00b37e;
+    --orange: #f59e0b;
+    --red: #f43f5e;
+    --header-h: 62px;
+    --nav-h: 68px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-        /* Стили для body */
 body {
-    background-color: #f8f9fa;
-    padding-top: var(--header-height);
-    /* Нижний отступ body теперь тоже учитывает безопасную зону */
-    padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
+    font-family: 'Manrope', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-top: var(--header-h);
+    padding-bottom: calc(var(--nav-h) + var(--safe-bottom));
+    -webkit-font-smoothing: antialiased;
 }
 
-        .app-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background-color: #ffffff;
-            border-bottom: 1px solid #dee2e6;
-            z-index: 1030;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1rem;
-        }
-        
-        .app-header .header-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
+/* ── HEADER ── */
+.app-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 1030;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; }
+.header-logo-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--grad); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+}
+.header-title {
+    font-size: 16px; font-weight: 800;
+    color: var(--text); letter-spacing: -0.4px;
+}
+#hamburger-menu {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 18px; cursor: pointer;
+}
+.header-right { display: flex; align-items: center; gap: 8px; }
+.header-avatar {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--grad); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+}
 
-        .app-header .header-action {
-            font-size: 1.75rem;
-            color: var(--bs-primary);
-        }
+/* ── PAGES ── */
+.app-page { display: none; }
+.app-page.active { display: block; }
+.app-main { padding: 14px 16px; }
 
-        .app-page { display: none; }
-        .app-page.active { display: block; }
-        
-        /* Стили для нижней навигационной панели */
+@media (min-width: 768px) {
+    .app-main { max-width: 720px; margin: 0 auto; }
+}
+
+/* ── BOTTOM NAV ── */
 .app-bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* Высота панели теперь динамически увеличивается на размер безопасной зоны */
-    height: calc(var(--bottom-nav-height) + var(--safe-area-bottom));
-    background-color: #ffffff;
-    border-top: 1px solid #dee2e6;
-    z-index: 1030;
+    bottom: 0; left: 0; right: 0;
+    height: calc(var(--nav-h) + var(--safe-bottom));
+    background: var(--surface);
+    border-top: 1.5px solid var(--border);
     display: flex;
-    justify-content: space-around;
     align-items: flex-start;
-    padding-top: 8px;
-    /* Внутренний отступ снизу равен высоте безопасной зоны, чтобы поднять иконки */
-    padding-bottom: var(--safe-area-bottom);
+    padding-top: 4px;
+    padding-bottom: var(--safe-bottom);
+    z-index: 1030;
 }
-        
-        .nav-button {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            color: #6c757d;
-            text-decoration: none;
-            flex-grow: 1;
-            border: none;
-            background: none;
-        }
-        
-        .nav-button i {
-            font-size: 1.5rem;
-            margin-bottom: 0px;
-        }
-
-        .nav-button.active {
-            color: var(--bs-primary);
-        }
-        
-        
-        /* --- СТАРЫЕ СТИЛИ --- */
-        .meeting-card { height: 100%; position: relative; }
-        .toast-container { z-index: 1100; }
-        .card-body { padding-top: 50px; padding-bottom: 1.25rem; }
-        .card-edit-btn-top-right { position: absolute; top: 0.75rem; right: 0.75rem; }
-        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
-        .status-blue { background-color: #0d6efd; }
-        .status-green { background-color: #198754; }
-        .status-orange { background-color: #fd7e14; }
-        .status-gray { background-color: #6c757d; }
-        .status-red { background-color: #dc3545; }
-        .meeting-card .report-btn-icon { font-size: 0.8em; vertical-align: middle; margin-left: 5px; }
-        .skeleton-card { background-color: #e9ecef; border-radius: 0.375rem; height: 200px; animation: pulse 1.5s infinite ease-in-out; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        #client-autocomplete-results .list-group-item { cursor: pointer; }
-        #client-autocomplete-results .list-group-item:hover { background-color: #f0f0f0; }
-      
-        /* --- Стили для адаптации на ПК --- */
-@media (min-width: 992px) {
-    /* Ограничиваем ширину и центрируем основные рабочие страницы */
-    #page-dashboard, #page-clients, #page-add-client {
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-        /* --- Стили для виджетов на рабочем столе (обновлено) --- */
-.widget-card {
-    background-color: #ffffff;
-    border-radius: 0.75rem;
-    padding: 0.5rem; /* Еще немного уменьшили внутренние отступы */
-    text-align: center;
-    border: 1px solid #dee2e6;
-    box-shadow: 0 1px 3px rgba(0,0,0, .04);
+.nav-button {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 2px; border: none; background: none;
+    color: var(--text3); font-size: 10px; font-weight: 700;
+    cursor: pointer; font-family: 'Manrope', sans-serif;
+    padding: 4px 4px 0;
+    transition: color .15s;
+    position: relative;
     text-decoration: none;
-    display: block;
-    color: inherit;
-    transition: box-shadow .2s ease-in-out;
 }
-.widget-card:hover {
-    box-shadow: 0 4px 10px rgba(0,0,0, .08);
+.nav-button i { font-size: 22px; }
+.nav-button.active { color: var(--primary); }
+.nav-button.active::after {
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 2px;
+    background: var(--grad);
+    border-radius: 0 0 3px 3px;
 }
-.widget-card .widget-value {
-    font-size: 1.6rem; /* Немного уменьшили размер цифры */
-    font-weight: 700;
-    line-height: 1.2;
+.nav-fab-wrap {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center;
+    padding-bottom: 6px;
 }
-.widget-card .widget-label {
-    font-size: 0.75rem; /* Еще немного уменьшили текст под цифрой */
-    color: #6c757d;
+.nav-fab {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--grad); border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 26px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(6,106,171,.35);
+    text-decoration: none;
+    margin-top: -2px;
 }
-        /* Стили для кнопки-фильтра дат */
-#date-preset-btn {
-    min-width: 100px;
+
+/* ── MEETING CARDS ── */
+.meeting-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: box-shadow .2s;
 }
-        /* --- Стили для выделения текста в заголовках поиска --- */
-.date-header mark {
-    background-color: transparent; /* Убираем желтый фон */
-    color: inherit; /* Наследуем цвет текста от родителя */
-    font-weight: 600; /* Делаем текст чуть жирнее, чтобы он выделялся */
-    padding: 0; /* Убираем лишние отступы */
+.meeting-card:active { opacity: .95; }
+.card-stripe { height: 3px; width: 100%; }
+.stripe-blue { background: var(--primary); }
+.stripe-orange { background: var(--orange); }
+.stripe-green { background: var(--green); }
+.stripe-red { background: var(--red); }
+.stripe-gray { background: var(--text3); }
+.card-blue { border-color: rgba(6,106,171,.2); }
+.card-orange { border-color: rgba(245,158,11,.2); }
+.card-green { border-color: rgba(0,179,126,.15); }
+.card-red { border-color: rgba(244,63,94,.2); }
+
+.card-body-new { padding: 12px 14px 14px; }
+.card-head {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 7px;
 }
-        .compact-card .card-body {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+.card-name {
+    font-size: 14px; font-weight: 700;
+    color: var(--text); letter-spacing: -0.2px;
+    line-height: 1.3; flex: 1; padding-right: 8px;
 }
+.badge {
+    font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 7px;
+    white-space: nowrap;
+}
+.badge-plan { background: #e5f1fb; color: #066aab; }
+.badge-work { background: #fff5d6; color: #b87000; }
+.badge-done { background: #e0f9f2; color: #00845f; }
+.badge-cancel { background: #f0f1f5; color: #6b7280; }
+.badge-over { background: #ffe5ea; color: #cc0022; }
+
+.card-meta-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 6px;
+}
+.meta-item {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; font-weight: 500; color: var(--text2);
+}
+.meta-item i { font-size: 12px; color: var(--text3); }
+.card-purpose-text {
+    font-size: 12px; font-weight: 500;
+    color: var(--text3); margin-bottom: 10px;
+    line-height: 1.4;
+}
+.card-footer-new {
+    border-top: 1px solid var(--border);
+    padding-top: 9px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    align-items: center;
+}
+.card-cat-badge {
+    font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 5px;
+    margin-left: 5px; vertical-align: middle;
+}
+
+/* ── BUTTONS ── */
+.card-btn {
+    height: 30px; padding: 0 11px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-size: 12px; font-weight: 700;
+    color: var(--text2); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'Manrope', sans-serif;
+    text-decoration: none;
+    transition: background .15s;
+    white-space: nowrap;
+}
+.card-btn:hover { background: var(--surface2); color: var(--text2); }
+.card-btn i { font-size: 12px; }
+.card-btn-primary {
+    background: var(--grad); border-color: transparent; color: white;
+}
+.card-btn-primary:hover { opacity: .9; color: white; }
+
+/* ── WIDGETS ── */
+.stat-widget {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+    padding: 10px 6px; text-align: center;
+    text-decoration: none; display: block; color: inherit;
+}
+.stat-val { font-size: 20px; font-weight: 800; letter-spacing: -0.8px; line-height: 1; margin-bottom: 3px; }
+.stat-lbl { font-size: 10px; font-weight: 600; color: var(--text3); }
+.s-all .stat-val { color: var(--primary); }
+.s-done .stat-val { color: var(--green); }
+.s-over .stat-val { color: var(--red); }
+
+/* ── SEARCH / FILTER ── */
+.search-panel {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 14px;
+}
+.search-row { display: flex; gap: 8px; align-items: center; }
+.search-wrap { flex: 1; position: relative; }
+.search-wrap i {
+    position: absolute; left: 11px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3); font-size: 15px; pointer-events: none;
+}
+.search-input {
+    width: 100%; height: 40px;
+    border-radius: 10px; border: 1.5px solid var(--border);
+    background: var(--surface2);
+    padding: 0 11px 0 34px;
+    font-size: 14px; font-family: 'Manrope', sans-serif;
+    font-weight: 500; color: var(--text); outline: none;
+    transition: border-color .15s;
+}
+.search-input:focus { border-color: var(--primary); background: var(--surface); }
+.search-input::placeholder { color: var(--text3); }
+.date-chip {
+    height: 40px; padding: 0 12px;
+    border-radius: 10px; border: 1.5px solid var(--border);
+    background: var(--surface2);
+    font-size: 13px; font-weight: 700; color: var(--primary);
+    cursor: pointer; display: flex; align-items: center; gap: 5px;
+    white-space: nowrap; font-family: 'Manrope', sans-serif;
+}
+.date-chip i { font-size: 14px; }
+
+/* ── GROUP HEADERS ── */
+.group-header {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 0 8px;
+}
+.group-date { font-size: 12px; font-weight: 700; color: var(--text2); white-space: nowrap; }
+.group-count {
+    font-size: 11px; font-weight: 700; color: var(--text3);
+    background: var(--surface2); border-radius: 20px; padding: 1px 7px;
+}
+.group-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── SKELETON ── */
+.skeleton-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 16px; height: 130px;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+
+/* ── CLIENT CARDS ── */
+.client-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 8px;
+}
+.client-card-main { display: flex; justify-content: space-between; align-items: flex-start; }
+.client-info { flex: 1; padding-right: 10px; }
+.client-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.client-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    padding: 2px 7px; border-radius: 5px; margin-bottom: 5px;
+}
+.client-meta { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 2px; }
+.client-meta i { color: var(--text3); margin-right: 4px; }
+.client-meta a { color: var(--primary); text-decoration: none; }
+.client-actions { display: flex; gap: 6px; align-items: flex-start; }
+
+/* ── FORMS ── */
+.form-section-wrap {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 18px; padding: 18px; margin-top: 8px;
+}
+.form-label { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 5px; }
+.form-control, .form-select {
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'Manrope', sans-serif; font-size: 14px;
+    font-weight: 500; color: var(--text);
+    background: var(--surface); padding: 8px 12px;
+    transition: border-color .15s;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary); box-shadow: none;
+    outline: none;
+}
+.form-control[readonly] { background: var(--surface2); }
+.btn { font-family: 'Manrope', sans-serif; font-weight: 700; border-radius: 10px; }
+.btn-primary { background: var(--grad); border: none; }
+.btn-primary:hover { opacity: .9; background: var(--grad); border: none; }
+.btn-outline-secondary { border: 1.5px solid var(--border); color: var(--text2); }
+.input-group .btn { border-radius: 0 10px 10px 0; }
+.input-group .form-control { border-radius: 10px 0 0 10px; }
+
+/* ── CLIENT CATEGORY FILTERS ── */
+#client-category-filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+#client-category-filters .btn { font-size: 12px; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
+
+/* ── AUTOCOMPLETE ── */
+#client-autocomplete-results {
+    position: absolute; width: 100%; z-index: 1050;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,.1);
+    border: 1.5px solid var(--border);
+}
+#client-autocomplete-results .list-group-item { cursor: pointer; font-family: 'Manrope', sans-serif; }
+#client-autocomplete-results .list-group-item:hover { background: var(--surface2); }
+
+/* ── LOGIN ── */
+.login-wrap {
+    min-height: 100vh; display: flex;
+    align-items: center; justify-content: center;
+    background: var(--bg); padding: 20px;
+}
+.login-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 20px; padding: 32px 24px;
+    width: 100%; max-width: 400px;
+    box-shadow: 0 8px 32px rgba(6,106,171,.08);
+}
+.login-logo { text-align: center; margin-bottom: 24px; }
+.login-logo img { max-height: 48px; width: auto; }
+.login-title { font-size: 20px; font-weight: 800; text-align: center; color: var(--text); margin-bottom: 24px; letter-spacing: -0.5px; }
+
+/* ── SIDE MENU ── */
+.offcanvas { font-family: 'Manrope', sans-serif; }
+.offcanvas-title { font-weight: 800; color: var(--text); }
+.list-group-item { font-weight: 600; font-size: 14px; }
+.list-group-item a { font-weight: 600; }
+
+/* ── TOAST ── */
+.toast { font-family: 'Manrope', sans-serif; border-radius: 12px; border: 1.5px solid var(--border); }
+.toast-container { z-index: 1100; }
+
+/* ── ANALYTICS PAGE ── */
+.section-title {
+    font-size: 12px; font-weight: 700; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 0.6px;
+    margin-bottom: 10px; margin-top: 18px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.section-title:first-child { margin-top: 0; }
+.section-link { font-size: 12px; font-weight: 700; color: var(--primary); text-decoration: none; text-transform: none; letter-spacing: 0; }
+
+.period-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.period-chip {
+    height: 34px; padding: 0 14px;
+    border-radius: 20px; border: 1.5px solid var(--border);
+    background: var(--surface); font-size: 13px; font-weight: 700;
+    color: var(--text2); cursor: pointer; font-family: 'Manrope', sans-serif;
+    transition: all .15s;
+}
+.period-chip.active { background: var(--grad); border-color: transparent; color: white; }
+
+.plan-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 18px; padding: 16px; margin-bottom: 10px;
+}
+.plan-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.plan-amount { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -1px; line-height: 1; }
+.plan-sub { font-size: 12px; font-weight: 600; color: var(--text3); margin-top: 3px; }
+.plan-pct-badge { font-size: 14px; font-weight: 800; padding: 5px 12px; border-radius: 10px; }
+.pct-ok { background: #e0f9f2; color: #00845f; }
+.pct-warn { background: #fff5d6; color: #b87000; }
+.pct-bad { background: #ffe5ea; color: #cc0022; }
+
+.progress-track { width: 100%; height: 9px; background: var(--surface2); border-radius: 99px; overflow: hidden; margin-bottom: 6px; }
+.progress-fill { height: 100%; border-radius: 99px; background: var(--grad); transition: width .6s ease; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--text3); }
+.deviation-row {
+    display: flex; align-items: center; gap: 6px;
+    margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--text2); flex-wrap: wrap;
+}
+.dev-badge { padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+.dev-behind { background: #ffe5ea; color: #cc0022; }
+.dev-ahead { background: #e0f9f2; color: #00845f; }
+.dev-ok { background: var(--surface2); color: var(--text3); }
+
+.plan-mini-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 10px; }
+.plan-mini { background: var(--surface2); border-radius: 11px; padding: 10px 6px; text-align: center; }
+.pm-val { font-size: 15px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+.pm-lbl { font-size: 10px; font-weight: 600; color: var(--text3); margin-top: 2px; }
+
+.brand-item {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
+}
+.brand-row1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.brand-name-text { font-size: 14px; font-weight: 700; color: var(--text); }
+.brand-right { display: flex; align-items: center; gap: 8px; }
+.brand-pct { font-size: 13px; font-weight: 800; }
+.pct-good { color: var(--green); }
+.pct-mid { color: var(--orange); }
+.pct-low { color: var(--red); }
+.brand-chevron { font-size: 14px; color: var(--text3); transition: transform .2s; }
+.brand-item.open .brand-chevron { transform: rotate(180deg); }
+.brand-row2 { display: flex; align-items: center; gap: 10px; }
+.brand-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.brand-fill { height: 100%; border-radius: 99px; }
+.fill-good { background: linear-gradient(90deg, #00b37e, #00d4a0); }
+.fill-mid { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.fill-low { background: linear-gradient(90deg, #f43f5e, #fb7185); }
+.brand-nums { font-size: 11px; font-weight: 600; color: var(--text3); white-space: nowrap; }
+
+.brand-clients { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.brand-item.open .brand-clients { display: block; }
+.brand-client-row {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 7px 0; border-bottom: 1px solid var(--border);
+}
+.brand-client-row:last-child { border-bottom: none; }
+.bcr-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.bcr-products { font-size: 11px; color: var(--text3); font-weight: 500; margin-top: 2px; }
+.bcr-amount { font-size: 13px; font-weight: 800; color: var(--primary); white-space: nowrap; margin-left: 8px; }
+
+.region-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.region-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 12px;
+}
+.region-name { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 5px; }
+.region-val { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; margin-bottom: 3px; }
+.region-sub { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 7px; }
+.region-bar { width: 100%; height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.region-bar-fill { height: 100%; border-radius: 99px; background: var(--grad); }
+
+.clients-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.cl-big {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 13px;
+}
+.cl-val { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.cl-lbl { font-size: 11px; font-weight: 600; color: var(--text3); }
+.cl-trend {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 6px; border-radius: 6px; margin-top: 4px;
+}
+.trend-up { background: #e0f9f2; color: #00845f; }
+.trend-down { background: #ffe5ea; color: #cc0022; }
+
+.donut-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 13px; margin-bottom: 8px;
+}
+.donut-wrap { display: flex; align-items: center; gap: 12px; }
+.donut-canvas-box { width: 88px; height: 88px; flex-shrink: 0; }
+.donut-legend { flex: 1; }
+.legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legend-name { font-size: 11px; font-weight: 600; color: var(--text2); flex: 1; }
+.legend-stat { font-size: 11px; font-weight: 800; color: var(--text); white-space: nowrap; }
+.legend-bought { font-size: 10px; font-weight: 600; color: var(--text3); }
+
+.training-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+}
+.training-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.training-table th {
+    padding: 8px 10px; font-size: 10px; font-weight: 700;
+    color: var(--text3); text-transform: uppercase; letter-spacing: 0.4px;
+    background: var(--surface2); text-align: center; white-space: nowrap;
+}
+.training-table th:first-child { text-align: left; }
+.training-table td {
+    padding: 8px 10px; border-top: 1px solid var(--border);
+    font-weight: 600; color: var(--text2); text-align: center;
+}
+.training-table td:first-child { text-align: left; font-weight: 700; color: var(--text); }
+.training-table .total-row td { background: var(--surface2); font-weight: 800; color: var(--text); }
+.training-cell-top { font-size: 12px; font-weight: 800; color: var(--text); }
+.training-cell-sub { font-size: 10px; color: var(--text3); }
+
+.buyers-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.buyer-card {
+    background: var(--surface); border: 1.5px solid var(--border);
+    border-radius: 14px; padding: 11px 6px; text-align: center;
+}
+.buyer-val { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+.buyer-lbl { font-size: 10px; font-weight: 600; color: var(--text3); margin-top: 2px; line-height: 1.3; }
+.bv-blue { color: var(--primary); }
+.bv-green { color: var(--green); }
+.bv-orange { color: var(--orange); }
+
+/* ── MISC ── */
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+.status-blue { background: var(--primary); }
+.status-green { background: var(--green); }
+.status-orange { background: var(--orange); }
+.status-gray { background: var(--text3); }
+.status-red { background: var(--red); }
+
+.date-header mark { background: transparent; color: inherit; font-weight: 700; padding: 0; }
+
+/* ── LITEPICKER OVERRIDE ── */
+.litepicker { font-family: 'Manrope', sans-serif !important; }
     </style>
 </head>
 
@@ -224,56 +610,186 @@ body {
 </div>
 
     <header class="app-header">
-        <button class="btn border-0 p-0" id="hamburger-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu">
-    <i class="bi bi-list fs-2"></i>
-</button>
-        <div id="header-title" class="header-title">Рабочий стол</div>
-        <a href="#" id="main-add-btn" class="header-action">
-            <i class="bi bi-plus-circle-fill"></i>
-        </a>
+        <div class="header-logo">
+            <button id="hamburger-menu" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="header-logo-icon">E</div>
+        </div>
+        <div id="header-title" class="header-title">Зустрічі</div>
+        <div class="header-right">
+            <div class="header-avatar" id="header-avatar-initials">ЕМ</div>
+        </div>
     </header>
 
-    <main class="app-main container-fluid py-3">
+    <main class="app-main">
+        <!-- ══ ANALYTICS DASHBOARD ══ -->
+        <div id="page-analytics" class="app-page">
+
+            <!-- Period chips -->
+            <div class="period-chips" id="period-chips">
+                <button class="period-chip active" data-period="month">Місяць</button>
+                <button class="period-chip" data-period="week">Тиждень</button>
+                <button class="period-chip" data-period="today">Сьогодні</button>
+                <button class="period-chip" data-period="quarter">Квартал</button>
+            </div>
+
+            <!-- Sales Plan -->
+            <div class="section-title" id="plan-section-title">План продажів</div>
+            <div class="plan-card" id="plan-card">
+                <div class="plan-top">
+                    <div>
+                        <div class="plan-amount" id="plan-fact-amount">₴ 1 248 500</div>
+                        <div class="plan-sub" id="plan-sub-text">з ₴ 2 000 000 план</div>
+                    </div>
+                    <span class="plan-pct-badge pct-warn" id="plan-pct-badge">62%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="plan-progress-fill" style="width:62%"></div>
+                </div>
+                <div class="progress-labels">
+                    <span>0</span>
+                    <span id="plan-progress-label" style="color:var(--orange);font-weight:700">62% виконано</span>
+                    <span>₴ 2M</span>
+                </div>
+                <div class="deviation-row" id="deviation-row">
+                    <span>Повинно бути:</span>
+                    <strong id="dev-expected">63%</strong>
+                    <span>·</span>
+                    <span>Фактично:</span>
+                    <strong id="dev-fact">62%</strong>
+                    <span>·</span>
+                    <span class="dev-badge dev-behind" id="dev-badge">Відставання: -1%</span>
+                </div>
+                <div class="plan-mini-row">
+                    <div class="plan-mini">
+                        <div class="pm-val" style="color:var(--red)" id="pm-left">₴ 752K</div>
+                        <div class="pm-lbl">Залишилось</div>
+                    </div>
+                    <div class="plan-mini">
+                        <div class="pm-val" id="pm-days">8</div>
+                        <div class="pm-lbl">Раб. днів</div>
+                    </div>
+                    <div class="plan-mini">
+                        <div class="pm-val" style="color:var(--primary)" id="pm-perday">₴ 94K</div>
+                        <div class="pm-lbl">/ день</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brands -->
+            <div class="section-title">Виконання по брендах</div>
+            <div id="brands-list">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Regions -->
+            <div class="section-title">По регіонах</div>
+            <div class="region-grid" id="regions-grid">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Clients -->
+            <div class="section-title">
+                База клієнтів
+                <a href="#" class="section-link" onclick="document.querySelector('.nav-button[data-page=clients]').click();return false;">Клієнти →</a>
+            </div>
+            <div class="clients-grid">
+                <div class="cl-big">
+                    <div class="cl-val" id="cl-total">347</div>
+                    <div class="cl-lbl">Всього клієнтів</div>
+                    <div class="cl-trend trend-up"><i class="bi bi-arrow-up-short"></i> +12 цього місяця</div>
+                </div>
+                <div class="cl-big">
+                    <div class="cl-val" id="cl-bought">128</div>
+                    <div class="cl-lbl">Купили цього місяця</div>
+                    <div class="cl-trend trend-down"><i class="bi bi-arrow-down-short"></i> -5 vs минулий</div>
+                </div>
+            </div>
+            <div class="donut-card">
+                <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;">Категорії клієнтів</div>
+                <div class="donut-wrap">
+                    <div class="donut-canvas-box"><canvas id="donutChart"></canvas></div>
+                    <div class="donut-legend" id="donut-legend"><!-- Rendered by JS --></div>
+                </div>
+            </div>
+            <div class="buyers-row" style="margin-bottom:18px;">
+                <div class="buyer-card">
+                    <div class="buyer-val bv-blue" id="bv-orders">128</div>
+                    <div class="buyer-lbl">Зробили замовлення</div>
+                </div>
+                <div class="buyer-card">
+                    <div class="buyer-val bv-green" id="bv-meetings">219</div>
+                    <div class="buyer-lbl">Зустрічей проведено</div>
+                </div>
+                <div class="buyer-card">
+                    <div class="buyer-val bv-orange" id="bv-conv">63%</div>
+                    <div class="buyer-lbl">Конверсія в продаж</div>
+                </div>
+            </div>
+
+            <!-- Training (director only) -->
+            <div id="training-block" class="d-none">
+                <div class="section-title">Навчання по брендах і регіонах</div>
+                <div class="training-card">
+                    <table class="training-table" id="training-table">
+                        <thead>
+                            <tr>
+                                <th>Бренд</th>
+                                <th>Київ</th>
+                                <th>Харків</th>
+                                <th>Дніпро</th>
+                                <th>Одеса</th>
+                                <th>Всього</th>
+                            </tr>
+                        </thead>
+                        <tbody id="training-tbody"><!-- Rendered by JS --></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <!-- ══ END ANALYTICS ══ -->
+
         <div id="page-dashboard" class="app-page active">
             <main id="view-meetings">
-    <div class="bg-light border rounded-3 p-2">
-    <div class="row g-2 mb-2" id="dashboard-widgets">
-        </div>
-    <div class="row g-2 align-items-end">
-        <div class="col-lg-6 col-12">
-            <label for="searchInput1" class="form-label">Поиск и фильтр встреч</label>
-            <input type="text" id="searchInput1" class="form-control" placeholder="Введите имя и нажмите Enter...">
-        </div>
-        <div class="col-lg-4 col-7">
-            <label for="dateRangeFilter" class="form-label">Период</label>
-            <input type="text" id="dateRangeFilter" class="form-control">
-        </div>
-        <div class="col-lg-2 col-5">
-            <div class="btn-group w-100" id="date-presets-container">
-                <button type="button" class="btn btn-outline-secondary" id="date-preset-btn">Сегодня</button>
-                <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="visually-hidden">Toggle Dropdown</span>
+    <!-- Widgets -->
+    <div class="row g-2 mb-3" id="dashboard-widgets"></div>
+
+    <!-- Search & Filter -->
+    <div class="search-panel">
+        <div class="search-row">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="searchInput1" class="search-input" placeholder="Пошук клієнта або зустрічі...">
+            </div>
+            <div id="date-presets-container">
+                <button type="button" class="date-chip" id="date-preset-btn">
+                    <i class="bi bi-calendar3"></i> Сьогодні
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" data-range="today">Сегодня</a></li>
+                <ul class="dropdown-menu dropdown-menu-end" style="display:none">
+                    <li><a class="dropdown-item" href="#" data-range="today">Сьогодні</a></li>
                     <li><a class="dropdown-item" href="#" data-range="tomorrow">Завтра</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" data-range="this-week">Текущая неделя</a></li>
-                    <li><a class="dropdown-item" href="#" data-range="last-week">Прошлая неделя</a></li>
+                    <li><a class="dropdown-item" href="#" data-range="this-week">Поточний тиждень</a></li>
+                    <li><a class="dropdown-item" href="#" data-range="last-week">Минулий тиждень</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" data-range="this-month">Текущий месяц</a></li>
-                    <li><a class="dropdown-item" href="#" data-range="last-month">Прошлый месяц</a></li>
+                    <li><a class="dropdown-item" href="#" data-range="this-month">Поточний місяць</a></li>
+                    <li><a class="dropdown-item" href="#" data-range="last-month">Минулий місяць</a></li>
                 </ul>
             </div>
         </div>
+        <div class="mt-2">
+            <input type="text" id="dateRangeFilter" class="form-control form-control-sm" placeholder="Або оберіть діапазон дат...">
+        </div>
     </div>
-</div>
-    <div id="meetings-list" class="row g-3 mt-3"></div>
+
+    <div id="meetings-list"></div>
 </main>
 
-            <section id="form-section" class="d-none mt-4">
-                <h2 id="form-title" class="h3 mb-3 text-center">Новая встреча</h2>
-                <form id="meeting-form" class="p-4 bg-light border rounded-3">
+            <section id="form-section" class="d-none mt-2">
+                <h2 id="form-title" class="h5 mb-3 fw-800" style="letter-spacing:-0.3px">Нова зустріч</h2>
+                <form id="meeting-form" class="form-section-wrap">
                     <input type="hidden" id="meeting-id"><input type="hidden" id="client-id">
                     <div class="row g-3">
                         <div class="col-12"><label for="meeting-date" class="form-label">Дата:</label><div class="input-group"><input type="date" id="meeting-date" class="form-control" required><button type="button" class="btn btn-outline-secondary" id="todayBtn">Сегодня</button><button type="button" class="btn btn-outline-secondary" id="tomorrowBtn">Завтра</button></div></div>
@@ -299,31 +815,29 @@ body {
             </section>
         </div>
         <div id="page-clients" class="app-page">
-    <div class="row g-3 mb-3 align-items-end">
-        <div class="col-lg-6 col-md-12">
-            <label for="client-list-filter" class="form-label">Поиск по вашим клиентам</label>
-            <input type="text" id="client-list-filter" class="form-control" placeholder="Введите ФИО или телефон...">
+    <div class="search-panel mb-3">
+        <div class="search-row mb-2">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input type="text" id="client-list-filter" class="search-input" placeholder="Пошук клієнта або телефону...">
+            </div>
         </div>
-        <div class="col-lg-3 col-6">
-            <button class="btn btn-primary w-100" id="show-add-client-form-btn">
-                <i class="bi bi-plus-lg"></i> Новый клиент
+        <div class="d-flex gap-2">
+            <button class="card-btn card-btn-primary flex-fill" id="show-add-client-form-btn">
+                <i class="bi bi-plus-lg"></i> Новий клієнт
             </button>
-        </div>
-        <div class="col-lg-3 col-6">
-            <button class="btn btn-outline-primary w-100" id="global-search-trigger-btn">
-                <i class="bi bi-search"></i> По всей базе 
+            <button class="card-btn flex-fill" id="global-search-trigger-btn">
+                <i class="bi bi-search"></i> По всій базі
             </button>
         </div>
     </div>
-    <div id="client-category-filters" class="d-flex flex-wrap gap-2 mb-3">
-        </div>
-    <div id="client-list-container">
-        </div>
+    <div id="client-category-filters"></div>
+    <div id="client-list-container"></div>
 </div>
     </main>
     <div id="page-add-client" class="app-page">
-    <h2 class="h4 mb-3">Новый клиент</h2>
-    <form id="add-client-form" class="p-3 bg-light border rounded-3">
+    <h2 class="h5 fw-800 mb-3" style="letter-spacing:-0.3px">Новий клієнт</h2>
+    <form id="add-client-form" class="form-section-wrap">
         <div class="row g-3">
             <div class="col-12">
                 <label for="new-client-name" class="form-label">ФИО</label>
@@ -361,26 +875,43 @@ body {
 </div>
     
     <nav class="app-bottom-nav">
-        <button class="nav-button active" data-page="dashboard"><i class="bi bi-speedometer2"></i><span>Рабочий стол</span></button>
-        <button class="nav-button" data-page="clients"><i class="bi bi-people"></i><span>Клиенты</span></button>
+        <button class="nav-button d-none" data-page="analytics" id="nav-analytics">
+            <i class="bi bi-grid-fill"></i><span>Дашборд</span>
+        </button>
+        <button class="nav-button active" data-page="dashboard" id="nav-meetings">
+            <i class="bi bi-house-fill"></i><span>Зустрічі</span>
+        </button>
+        <div class="nav-fab-wrap" id="nav-fab-wrap">
+            <a href="#" id="main-add-btn" class="nav-fab">
+                <i class="bi bi-plus"></i>
+            </a>
+        </div>
+        <button class="nav-button" data-page="clients" id="nav-clients">
+            <i class="bi bi-people"></i><span>Клієнти</span>
+        </button>
+        <button class="nav-button" id="nav-more-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
+            <i class="bi bi-grid-3x3-gap"></i><span>Ще</span>
+        </button>
     </nav>
     
-    <div id="login-container" class="container vh-100 d-flex align-items-center justify-content-center">
-        <div class="row justify-content-center w-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <div class="text-center mb-4"><img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Логотип" style="max-height: 50px; width: auto;"></div>
-                        <h1 class="card-title text-center h3 mb-4">Вход в систему</h1>
-                        <form id="login-form">
-                            <div class="mb-3"><label for="username" class="form-label">Имя пользователя:</label><input type="text" id="username" class="form-control" required></div>
-                            <div class="mb-3"><label for="password" class="form-label">Пароль:</label><input type="password" id="password" class="form-control" required></div>
-                            <button type="submit" id="login-button" class="btn btn-primary w-100 py-2">Войти</button>
-                            <p id="login-error" class="text-danger text-center mt-3 d-none"></p>
-                        </form>
-                    </div>
-                </div>
+    <div id="login-container" class="login-wrap">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://links.emet.in.ua/wp-content/uploads/2025/07/logo_dark-scaled.png" alt="Emet" style="max-height:48px;width:auto;">
             </div>
+            <div class="login-title">Вхід до системи</div>
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Логін</label>
+                    <input type="text" id="username" class="form-control" required placeholder="Ваш логін">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                </div>
+                <button type="submit" id="login-button" class="btn btn-primary w-100 py-2" style="font-size:15px;font-weight:700;">Увійти</button>
+                <p id="login-error" class="text-danger text-center mt-3 d-none" style="font-size:13px;font-weight:600;"></p>
+            </form>
         </div>
     </div>
     
@@ -966,7 +1497,20 @@ clientListMask = IMask(clientListFilterInput, {
                 if (pageId === 'clients' && allClients.length === 0) {
                     loadClientsPage();
                 }
+                if (pageId === 'analytics') {
+                    renderDashboard(currentPeriod);
+                }
             });
+        });
+
+        // Period chips for analytics
+        document.getElementById('period-chips')?.addEventListener('click', (e) => {
+            const chip = e.target.closest('.period-chip');
+            if (!chip) return;
+            document.querySelectorAll('.period-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentPeriod = chip.dataset.period;
+            renderDashboard(currentPeriod);
         });
 
         document.getElementById('main-add-btn')?.addEventListener('click', (e) => {
@@ -995,19 +1539,26 @@ clientListMask = IMask(clientListFilterInput, {
         const datePresetsContainer = document.getElementById('date-presets-container');
         if (datePresetsContainer) {
             const mainPresetBtn = datePresetsContainer.querySelector('#date-preset-btn');
-            if (mainPresetBtn) {
-                mainPresetBtn.addEventListener('click', () => {
-                    isSearchMode = false;
-                    document.getElementById('searchInput1').value = '';
-                    handleDatePresetClick('today');
-                });
-            }
             const datePresetDropdown = datePresetsContainer.querySelector('.dropdown-menu');
-            if (datePresetDropdown) {
+            if (mainPresetBtn && datePresetDropdown) {
+                // Style dropdown for new design
+                datePresetDropdown.style.cssText = 'display:none;position:absolute;right:0;z-index:1060;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.1);min-width:180px;padding:6px;';
+                datePresetsContainer.style.position = 'relative';
+
+                mainPresetBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isOpen = datePresetDropdown.style.display === 'block';
+                    datePresetDropdown.style.display = isOpen ? 'none' : 'block';
+                });
+                document.addEventListener('click', () => { datePresetDropdown.style.display = 'none'; });
                 datePresetDropdown.addEventListener('click', (e) => {
                     if (e.target.classList.contains('dropdown-item')) {
                         e.preventDefault();
                         const range = e.target.dataset.range;
+                        mainPresetBtn.innerHTML = `<i class="bi bi-calendar3"></i> ${e.target.textContent}`;
+                        datePresetDropdown.style.display = 'none';
+                        isSearchMode = false;
+                        document.getElementById('searchInput1').value = '';
                         handleDatePresetClick(range);
                     }
                 });
@@ -1363,33 +1914,28 @@ async function handleSaveNewClient(e) {
         const container = document.getElementById('client-list-container');
         if (!container) return;
         if (clientsToRender.length === 0) {
-            container.innerHTML = '<p class="text-center text-muted mt-4">Клиенты не найдены.</p>';
+            container.innerHTML = '<p class="text-center mt-4" style="color:var(--text3);font-size:14px;font-weight:600;">Клієнтів не знайдено</p>';
             return;
         }
         const clientHtml = clientsToRender.map(client => {
             const categoryColor = getCategoryColor(client.ClientCategory);
             const cleanPhone = client.Phone ? client.Phone.replace(/[^+\d]/g, '') : '';
             return `
-                <div class="card shadow-sm mb-2">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="card-title mb-1">${client.ClientName}</h5>
-                                <span class="badge" style="background-color: ${categoryColor};">${client.ClientCategory || 'Без категории'}</span>
-                            </div>
-                            <div class="btn-group">
-                                <a href="#" class="btn btn-sm btn-outline-secondary js-report-from-client-list" title="Отчет по клиенту" data-client-id="${client.ClientID}" data-client-name="${client.ClientName}"><i class="bi bi-file-text"></i></a>
-                                <a href="#" class="btn btn-sm btn-primary js-create-meeting-from-client-list" title="Создать встречу" 
-                                   data-client-id="${client.ClientID}" data-client-name="${client.ClientName}"
-                                   data-client-category="${client.ClientCategory || ''}" data-client-address="${client.ClientAddress || ''}"
-                                   data-client-phone="${client.Phone || ''}">
-                                   <i class="bi bi-calendar-plus"></i>
-                                </a>
-                            </div>
+                <div class="client-card">
+                    <div class="client-card-main">
+                        <div class="client-info">
+                            <div class="client-name">${client.ClientName}</div>
+                            <span class="client-badge" style="background:${categoryColor}22;color:${categoryColor};border:1px solid ${categoryColor}44">${client.ClientCategory || 'Без категорії'}</span>
+                            <div class="client-meta"><i class="bi bi-telephone"></i> <a href="tel:${cleanPhone}">${client.Phone || 'Не вказано'}</a></div>
+                            <div class="client-meta"><i class="bi bi-clock-history"></i> ${client.LastMeetingDate || 'Немає даних'}</div>
                         </div>
-                        <hr>
-                        <p class="card-text mb-1"><small class="text-muted">Телефон: <a href="tel:${cleanPhone}">${client.Phone || 'Не указан'}</a></small></p>
-                        <p class="card-text"><small class="text-muted">Последняя встреча: ${client.LastMeetingDate || 'Нет данных'}</small></p>
+                        <div class="client-actions">
+                            <a href="#" class="card-btn js-report-from-client-list" title="Звіт" data-client-id="${client.ClientID}" data-client-name="${client.ClientName}"><i class="bi bi-bar-chart"></i></a>
+                            <a href="#" class="card-btn card-btn-primary js-create-meeting-from-client-list" title="Нова зустріч"
+                               data-client-id="${client.ClientID}" data-client-name="${client.ClientName}"
+                               data-client-category="${client.ClientCategory || ''}" data-client-address="${client.ClientAddress || ''}"
+                               data-client-phone="${client.Phone || ''}"><i class="bi bi-calendar-plus"></i></a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1489,11 +2035,18 @@ localStorage.setItem('crm_session', JSON.stringify(session));
     if (userInfoElement) userInfoElement.textContent = `Менеджер: ${currentUser}`;
 
     window.showMainApp(true);
-    
+
     const header = document.querySelector('.app-header');
     const main = document.querySelector('.app-main');
     const bottomNav = document.querySelector('.app-bottom-nav');
     const adminDashboard = document.getElementById('admin-dashboard');
+
+    // Update avatar initials
+    const avatarEl = document.getElementById('header-avatar-initials');
+    if (avatarEl && currentUser) {
+        const parts = currentUser.split(/[\s.@]/);
+        avatarEl.textContent = parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : currentUser.substring(0,2).toUpperCase();
+    }
 
     if (userRole === 'admin') {
         if (header) header.classList.add('d-none');
@@ -1505,6 +2058,9 @@ localStorage.setItem('crm_session', JSON.stringify(session));
         if (main) main.classList.remove('d-none');
         if (bottomNav) bottomNav.classList.remove('d-none');
         if (adminDashboard) adminDashboard.classList.add('d-none');
+
+        // Apply role-based navigation
+        updateNavForRole(userRole);
 
         if (typeof datePicker !== 'undefined') {
             datePicker.setDateRange(new Date(), new Date());
@@ -1770,21 +2326,21 @@ function updateDashboardWidgets() {
     // 4. Отображаем результат
     widgetsContainer.innerHTML = `
         <div class="col-4">
-            <div class="widget-card">
-                <div class="widget-value text-primary">${totalValue}</div>
-                <div class="widget-label">${totalLabel}</div>
+            <div class="stat-widget s-all">
+                <div class="stat-val">${totalValue}</div>
+                <div class="stat-lbl">${totalLabel}</div>
             </div>
         </div>
         <div class="col-4">
-            <div class="widget-card">
-                <div class="widget-value text-success">${completedForPeriod}</div>
-                <div class="widget-label">Завершено</div>
+            <div class="stat-widget s-done">
+                <div class="stat-val">${completedForPeriod}</div>
+                <div class="stat-lbl">Завершено</div>
             </div>
         </div>
         <div class="col-4">
-            <a href="#" id="widget-overdue-filter" class="widget-card">
-                <div class="widget-value text-danger">${overdueForPeriod}</div>
-                <div class="widget-label">Просрочено</div>
+            <a href="#" id="widget-overdue-filter" class="stat-widget s-over" style="display:block;text-decoration:none;color:inherit;">
+                <div class="stat-val">${overdueForPeriod}</div>
+                <div class="stat-lbl">Прострочено</div>
             </a>
         </div>`;
 }
@@ -1820,74 +2376,77 @@ function filterAndGroupMeetings() {
     }
 
     sortedDates.forEach(date => {
-        const dateTitle = document.createElement('h3');
-        dateTitle.className = 'col-12 mt-4 border-bottom pb-2 date-header';
-        dateTitle.textContent = date;
+        const totalForDate = Object.values(dateGroups[date]).flat().length;
+        const dateTitle = document.createElement('div');
+        dateTitle.className = 'col-12 group-header';
+        dateTitle.innerHTML = `<span class="group-date">${date}</span><span class="group-count">${totalForDate}</span><div class="group-line"></div>`;
         meetingsList.appendChild(dateTitle);
         const groups = dateGroups[date];
         const groupOrder = ['Просрочено', 'В работе', 'Запланировано', 'Завершена', 'Отмена'];
         groupOrder.forEach(status => {
             if (groups[status] && groups[status].length > 0) {
-                const groupTitle = document.createElement('h4');
-                groupTitle.className = 'col-12 mt-3 text-muted';
-                groupTitle.textContent = status;
-                meetingsList.appendChild(groupTitle);
                 groups[status].sort((a, b) => a.Time.localeCompare(b.Time)).forEach(m => {
                     const cleanStatus = m.Status ? m.Status.trim() : '';
                     const isActive = cleanStatus !== 'Завершена' && cleanStatus !== 'Завершено' && cleanStatus !== 'Отмена' && cleanStatus !== 'Отменено' && cleanStatus !== 'Просрочено';
                     const activeTimers = JSON.parse(localStorage.getItem('activeTimers')) || {};
                     const isMeetingRunning = !!activeTimers[m.ID];
                     
+                    // — State button (new style) —
                     let stateButtonHtml = '';
                     if (isActive) {
                         if (isMeetingRunning) {
                             const initialElapsedTime = formatElapsedTime(Date.now() - activeTimers[m.ID].startTime);
-                            stateButtonHtml = `<button class="btn btn-danger btn-sm js-state-toggle-btn" data-id="${m.ID}">
-                                <i class="bi bi-stop-circle me-2"></i>Завершить (<span class="timer" data-start-time="${activeTimers[m.ID].startTime}">${initialElapsedTime}</span>)
+                            stateButtonHtml = `<button class="card-btn card-btn-primary js-state-toggle-btn" data-id="${m.ID}" style="background:var(--red);border-color:var(--red);">
+                                <i class="bi bi-stop-circle"></i> Завершити (<span class="timer" data-start-time="${activeTimers[m.ID].startTime}">${initialElapsedTime}</span>)
                             </button>`;
                         } else {
-                            stateButtonHtml = `<button class="btn btn-success btn-sm js-state-toggle-btn" data-id="${m.ID}">
-                                <i class="bi bi-play-circle me-2"></i>Старт встречи
+                            stateButtonHtml = `<button class="card-btn card-btn-primary js-state-toggle-btn" data-id="${m.ID}">
+                                <i class="bi bi-play-circle"></i> Старт
                             </button>`;
                         }
                     }
 
-                    let dropdownItems = `<li><a class="dropdown-item outcome-btn" href="#" data-id="${m.ID}"><i class="bi bi-card-checklist me-2"></i>Итоги встречи</a></li>`;
+                    // — Inline action buttons (no dropdown) —
+                    let extraActions = `<a href="#" class="card-btn outcome-btn" data-id="${m.ID}"><i class="bi bi-card-checklist"></i> Підсумки</a>`;
                     if (isActive && !isMeetingRunning) {
-                         dropdownItems += `<li><a class="dropdown-item reschedule-btn" href="#" data-id="${m.ID}"><i class="bi bi-arrow-repeat me-2"></i>Перенести</a></li>`;
+                        extraActions += `<a href="#" class="card-btn reschedule-btn" data-id="${m.ID}"><i class="bi bi-arrow-repeat"></i> Перенести</a>`;
                     }
-                    const actionsMenu = `<div class="dropdown actions-dropdown ms-auto">${dropdownItems ? `<button class="btn btn-sm btn-light border-0 py-0 px-2" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-three-dots-vertical"></i></button><ul class="dropdown-menu dropdown-menu-end">${dropdownItems}</ul>` : ''}</div>`;
-                    
-                    const statusColors = { 'В работе': 'orange', 'Запланировано': 'blue', 'Завершена': 'green', 'Отмена': 'gray', 'Просрочено': 'red' };
-                    const statusColor = statusColors[cleanStatus] || 'gray';
-                    let clientTitle = `<div class="d-flex align-items-center"><span>${m.Time} - ${m.Client}</span></div>`;
+
+                    // — Status stripe & badge mapping —
+                    const stripeMap = { 'В работе': 'orange', 'Запланировано': 'blue', 'Завершена': 'green', 'Отмена': 'gray', 'Просрочено': 'red' };
+                    const badgeMap  = { 'В работе': 'work', 'Запланировано': 'plan', 'Завершена': 'done', 'Отмена': 'cancel', 'Просрочено': 'over' };
+                    const statusLabels = { 'В работе': 'В роботі', 'Запланировано': 'Заплановано', 'Завершена': 'Завершено', 'Отмена': 'Скасовано', 'Просрочено': 'Прострочено' };
+                    const stripe = stripeMap[cleanStatus] || 'gray';
+                    const badgeCls = badgeMap[cleanStatus] || 'cancel';
+                    const statusLabel = statusLabels[cleanStatus] || cleanStatus;
+
+                    // — Category inline badge —
+                    let catBadge = '';
                     if (m.ClientCategory) {
-                        const categoryColor = getCategoryColor(m.ClientCategory);
-                        clientTitle = `<div class="d-flex align-items-center"><span>${m.Time} - ${m.Client}</span><span class="badge ms-2" style="background-color: ${categoryColor};">${m.ClientCategory}</span></div>`;
+                        const catColor = getCategoryColor(m.ClientCategory);
+                        catBadge = `<span class="card-cat-badge" style="background:${catColor}22;color:${catColor};border:1px solid ${catColor}44">${m.ClientCategory}</span>`;
                     }
-                    
+
                     const cardWrapper = document.createElement('div');
-                    cardWrapper.className = "col-12 col-md-6";
+                    cardWrapper.className = "col-12";
                     cardWrapper.innerHTML = `
-                        <div class="card meeting-card shadow-sm border-0 d-flex flex-column h-100">
-                            <div class="card-body flex-grow-1">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title">${clientTitle}</h5>
-                                    <a href="#" class="btn btn-light edit-btn" style="height: fit-content;" title="Редактировать" data-id="${m.ID}"><i class="bi bi-pencil-square"></i></a>
+                        <div class="meeting-card card-${stripe}">
+                            <div class="card-stripe stripe-${stripe}"></div>
+                            <div class="card-body-new">
+                                <div class="card-head">
+                                    <div class="card-name">${m.Time} · ${m.Client}${catBadge}</div>
+                                    <span class="badge badge-${badgeCls}">${statusLabel}</span>
                                 </div>
-                                <p class="card-text mb-1"><small class="text-muted">${m.Purpose || 'Цель не указана'}</small></p>
-                                <p class="card-text mb-1"><small class="text-muted">Место: ${m.StartAddress || m.PlannedAddress || 'Не указано'}</small></p>
-                                <p class="card-text mb-0"><strong><span class="status-dot status-${statusColor}"></span>Статус:</strong> ${m.Status || 'Не указан'}</p>
-                            </div>
-                            <div class="card-footer bg-white border-top-0 pt-0">
-                                <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="card-meta-row">
+                                    <span class="meta-item"><i class="bi bi-telephone"></i> ${m.Phone || '—'}</span>
+                                    <span class="meta-item"><i class="bi bi-geo-alt"></i> ${m.StartAddress || m.PlannedAddress || '—'}</span>
+                                </div>
+                                <div class="card-purpose-text">${m.Purpose || 'Мета не вказана'}</div>
+                                <div class="card-footer-new">
                                     ${stateButtonHtml}
-                                    ${actionsMenu}
-                                </div>
-                                <div class="pt-2 border-top">
-                                    <button class="btn btn-sm btn-outline-secondary w-100 report-btn-icon" data-client-id="${m.ClientID}" data-client-name="${m.Client}">
-                                        <i class="bi bi-file-text me-2"></i>Данные по клиенту
-                                    </button>
+                                    <a href="#" class="card-btn edit-btn" data-id="${m.ID}"><i class="bi bi-pencil"></i> Редагувати</a>
+                                    <button class="card-btn report-btn-icon" data-client-id="${m.ClientID}" data-client-name="${m.Client}"><i class="bi bi-bar-chart"></i> Звіт</button>
+                                    ${extraActions}
                                 </div>
                             </div>
                         </div>`;
@@ -1904,6 +2463,245 @@ function filterAndGroupMeetings() {
 }
 
 // --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
+
+// ═══════════════════════════════════════════
+//  ANALYTICS DASHBOARD
+// ═══════════════════════════════════════════
+
+const MOCK_DASHBOARD = {
+    month: {
+        plan: 2000000, fact: 1248500,
+        workingDaysTotal: 22, workingDaysPassed: 14,
+        brands: [
+            { name: 'Neuramis', plan: 450000, fact: 312000, clients: [
+                { name: 'Клініка Estet', amount: 98000, products: 'Neuramis Deep, Light' },
+                { name: 'ПП Коваль О.М.', amount: 74000, products: 'Neuramis Filler' },
+                { name: 'МЦ Belleza', amount: 140000, products: 'Neuramis Deep Lidocaine' },
+            ]},
+            { name: 'Neuronox', plan: 380000, fact: 340000, clients: [
+                { name: 'Лікар Петренко В.', amount: 120000, products: 'Neuronox 100u' },
+                { name: 'Клініка Skin Lab', amount: 220000, products: 'Neuronox 50u, 100u' },
+            ]},
+            { name: 'Vitaran', plan: 300000, fact: 165000, clients: [
+                { name: 'Клініка Estet', amount: 85000, products: 'Vitaran 2ml' },
+                { name: 'ПП Мороз Н.В.', amount: 80000, products: 'Vitaran 1ml, 2ml' },
+            ]},
+            { name: 'Petaran', plan: 280000, fact: 215000, clients: [
+                { name: 'Лікар Ткач І.О.', amount: 95000, products: 'Petaran 2ml' },
+                { name: 'МЦ BeautyPro', amount: 120000, products: 'Petaran 1.5ml' },
+            ]},
+            { name: 'IUSE', plan: 230000, fact: 108000, clients: [
+                { name: 'Клініка White', amount: 58000, products: 'IUSE Skin Booster' },
+                { name: 'ПП Савченко Л.', amount: 50000, products: 'IUSE Hair' },
+            ]},
+            { name: 'Інші бренди', plan: 360000, fact: 108000, clients: [
+                { name: 'Різні клієнти', amount: 108000, products: 'Асорті' },
+            ]},
+        ],
+        regions: [
+            { name: 'Київ', plan: 800000, fact: 520000 },
+            { name: 'Харків', plan: 450000, fact: 298000 },
+            { name: 'Дніпро', plan: 400000, fact: 245000 },
+            { name: 'Одеса', plan: 350000, fact: 185500 },
+        ],
+        clients: { total: 347, bought: 128, totalTrend: +12, boughtTrend: -5 },
+        clientCategories: [
+            { name: 'Активні', total: 142, bought: 98 },
+            { name: 'Потенційні', total: 85, bought: 18 },
+            { name: 'Сплячі', total: 67, bought: 7 },
+            { name: 'Нові', total: 53, bought: 5 },
+        ],
+        meetings: { conducted: 219, converted: 128 },
+        training: [
+            { brand: 'Neuramis', Київ: [3,45], Харків: [2,28], Дніпро: [1,14], Одеса: [2,22] },
+            { brand: 'Neuronox', Київ: [2,30], Харків: [1,12], Дніпро: [2,18], Одеса: [1,10] },
+            { brand: 'Vitaran', Київ: [1,15], Харків: [1,8],  Дніпро: [0,0],  Одеса: [1,9]  },
+            { brand: 'Petaran', Київ: [2,22], Харків: [0,0],  Дніпро: [1,11], Одеса: [0,0]  },
+        ],
+    }
+};
+// Заповнюємо інші періоди тими ж даними (можна буде замінити реальними)
+MOCK_DASHBOARD.week = MOCK_DASHBOARD.month;
+MOCK_DASHBOARD.today = MOCK_DASHBOARD.month;
+MOCK_DASHBOARD.quarter = MOCK_DASHBOARD.month;
+
+let donutChartInstance = null;
+let currentPeriod = 'month';
+
+function renderDashboard(period) {
+    const data = MOCK_DASHBOARD[period] || MOCK_DASHBOARD.month;
+    const { plan, fact, workingDaysTotal, workingDaysPassed, brands, regions, clients, clientCategories, meetings, training } = data;
+
+    // — Plan card —
+    const pct = Math.round(fact / plan * 100);
+    const expectedPct = Math.round(workingDaysPassed / workingDaysTotal * 100);
+    const diff = pct - expectedPct;
+    const left = plan - fact;
+    const daysLeft = workingDaysTotal - workingDaysPassed;
+    const perDay = daysLeft > 0 ? Math.round(left / daysLeft) : 0;
+
+    const pctClass = pct >= expectedPct ? 'pct-ok' : (pct >= expectedPct - 10 ? 'pct-warn' : 'pct-bad');
+    const devClass = diff >= 0 ? 'dev-ahead' : 'dev-behind';
+    const devText = diff >= 0 ? `Випереджаємо: +${diff}%` : `Відставання: ${diff}%`;
+    const fillColor = pct >= 80 ? 'var(--green)' : (pct >= 50 ? 'var(--orange)' : 'var(--red)');
+
+    const el = (id) => document.getElementById(id);
+    const periodLabels = { month: 'місяць', week: 'тиждень', today: 'сьогодні', quarter: 'квартал' };
+    const now = new Date();
+    const monthNames = ['січень','лютий','березень','квітень','травень','червень','липень','серпень','вересень','жовтень','листопад','грудень'];
+    const titleSuffix = period === 'month' ? ` — ${monthNames[now.getMonth()]} ${now.getFullYear()}` : ` — ${periodLabels[period] || ''}`;
+    if (el('plan-section-title')) el('plan-section-title').textContent = 'План продажів' + titleSuffix;
+    if (el('plan-fact-amount')) el('plan-fact-amount').textContent = '₴ ' + fact.toLocaleString('uk-UA');
+    if (el('plan-sub-text')) el('plan-sub-text').textContent = 'з ₴ ' + plan.toLocaleString('uk-UA') + ' план';
+    if (el('plan-pct-badge')) { el('plan-pct-badge').textContent = pct + '%'; el('plan-pct-badge').className = 'plan-pct-badge ' + pctClass; }
+    if (el('plan-progress-fill')) { el('plan-progress-fill').style.width = pct + '%'; el('plan-progress-fill').style.background = fillColor; }
+    if (el('plan-progress-label')) { el('plan-progress-label').textContent = pct + '% виконано'; el('plan-progress-label').style.color = fillColor; }
+    if (el('dev-expected')) el('dev-expected').textContent = expectedPct + '%';
+    if (el('dev-fact')) el('dev-fact').textContent = pct + '%';
+    if (el('dev-badge')) { el('dev-badge').textContent = devText; el('dev-badge').className = 'dev-badge ' + devClass; }
+    if (el('pm-left')) { el('pm-left').textContent = '₴ ' + Math.round(left/1000) + 'K'; }
+    if (el('pm-days')) el('pm-days').textContent = daysLeft;
+    if (el('pm-perday')) el('pm-perday').textContent = '₴ ' + Math.round(perDay/1000) + 'K';
+
+    // — Brands —
+    const brandsList = document.getElementById('brands-list');
+    if (brandsList) {
+        brandsList.innerHTML = brands.map(b => {
+            const bPct = Math.round(b.fact / b.plan * 100);
+            const bCls = bPct >= 80 ? 'good' : (bPct >= 50 ? 'mid' : 'low');
+            const clientsHtml = b.clients.map(c => `
+                <div class="brand-client-row">
+                    <div>
+                        <div class="bcr-name">${c.name}</div>
+                        <div class="bcr-products">${c.products}</div>
+                    </div>
+                    <div class="bcr-amount">₴ ${c.amount.toLocaleString('uk-UA')}</div>
+                </div>`).join('');
+            return `
+                <div class="brand-item" onclick="this.classList.toggle('open')">
+                    <div class="brand-row1">
+                        <div class="brand-name-text">${b.name}</div>
+                        <div class="brand-right">
+                            <span class="brand-pct pct-${bCls}">${bPct}%</span>
+                            <i class="bi bi-chevron-down brand-chevron"></i>
+                        </div>
+                    </div>
+                    <div class="brand-row2">
+                        <div class="brand-track"><div class="brand-fill fill-${bCls}" style="width:${Math.min(bPct,100)}%"></div></div>
+                        <span class="brand-nums">₴${Math.round(b.fact/1000)}K / ₴${Math.round(b.plan/1000)}K</span>
+                    </div>
+                    <div class="brand-clients">${clientsHtml}</div>
+                </div>`;
+        }).join('');
+    }
+
+    // — Regions —
+    const regionsGrid = document.getElementById('regions-grid');
+    if (regionsGrid) {
+        regionsGrid.innerHTML = regions.map(r => {
+            const rPct = Math.round(r.fact / r.plan * 100);
+            return `
+                <div class="region-card">
+                    <div class="region-name">${r.name}</div>
+                    <div class="region-val">₴ ${Math.round(r.fact/1000)}K</div>
+                    <div class="region-sub">${rPct}% від плану</div>
+                    <div class="region-bar"><div class="region-bar-fill" style="width:${Math.min(rPct,100)}%"></div></div>
+                </div>`;
+        }).join('');
+    }
+
+    // — Client totals —
+    if (el('cl-total')) el('cl-total').textContent = clients.total;
+    if (el('cl-bought')) el('cl-bought').textContent = clients.bought;
+
+    // — Donut chart + legend —
+    const donutLegend = document.getElementById('donut-legend');
+    const colors = ['#066aab', '#2a9fd6', '#00b37e', '#f59e0b'];
+    if (donutLegend) {
+        donutLegend.innerHTML = clientCategories.map((c, i) => {
+            const buyPct = Math.round(c.bought / c.total * 100);
+            return `<div class="legend-row">
+                <div class="legend-dot" style="background:${colors[i]}"></div>
+                <div class="legend-name">${c.name}</div>
+                <div><div class="legend-stat">${c.total}</div><div class="legend-bought">${c.bought} купили (${buyPct}%)</div></div>
+            </div>`;
+        }).join('');
+    }
+    const donutCanvas = document.getElementById('donutChart');
+    if (donutCanvas) {
+        if (donutChartInstance) donutChartInstance.destroy();
+        donutChartInstance = new Chart(donutCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: clientCategories.map(c => c.name),
+                datasets: [{ data: clientCategories.map(c => c.total), backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }]
+            },
+            options: { cutout: '70%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ` ${ctx.label}: ${ctx.raw}` } } } }
+        });
+    }
+
+    // — Buyers row —
+    if (el('bv-orders')) el('bv-orders').textContent = clients.bought;
+    if (el('bv-meetings')) el('bv-meetings').textContent = meetings.conducted;
+    if (el('bv-conv')) el('bv-conv').textContent = Math.round(meetings.converted / meetings.conducted * 100) + '%';
+
+    // — Training (director only) —
+    const trainingTbody = document.getElementById('training-tbody');
+    if (trainingTbody) {
+        const regionNames = ['Київ', 'Харків', 'Дніпро', 'Одеса'];
+        const totals = [0, 0, 0, 0, 0, 0]; // [kyiv_ev, kyiv_ppl, kh_ev, kh_ppl, ...]
+        trainingTbody.innerHTML = training.map(row => {
+            let total_ev = 0, total_ppl = 0;
+            const cells = regionNames.map((r, i) => {
+                const [ev, ppl] = row[r] || [0,0];
+                total_ev += ev; total_ppl += ppl;
+                totals[i*2] = (totals[i*2]||0) + ev;
+                totals[i*2+1] = (totals[i*2+1]||0) + ppl;
+                return `<td><div class="training-cell-top">${ev}</div><div class="training-cell-sub">${ppl} ос.</div></td>`;
+            }).join('');
+            return `<tr><td>${row.brand}</td>${cells}<td><div class="training-cell-top">${total_ev}</div><div class="training-cell-sub">${total_ppl} ос.</div></td></tr>`;
+        }).join('');
+        // totals row
+        const totalCells = regionNames.map((r, i) => `<td><div class="training-cell-top">${totals[i*2]||0}</div><div class="training-cell-sub">${totals[i*2+1]||0} ос.</div></td>`).join('');
+        const totalEv = training.reduce((s,r) => s + regionNames.reduce((a,rn) => a + (r[rn]?r[rn][0]:0), 0), 0);
+        const totalPpl = training.reduce((s,r) => s + regionNames.reduce((a,rn) => a + (r[rn]?r[rn][1]:0), 0), 0);
+        trainingTbody.innerHTML += `<tr class="total-row"><td>Разом</td>${totalCells}<td><div class="training-cell-top">${totalEv}</div><div class="training-cell-sub">${totalPpl} ос.</div></td></tr>`;
+    }
+}
+
+function updateNavForRole(role) {
+    const navAnalytics = document.getElementById('nav-analytics');
+    const navMeetings  = document.getElementById('nav-meetings');
+    const navClients   = document.getElementById('nav-clients');
+    const navFabWrap   = document.getElementById('nav-fab-wrap');
+    const trainingBlock = document.getElementById('training-block');
+
+    if (role === 'director' || role === 'owner' || role === 'ceo') {
+        // Director: show Analytics, hide Meetings & Clients & FAB
+        if (navAnalytics) navAnalytics.classList.remove('d-none');
+        if (navMeetings)  navMeetings.classList.add('d-none');
+        if (navClients)   navClients.classList.add('d-none');
+        if (navFabWrap)   navFabWrap.classList.add('d-none');
+        if (trainingBlock) trainingBlock.classList.remove('d-none');
+        // Switch to analytics
+        document.querySelector('.nav-button[data-page="analytics"]')?.click();
+    } else if (role === 'regional_manager') {
+        // Reg manager: show Analytics + Meetings + Clients + FAB
+        if (navAnalytics) navAnalytics.classList.remove('d-none');
+        if (navMeetings)  navMeetings.classList.remove('d-none');
+        if (navClients)   navClients.classList.remove('d-none');
+        if (navFabWrap)   navFabWrap.classList.remove('d-none');
+        if (trainingBlock) trainingBlock.classList.add('d-none');
+    } else {
+        // Manager (default): hide Analytics, show Meetings + Clients + FAB
+        if (navAnalytics) navAnalytics.classList.add('d-none');
+        if (navMeetings)  navMeetings.classList.remove('d-none');
+        if (navClients)   navClients.classList.remove('d-none');
+        if (navFabWrap)   navFabWrap.classList.remove('d-none');
+        if (trainingBlock) trainingBlock.classList.add('d-none');
+    }
+}
+
     function handleClientInput(e) {
         const searchTerm = e.target.value;
         const resultsContainer = document.getElementById('client-autocomplete-results');
