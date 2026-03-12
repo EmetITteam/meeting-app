@@ -572,6 +572,75 @@ body {
 
 /* ── LITEPICKER OVERRIDE ── */
 .litepicker { font-family: 'Manrope', sans-serif !important; }
+
+/* ── ORDERS MODULE ── */
+.order-card { background:var(--surface); border:1.5px solid var(--border); border-radius:16px; margin-bottom:10px; overflow:hidden; }
+.order-stripe { height:3px; width:100%; }
+.order-body { padding:12px 14px 14px; }
+.order-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
+.order-num { font-size:13px; font-weight:800; color:var(--text); }
+.order-date { font-size:11px; font-weight:600; color:var(--text3); margin-top:1px; }
+.order-client { font-size:14px; font-weight:700; color:var(--text); margin-bottom:6px; }
+.order-client i { color:var(--text3); font-size:13px; margin-right:4px; }
+.order-meta-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:7px; }
+.order-meta { display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:var(--text2); }
+.order-meta i { font-size:12px; color:var(--text3); }
+.order-amount { font-size:17px; font-weight:800; color:var(--text); letter-spacing:-0.5px; margin-bottom:8px; }
+.order-amount span { font-size:11px; font-weight:600; color:var(--text3); margin-left:4px; }
+.order-footer { border-top:1px solid var(--border); padding-top:9px; display:flex; flex-wrap:wrap; gap:6px; }
+.order-items-preview { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:7px; }
+.item-tag { font-size:11px; font-weight:600; color:var(--text2); background:var(--surface2); border-radius:6px; padding:2px 8px; }
+.item-tag-gift { font-size:11px; font-weight:600; color:#00845f; background:#e0f9f2; border-radius:6px; padding:2px 8px; }
+
+.badge-draft     { background:#f0f1f5; color:#52587a; }
+.badge-formed    { background:#e5f1fb; color:#066aab; }
+.badge-realization { background:#f0f1f5; color:#52587a; font-style:italic; }
+
+/* ── ACTION SHEET ── */
+.action-sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:1050; opacity:0; pointer-events:none; transition:opacity .2s; }
+.action-sheet-overlay.open { opacity:1; pointer-events:all; }
+.action-sheet { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-radius:20px 20px 0 0; padding:8px 16px calc(16px + env(safe-area-inset-bottom,0px)); z-index:1051; transform:translateY(100%); transition:transform .3s cubic-bezier(.32,1,.32,1); }
+.action-sheet.open { transform:translateY(0); }
+.sheet-handle { width:40px; height:4px; border-radius:99px; background:var(--border); margin:8px auto 18px; }
+.sheet-title { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.6px; margin-bottom:10px; }
+.sheet-btn { width:100%; height:58px; border-radius:14px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; gap:14px; padding:0 16px; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; font-family:'Manrope',sans-serif; margin-bottom:8px; }
+.sheet-btn-icon { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.sheet-btn-sub { font-size:12px; font-weight:500; color:var(--text3); margin-top:1px; }
+
+/* ── ORDER FORM ── */
+.delivery-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.delivery-opt { border:1.5px solid var(--border); border-radius:12px; padding:10px 8px; cursor:pointer; text-align:center; transition:all .15s; }
+.delivery-opt.active { border-color:var(--primary); background:#e5f1fb; }
+.delivery-opt i { font-size:20px; color:var(--text3); display:block; margin-bottom:3px; }
+.delivery-opt.active i { color:var(--primary); }
+.delivery-opt span { font-size:11px; font-weight:700; color:var(--text2); }
+.delivery-opt.active span { color:var(--primary); }
+.cart-item { display:flex; justify-content:space-between; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+.cart-item:last-child { border-bottom:none; }
+.cart-item-name { font-size:13px; font-weight:700; color:var(--text); }
+.cart-item-meta { font-size:11px; font-weight:600; color:var(--text3); margin-top:2px; }
+.cart-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:5px; }
+.cart-item-price { font-size:13px; font-weight:800; color:var(--primary); }
+.cart-qty { display:flex; align-items:center; gap:8px; }
+.qty-btn { width:26px; height:26px; border-radius:7px; border:1.5px solid var(--border); background:none; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Manrope',sans-serif; }
+.qty-val { font-size:14px; font-weight:800; min-width:18px; text-align:center; }
+.gift-banner { background:#e0f9f2; border:1.5px solid #6ee7b7; border-radius:13px; padding:11px 13px; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+.gift-banner-text { font-size:13px; font-weight:700; color:#065f46; }
+.gift-banner-sub { font-size:11px; font-weight:500; color:#047857; margin-top:1px; }
+.restrict-banner { background:#ffe5ea; border:1.5px solid #fecdd3; border-radius:13px; padding:11px 13px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; }
+.restrict-banner i { font-size:18px; color:var(--red); flex-shrink:0; margin-top:1px; }
+.restrict-text { font-size:13px; font-weight:700; color:#9f1239; }
+.restrict-sub { font-size:11px; font-weight:500; color:#be123c; margin-top:1px; }
+.payment-chips { display:flex; gap:6px; margin-bottom:12px; }
+.pay-chip { height:34px; padding:0 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:13px; font-weight:700; color:var(--text2); cursor:pointer; font-family:'Manrope',sans-serif; }
+.pay-chip.active { background:var(--grad); border-color:transparent; color:white; }
+.order-total-row { display:flex; justify-content:space-between; align-items:center; border-top:1.5px solid var(--border); padding-top:10px; margin-top:12px; }
+.order-total-label { font-size:13px; font-weight:700; color:var(--text2); }
+.order-total-val { font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.5px; }
+.order-status-chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; margin-bottom:14px; }
+.order-status-chips::-webkit-scrollbar { display:none; }
+.osc { height:32px; padding:0 13px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:12px; font-weight:700; color:var(--text2); cursor:pointer; font-family:'Manrope',sans-serif; white-space:nowrap; }
+.osc.active { background:var(--grad); border-color:transparent; color:white; }
     </style>
 </head>
 
@@ -877,6 +946,119 @@ body {
     </form>
 </div>
     
+    <!-- ══ PAGE: ORDERS LIST ══ -->
+    <div id="page-orders" class="app-page">
+        <div class="search-panel">
+            <div class="search-row">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="orders-search" class="search-input" placeholder="Пошук замовлення або клієнта...">
+                </div>
+            </div>
+        </div>
+        <div class="order-status-chips" id="order-status-chips">
+            <button class="osc active" data-filter="all">Всі</button>
+            <button class="osc" data-filter="draft">Чернетка</button>
+            <button class="osc" data-filter="formed">Сформовано</button>
+            <button class="osc" data-filter="realization">Реалізація</button>
+        </div>
+        <div id="orders-list"></div>
+    </div>
+
+    <!-- ══ PAGE: ADD ORDER ══ -->
+    <div id="page-add-order" class="app-page">
+        <h2 class="h5 fw-800 mb-3" style="letter-spacing:-0.3px">Нове замовлення</h2>
+        <div class="form-section-wrap">
+            <!-- Client + contract -->
+            <div class="mb-3">
+                <label class="form-label">Клієнт</label>
+                <div class="position-relative">
+                    <input type="text" id="order-client-name" class="form-control" placeholder="Почніть вводити ім'я клієнта..." autocomplete="off">
+                    <input type="hidden" id="order-client-id">
+                    <div id="order-client-autocomplete" class="list-group position-absolute w-100" style="z-index:1050;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1.5px solid var(--border);"></div>
+                </div>
+            </div>
+            <div>
+                <label class="form-label">Договір</label>
+                <select id="order-contract" class="form-select">
+                    <option value="">— оберіть клієнта —</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="form-section-wrap" style="margin-top:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Товари</div>
+            <div class="search-wrap" style="margin-bottom:10px;">
+                <i class="bi bi-search"></i>
+                <input type="text" id="order-product-search" class="search-input" placeholder="Назва або артикул...">
+            </div>
+            <div id="order-product-results" style="margin-bottom:10px;"></div>
+            <div id="order-restrict-banner" style="display:none;" class="restrict-banner">
+                <i class="bi bi-shield-exclamation"></i>
+                <div><div class="restrict-text" id="order-restrict-text"></div></div>
+            </div>
+            <div id="order-gift-banner" style="display:none;" class="gift-banner">
+                <span style="font-size:22px;">🎁</span>
+                <div class="flex-1">
+                    <div class="gift-banner-text">Доступний подарунок!</div>
+                    <div class="gift-banner-sub" id="order-gift-text"></div>
+                </div>
+                <button class="card-btn card-btn-primary" id="order-choose-gift-btn" style="white-space:nowrap;">Обрати</button>
+            </div>
+            <div id="order-cart"></div>
+            <div class="order-total-row" id="order-total-row" style="display:none;">
+                <span class="order-total-label">Всього</span>
+                <span class="order-total-val" id="order-total-val">₴ 0</span>
+            </div>
+        </div>
+
+        <!-- Delivery -->
+        <div class="form-section-wrap" style="margin-top:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Доставка</div>
+            <div class="delivery-grid" id="delivery-grid">
+                <div class="delivery-opt active" data-delivery="courier"><i class="bi bi-truck"></i><span>Кур'єр</span></div>
+                <div class="delivery-opt" data-delivery="pickup"><i class="bi bi-building"></i><span>Самовивіз</span></div>
+                <div class="delivery-opt" data-delivery="nova_poshta"><i class="bi bi-envelope"></i><span>Нова Пошта</span></div>
+                <div class="delivery-opt" data-delivery="manager"><i class="bi bi-person-walking"></i><span>Менеджер</span></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Адреса доставки</label>
+                <input type="text" id="order-delivery-address" class="form-control" placeholder="Адреса...">
+            </div>
+            <div class="row g-2">
+                <div class="col-6"><label class="form-label">Дата збірки</label><input type="date" id="order-date-assembly" class="form-control"></div>
+                <div class="col-6"><label class="form-label">Дата доставки</label><input type="date" id="order-date-delivery" class="form-control"></div>
+            </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="form-section-wrap" style="margin-top:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Оплата</div>
+            <div class="payment-chips" id="payment-chips">
+                <button class="pay-chip active" data-pay="cash">Готівка</button>
+                <button class="pay-chip" data-pay="cashless">Безнал</button>
+                <button class="pay-chip" data-pay="deferred">Відстрочка</button>
+            </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="form-section-wrap" style="margin-top:10px;margin-bottom:16px;">
+            <label class="form-label">Коментар</label>
+            <textarea id="order-comment" class="form-control" rows="2" placeholder="Додаткові побажання..."></textarea>
+        </div>
+
+        <div class="d-flex gap-2 mb-4">
+            <button type="button" id="order-save-draft-btn" class="btn btn-outline-secondary flex-fill">
+                <i class="bi bi-floppy me-2"></i>Записати
+            </button>
+            <button type="button" id="order-post-btn" class="btn btn-primary flex-fill" style="font-size:15px;">
+                <i class="bi bi-check-lg me-2"></i>Провести
+            </button>
+        </div>
+    </div>
+
+    <!-- ══ NAV ══ -->
     <nav class="app-bottom-nav">
         <button class="nav-button d-none" data-page="analytics" id="nav-analytics">
             <i class="bi bi-grid-fill"></i><span>Дашборд</span>
@@ -885,17 +1067,32 @@ body {
             <i class="bi bi-house-fill"></i><span>Зустрічі</span>
         </button>
         <div class="nav-fab-wrap" id="nav-fab-wrap">
-            <a href="#" id="main-add-btn" class="nav-fab">
+            <button id="main-add-btn" class="nav-fab" type="button">
                 <i class="bi bi-plus"></i>
-            </a>
+            </button>
         </div>
         <button class="nav-button" data-page="clients" id="nav-clients">
             <i class="bi bi-people"></i><span>Клієнти</span>
         </button>
-        <button class="nav-button" id="nav-more-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu">
-            <i class="bi bi-grid-3x3-gap"></i><span>Ще</span>
+        <button class="nav-button" data-page="orders" id="nav-orders">
+            <i class="bi bi-bag"></i><span>Замовлення</span>
         </button>
     </nav>
+
+    <!-- ══ FAB ACTION SHEET ══ -->
+    <div class="action-sheet-overlay" id="fab-overlay"></div>
+    <div class="action-sheet" id="fab-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title">Створити нове</div>
+        <button class="sheet-btn" id="sheet-btn-meeting">
+            <div class="sheet-btn-icon" style="background:#e5f1fb;color:var(--primary);"><i class="bi bi-calendar-plus"></i></div>
+            <div><div>Нова зустріч</div><div class="sheet-btn-sub">Запланувати зустріч з клієнтом</div></div>
+        </button>
+        <button class="sheet-btn" id="sheet-btn-order">
+            <div class="sheet-btn-icon" style="background:#e0f9f2;color:var(--green);"><i class="bi bi-bag-plus"></i></div>
+            <div><div>Нове замовлення</div><div class="sheet-btn-sub">Оформити замовлення для клієнта</div></div>
+        </button>
+    </div>
     
     <div id="login-container" class="login-wrap">
         <div class="login-card">
@@ -2746,6 +2943,7 @@ function updateNavForRole(role) {
     const navAnalytics  = document.getElementById('nav-analytics');
     const navMeetings   = document.getElementById('nav-meetings');
     const navClients    = document.getElementById('nav-clients');
+    const navOrders     = document.getElementById('nav-orders');
     const navFabWrap    = document.getElementById('nav-fab-wrap');
     const trainingBlock = document.getElementById('training-block');
 
@@ -2757,9 +2955,10 @@ function updateNavForRole(role) {
     if (navAnalytics) navAnalytics.classList.remove('d-none');
 
     if (isDirector) {
-        // Директор: тільки Дашборд, без Зустрічей/Клієнтів/FAB
+        // Директор: тільки Дашборд, без Зустрічей/Клієнтів/FAB/Замовлень
         if (navMeetings)   navMeetings.classList.add('d-none');
         if (navClients)    navClients.classList.add('d-none');
+        if (navOrders)     navOrders.classList.add('d-none');
         if (navFabWrap)    navFabWrap.classList.add('d-none');
         if (trainingBlock) trainingBlock.classList.remove('d-none');
         // Відкриваємо одразу аналітику
@@ -2768,6 +2967,7 @@ function updateNavForRole(role) {
         // Регіональний менеджер і звичайний менеджер: всі вкладки
         if (navMeetings)   navMeetings.classList.remove('d-none');
         if (navClients)    navClients.classList.remove('d-none');
+        if (navOrders)     navOrders.classList.remove('d-none');
         if (navFabWrap)    navFabWrap.classList.remove('d-none');
         // Навчання — тільки для рег.менеджера і вище
         if (trainingBlock) trainingBlock.classList.toggle('d-none', !isRegManager);
@@ -3656,7 +3856,369 @@ setInterval(() => {
     });
 }, 1000);
     }
-           
+
+// ═══════════════════════════════════════════
+//  ORDERS MODULE
+// ═══════════════════════════════════════════
+
+const MOCK_ORDERS = [
+    {
+        id: 'ord-1', number: 'ЗИН00003082', docType: 'order', posted: true,
+        date: '12.03.2026', time: '10:54',
+        clientID: 'c1', clientName: 'Шаламова Аліна Вадимівна',
+        contractName: 'Основний з 2020, грн.', totalAmount: 19511, currency: 'грн',
+        deliveryType: 'courier', deliveryAddress: 'Київ, А. Ахматової, 45',
+        paymentType: 'cash', comment: 'ЖК Рів\'єра',
+        items: [
+            { name: 'HP CELL VITARAN I II (PN 20 мг/мл)', qty: 4, price: 4877.75, isGift: false },
+            { name: 'Пакет Emet п/е, 30×40 см', qty: 1, price: 0, isGift: true },
+        ]
+    },
+    {
+        id: 'ord-2', number: 'ЗИН00003075', docType: 'order', posted: false,
+        date: '11.03.2026', time: '14:22',
+        clientID: 'c2', clientName: 'Петренко Валентина Іванівна',
+        contractName: 'Основний з 2020, грн.', totalAmount: 8340, currency: 'грн',
+        deliveryType: 'pickup', deliveryAddress: '',
+        paymentType: 'cash', comment: '',
+        items: [
+            { name: 'Neuramis Deep Lidocaine', qty: 2, price: 2800, isGift: false },
+            { name: 'Neuronox 100u', qty: 1, price: 2740, isGift: false },
+        ]
+    },
+    {
+        id: 'rlz-1', number: 'РЛЗ00006744', docType: 'realization', posted: true,
+        date: '10.03.2026', time: '09:18',
+        clientID: 'c3', clientName: 'Сирих Людмила (МЦ Дніпро)',
+        contractName: 'Співробітник, грн.', totalAmount: 1432, currency: 'грн',
+        deliveryType: 'nova_poshta', deliveryAddress: 'Дніпро, відд. №12',
+        paymentType: 'cashless', comment: '',
+        items: [
+            { name: 'MAGNOX 520 / 60 капсул', qty: 2, price: 716, isGift: false },
+            { name: 'Пакет Emet п/е, 30×40 см', qty: 1, price: 0, isGift: true },
+        ]
+    },
+    {
+        id: 'ord-3', number: 'ЗИН00003060', docType: 'order', posted: true,
+        date: '05.03.2026', time: '16:10',
+        clientID: 'c4', clientName: 'Коваль Олена Миколаївна',
+        contractName: 'Основний з 2020, грн.', totalAmount: 12750, currency: 'грн',
+        deliveryType: 'courier', deliveryAddress: 'Київ, Хрещатик 22',
+        paymentType: 'cash', comment: '',
+        items: [
+            { name: 'Petaran 2ml', qty: 3, price: 3100, isGift: false },
+            { name: 'Vitaran 1ml', qty: 2, price: 2025, isGift: false },
+        ]
+    },
+];
+
+// Mock catalog for new order form
+const MOCK_CATALOG = [
+    { id: 'p1', name: 'HP CELL VITARAN I II (PN 20 мг/мл)', code: 'VIT-001', brand: 'Vitaran', price: 4877.75, stock: 24, restricted: false },
+    { id: 'p2', name: 'Neuramis Deep Lidocaine', code: 'NEU-002', brand: 'Neuramis', price: 2800, stock: 15, restricted: false },
+    { id: 'p3', name: 'Neuronox 100u', code: 'NRX-003', brand: 'Neuronox', price: 2740, stock: 8, restricted: false },
+    { id: 'p4', name: 'Petaran 2ml', code: 'PET-004', brand: 'Petaran', price: 3100, stock: 6, restricted: true, restrictionReason: 'Необхідно: пройдено навчання Petaran' },
+    { id: 'p5', name: 'Vitaran 1ml', code: 'VIT-005', brand: 'Vitaran', price: 2025, stock: 20, restricted: false },
+    { id: 'p6', name: 'MAGNOX 520 / 60 капсул', code: 'MAG-006', brand: 'Magnox', price: 716, stock: 40, restricted: false },
+];
+
+let orderCart = []; // { product, qty }
+let activeOrderFilter = 'all';
+
+function renderOrders(filter) {
+    activeOrderFilter = filter || activeOrderFilter;
+    const container = document.getElementById('orders-list');
+    if (!container) return;
+
+    let orders = MOCK_ORDERS;
+    if (activeOrderFilter === 'draft')       orders = orders.filter(o => o.docType === 'order' && !o.posted);
+    if (activeOrderFilter === 'formed')      orders = orders.filter(o => o.docType === 'order' && o.posted);
+    if (activeOrderFilter === 'realization') orders = orders.filter(o => o.docType === 'realization');
+
+    if (orders.length === 0) {
+        container.innerHTML = `<div style="text-align:center;padding:48px 0;color:var(--text3);">
+            <i class="bi bi-bag" style="font-size:48px;display:block;margin-bottom:12px;"></i>
+            <div style="font-size:15px;font-weight:700;">Замовлень не знайдено</div></div>`;
+        return;
+    }
+
+    const stripeMap = { order_draft: 'gray', order_formed: 'blue', realization: 'orange' };
+    const deliveryLabels = { courier: 'Кур\'єр', pickup: 'Самовивіз', nova_poshta: 'Нова Пошта', manager: 'Менеджер' };
+    const payLabels = { cash: 'нал', cashless: 'безнал', deferred: 'відстрочка' };
+
+    container.innerHTML = orders.map(o => {
+        const key = o.docType === 'realization' ? 'realization' : (o.posted ? 'order_formed' : 'order_draft');
+        const stripe = stripeMap[key];
+
+        let badgeHtml = '';
+        if (o.docType === 'order' && o.posted)   badgeHtml = `<span class="badge badge-formed">Сформовано</span>`;
+        if (o.docType === 'order' && !o.posted)  badgeHtml = `<span class="badge badge-draft">Чернетка</span>`;
+        if (o.docType === 'realization')          badgeHtml = `<span class="badge badge-realization">Реалізація</span>`;
+
+        const itemsHtml = o.items.map(it =>
+            it.isGift
+                ? `<span class="item-tag-gift"><i class="bi bi-gift" style="margin-right:3px;font-size:10px;"></i>${it.name}</span>`
+                : `<span class="item-tag">${it.name} × ${it.qty}</span>`
+        ).join('');
+
+        // Manager can only view — no status buttons
+        const editBtn = (!o.posted) ? `<button class="card-btn js-order-edit" data-id="${o.id}"><i class="bi bi-pencil"></i> Редагувати</button>` : '';
+
+        return `<div class="order-card">
+            <div class="order-stripe stripe-${stripe}"></div>
+            <div class="order-body">
+                <div class="order-head">
+                    <div>
+                        <div class="order-num">${o.number}</div>
+                        <div class="order-date">${o.date} · ${o.time}${o.docType === 'realization' ? ' · Реалізація' : ''}</div>
+                    </div>
+                    ${badgeHtml}
+                </div>
+                <div class="order-client"><i class="bi bi-person"></i>${o.clientName}</div>
+                <div class="order-items-preview">${itemsHtml}</div>
+                <div class="order-meta-row">
+                    <span class="order-meta"><i class="bi bi-truck"></i> ${deliveryLabels[o.deliveryType] || o.deliveryType}</span>
+                    ${o.deliveryAddress ? `<span class="order-meta"><i class="bi bi-geo-alt"></i> ${o.deliveryAddress}</span>` : ''}
+                </div>
+                <div class="order-amount">₴ ${o.totalAmount.toLocaleString('uk-UA')} <span>${o.currency} · ${payLabels[o.paymentType] || ''}</span></div>
+                <div class="order-footer">
+                    <button class="card-btn card-btn-primary js-order-view" data-id="${o.id}"><i class="bi bi-eye"></i> Деталі</button>
+                    ${editBtn}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function initOrdersPage() {
+    // Filter chips
+    document.getElementById('order-status-chips')?.addEventListener('click', e => {
+        const chip = e.target.closest('.osc');
+        if (!chip) return;
+        document.querySelectorAll('.osc').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderOrders(chip.dataset.filter);
+    });
+
+    // Search
+    document.getElementById('orders-search')?.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        document.querySelectorAll('.order-card').forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(q) ? '' : 'none';
+        });
+    });
+
+    // Delegated: view order
+    document.getElementById('orders-list')?.addEventListener('click', e => {
+        const viewBtn = e.target.closest('.js-order-view');
+        if (viewBtn) {
+            e.preventDefault();
+            const order = MOCK_ORDERS.find(o => o.id === viewBtn.dataset.id);
+            if (order) showOrderDetail(order);
+        }
+    });
+}
+
+function showOrderDetail(order) {
+    // Switches to meetings page as placeholder; real detail page TBD when 1C is connected
+    showToast(`Замовлення ${order.number} · ₴${order.totalAmount.toLocaleString('uk-UA')}`);
+}
+
+// ── ADD ORDER FORM ──
+function initAddOrderForm() {
+    // Product search
+    document.getElementById('order-product-search')?.addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        const results = document.getElementById('order-product-results');
+        if (q.length < 2) { results.innerHTML = ''; return; }
+        const matches = MOCK_CATALOG.filter(p => p.name.toLowerCase().includes(q) || p.code.toLowerCase().includes(q));
+        if (!matches.length) { results.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:6px 0;">Нічого не знайдено</div>`; return; }
+        results.innerHTML = matches.map(p => `
+            <div class="cart-item js-add-to-cart" data-id="${p.id}" style="cursor:pointer;${p.restricted ? 'opacity:.6;' : ''}">
+                <div>
+                    <div class="cart-item-name">${p.name}</div>
+                    <div class="cart-item-meta">${p.brand} · ${p.code} · залишок: ${p.stock}</div>
+                    ${p.restricted ? `<div style="font-size:11px;color:var(--red);font-weight:600;margin-top:2px;"><i class="bi bi-shield-exclamation"></i> ${p.restrictionReason}</div>` : ''}
+                </div>
+                <div class="cart-item-right">
+                    <div class="cart-item-price">₴ ${p.price.toLocaleString('uk-UA')}</div>
+                    ${!p.restricted ? `<button class="card-btn card-btn-primary" style="pointer-events:none;">+ Додати</button>` : `<span style="font-size:11px;color:var(--red);font-weight:700;">Заборонено</span>`}
+                </div>
+            </div>`).join('');
+    });
+
+    // Add to cart
+    document.getElementById('order-product-results')?.addEventListener('click', e => {
+        const row = e.target.closest('.js-add-to-cart');
+        if (!row) return;
+        const product = MOCK_CATALOG.find(p => p.id === row.dataset.id);
+        if (!product || product.restricted) return;
+        const existing = orderCart.find(c => c.product.id === product.id);
+        if (existing) { existing.qty++; } else { orderCart.push({ product, qty: 1 }); }
+        document.getElementById('order-product-search').value = '';
+        document.getElementById('order-product-results').innerHTML = '';
+        renderOrderCart();
+    });
+
+    // Delivery opts
+    document.getElementById('delivery-grid')?.addEventListener('click', e => {
+        const opt = e.target.closest('.delivery-opt');
+        if (!opt) return;
+        document.querySelectorAll('.delivery-opt').forEach(d => d.classList.remove('active'));
+        opt.classList.add('active');
+    });
+
+    // Payment chips
+    document.getElementById('payment-chips')?.addEventListener('click', e => {
+        const chip = e.target.closest('.pay-chip');
+        if (!chip) return;
+        document.querySelectorAll('.pay-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+    });
+
+    // Save / Post buttons
+    document.getElementById('order-save-draft-btn')?.addEventListener('click', () => {
+        showToast('Замовлення записано як чернетку');
+        switchPageById('orders');
+        resetOrderForm();
+        renderOrders('all');
+    });
+    document.getElementById('order-post-btn')?.addEventListener('click', () => {
+        if (orderCart.length === 0) { showToast('Додайте хоча б один товар'); return; }
+        showToast('Замовлення проведено — статус: Сформовано');
+        switchPageById('orders');
+        resetOrderForm();
+        renderOrders('all');
+    });
+
+    // Cancel new order
+    document.getElementById('cancel-new-client-btn'); // reuse existing cancel
+}
+
+function renderOrderCart() {
+    const container = document.getElementById('order-cart');
+    const totalRow = document.getElementById('order-total-row');
+    const totalVal = document.getElementById('order-total-val');
+    if (!container) return;
+
+    if (orderCart.length === 0) {
+        container.innerHTML = '';
+        if (totalRow) totalRow.style.display = 'none';
+        return;
+    }
+
+    let total = 0;
+    container.innerHTML = orderCart.map(({ product, qty }) => {
+        total += product.price * qty;
+        return `<div class="cart-item">
+            <div>
+                <div class="cart-item-name">${product.name}</div>
+                <div class="cart-item-meta">${product.brand} · ₴ ${product.price.toLocaleString('uk-UA')} / шт</div>
+            </div>
+            <div class="cart-item-right">
+                <div class="cart-item-price">₴ ${(product.price * qty).toLocaleString('uk-UA')}</div>
+                <div class="cart-qty">
+                    <button class="qty-btn js-cart-minus" data-id="${product.id}">−</button>
+                    <span class="qty-val">${qty}</span>
+                    <button class="qty-btn js-cart-plus" data-id="${product.id}">+</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+
+    // Check mock gift condition: if Vitaran qty >= 4 → show gift banner
+    const vitaran = orderCart.find(c => c.product.brand === 'Vitaran');
+    const giftBanner = document.getElementById('order-gift-banner');
+    const giftText = document.getElementById('order-gift-text');
+    if (vitaran && vitaran.qty >= 4 && giftBanner) {
+        giftBanner.style.display = 'flex';
+        if (giftText) giftText.textContent = 'Акція «Vitaran 4+» — оберіть подарунок';
+    } else if (giftBanner) {
+        giftBanner.style.display = 'none';
+    }
+
+    if (totalRow) totalRow.style.display = 'flex';
+    if (totalVal) totalVal.textContent = '₴ ' + total.toLocaleString('uk-UA');
+
+    // Qty buttons
+    container.querySelectorAll('.js-cart-minus').forEach(btn => btn.addEventListener('click', () => {
+        const item = orderCart.find(c => c.product.id === btn.dataset.id);
+        if (!item) return;
+        if (item.qty > 1) { item.qty--; } else { orderCart = orderCart.filter(c => c.product.id !== btn.dataset.id); }
+        renderOrderCart();
+    }));
+    container.querySelectorAll('.js-cart-plus').forEach(btn => btn.addEventListener('click', () => {
+        const item = orderCart.find(c => c.product.id === btn.dataset.id);
+        if (item) { item.qty++; renderOrderCart(); }
+    }));
+}
+
+function resetOrderForm() {
+    orderCart = [];
+    renderOrderCart();
+    const fields = ['order-client-name','order-client-id','order-delivery-address','order-date-assembly','order-date-delivery','order-comment'];
+    fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.querySelectorAll('.delivery-opt').forEach((d,i) => d.classList.toggle('active', i === 0));
+    document.querySelectorAll('.pay-chip').forEach((c,i) => c.classList.toggle('active', i === 0));
+    const giftBanner = document.getElementById('order-gift-banner');
+    if (giftBanner) giftBanner.style.display = 'none';
+}
+
+function switchPageById(pageId) {
+    document.querySelectorAll('.app-page').forEach(p => p.classList.toggle('active', p.id === `page-${pageId}`));
+    document.querySelectorAll('.nav-button').forEach(b => b.classList.toggle('active', b.dataset.page === pageId));
+    const headerTitle = document.getElementById('header-title');
+    if (headerTitle) {
+        const titles = { orders: 'Замовлення', dashboard: 'Зустрічі', clients: 'Клієнти', analytics: 'Дашборд', 'add-order': 'Нове замовлення' };
+        headerTitle.textContent = titles[pageId] || '';
+    }
+}
+
+// ── FAB ACTION SHEET ──
+function initFabSheet() {
+    const mainAddBtn = document.getElementById('main-add-btn');
+    const overlay    = document.getElementById('fab-overlay');
+    const sheet      = document.getElementById('fab-sheet');
+    const btnMeeting = document.getElementById('sheet-btn-meeting');
+    const btnOrder   = document.getElementById('sheet-btn-order');
+    if (!mainAddBtn || !sheet) return;
+
+    function openSheet()  { overlay.classList.add('open'); sheet.classList.add('open'); }
+    function closeSheet() { overlay.classList.remove('open'); sheet.classList.remove('open'); }
+
+    mainAddBtn.addEventListener('click', e => { e.preventDefault(); openSheet(); });
+    overlay.addEventListener('click', closeSheet);
+
+    btnMeeting?.addEventListener('click', () => {
+        closeSheet();
+        // Trigger existing "add meeting" flow
+        document.querySelector('.nav-button[data-page="dashboard"]')?.click();
+        setTimeout(() => showAddForm?.(), 50);
+    });
+
+    btnOrder?.addEventListener('click', () => {
+        closeSheet();
+        switchPageById('add-order');
+        resetOrderForm();
+    });
+}
+
+// ── INIT on DOMContentLoaded (appended to existing) ──
+document.addEventListener('DOMContentLoaded', () => {
+    renderOrders('all');
+    initOrdersPage();
+    initAddOrderForm();
+    initFabSheet();
+
+    // Hook orders into main nav
+    document.getElementById('nav-orders')?.addEventListener('click', () => {
+        switchPageById('orders');
+        renderOrders(activeOrderFilter);
+    });
+});
+
+
 </script>
 </body>
 
