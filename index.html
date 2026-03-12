@@ -1004,10 +1004,27 @@ body {
                     <div id="order-client-autocomplete" class="list-group position-absolute w-100" style="z-index:1050;border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.1);border:1.5px solid var(--border);"></div>
                 </div>
             </div>
-            <div>
+            <div class="mt-3">
                 <label class="form-label">Договір</label>
                 <select id="order-contract" class="form-select">
                     <option value="">— оберіть клієнта —</option>
+                </select>
+            </div>
+            <div class="mt-3">
+                <label class="form-label">Мероприятие <span style="font-weight:500;color:var(--text3);">(необов'язково)</span></label>
+                <select id="order-event" class="form-select">
+                    <option value="">— без мероприятия —</option>
+                    <optgroup label="Навчання">
+                        <option value="edu-1">Семінар Neuramis (Київ, 15.03)</option>
+                        <option value="edu-2">Конференція Beauty Med 2026</option>
+                        <option value="edu-3">Вебінар Botulinum Toxins</option>
+                        <option value="edu-4">Майстер-клас Vitaran Advanced</option>
+                    </optgroup>
+                    <optgroup label="Проекти">
+                        <option value="prj-1">Поїздка на завод Hugel (Корея)</option>
+                        <option value="prj-2">Виставка Intercharm Kyiv 2026</option>
+                        <option value="prj-3">Ознайомча поїздка Daewoong</option>
+                    </optgroup>
                 </select>
             </div>
         </div>
@@ -2999,9 +3016,11 @@ function renderDashboard(period) {
 
 // Глобальна змінна для поточної ролі (використовується в renderDashboard)
 let currentUserRole = 'manager';
+let currentUserRegion = ''; // 'kyiv' | '' (other regions)
 
-function updateNavForRole(role) {
+function updateNavForRole(role, region) {
     currentUserRole = role || 'manager';
+    if (region !== undefined) currentUserRegion = (region || '').toLowerCase();
 
     const navAnalytics  = document.getElementById('nav-analytics');
     const navMeetings   = document.getElementById('nav-meetings');
@@ -3044,7 +3063,20 @@ function updateNavForRole(role) {
         else filterLabel.textContent = 'Мої показники';
     }
 
-    console.log(`[CRM] Role: "${role}" | isDirector:${isDirector} | isRegManager:${isRegManager}`);
+    applyRegionRules();
+    console.log(`[CRM] Role: "${role}" | Region: "${currentUserRegion}" | isDirector:${isDirector} | isRegManager:${isRegManager}`);
+}
+
+function applyRegionRules() {
+    const isKyiv = currentUserRegion === 'kyiv' || currentUserRegion === 'київ';
+    // Kyiv: no реалізація documents — hide chip and filter them out
+    const rlzChip = document.querySelector('.osc[data-filter="realization"]');
+    if (rlzChip) rlzChip.classList.toggle('d-none', isKyiv);
+    // If currently on realization filter, reset to 'all'
+    if (isKyiv && activeOrderFilter === 'realization') {
+        activeOrderFilter = 'all';
+        document.querySelector('.osc[data-filter="all"]')?.click();
+    }
 }
 
     function handleClientInput(e) {
@@ -3945,13 +3977,21 @@ const MOCK_ORDER_CLIENTS = [
     ]},
 ];
 
-const MOCK_UAH_RATE = { USD: 41.5, EUR: 45.2 }; // mock exchange rates
+// Exchange rate — updated daily from 1C (НБУ rate)
+let TODAY_RATE_USD = 41.50;
+let TODAY_RATE_EUR = 45.20;
 
 function formatPrice(amount, currency) {
-    if (!currency || currency === 'UAH') return amount.toLocaleString('uk-UA') + ' грн';
+    if (!currency || currency === 'UAH') return amount.toLocaleString('uk-UA') + '\u202fгрн';
     const sym = { USD: '$', EUR: '€' }[currency] || currency;
-    const uah = (amount * (MOCK_UAH_RATE[currency] || 1)).toFixed(0);
-    return `${sym}\u202f${amount.toLocaleString('uk-UA')} · ≈\u202f${Number(uah).toLocaleString('uk-UA')}\u202fгрн`;
+    const rate = currency === 'EUR' ? TODAY_RATE_EUR : TODAY_RATE_USD;
+    const uah = Math.round(amount * rate);
+    return `${sym}\u202f${amount % 1 === 0 ? amount.toLocaleString('uk-UA') : amount.toFixed(2)} · ${uah.toLocaleString('uk-UA')}\u202fгрн`;
+}
+
+function formatCatalogPrice(priceUSD) {
+    const uah = Math.round(priceUSD * TODAY_RATE_USD);
+    return `$\u202f${priceUSD % 1 === 0 ? priceUSD : priceUSD.toFixed(2)} · ${uah.toLocaleString('uk-UA')}\u202fгрн`;
 }
 
 const MOCK_ORDERS = [
@@ -4005,14 +4045,14 @@ const MOCK_ORDERS = [
     },
 ];
 
-// Mock catalog for new order form
+// Mock catalog — prices in USD (shown as $X · Y грн at today's rate)
 const MOCK_CATALOG = [
-    { id: 'p1', name: 'HP CELL VITARAN I II (PN 20 мг/мл)', code: 'VIT-001', brand: 'Vitaran', price: 4877.75, stock: 24, restricted: false },
-    { id: 'p2', name: 'Neuramis Deep Lidocaine', code: 'NEU-002', brand: 'Neuramis', price: 2800, stock: 15, restricted: false },
-    { id: 'p3', name: 'Neuronox 100u', code: 'NRX-003', brand: 'Neuronox', price: 2740, stock: 8, restricted: false },
-    { id: 'p4', name: 'Petaran 2ml', code: 'PET-004', brand: 'Petaran', price: 3100, stock: 6, restricted: true, restrictionReason: 'Необхідно: пройдено навчання Petaran' },
-    { id: 'p5', name: 'Vitaran 1ml', code: 'VIT-005', brand: 'Vitaran', price: 2025, stock: 20, restricted: false },
-    { id: 'p6', name: 'MAGNOX 520 / 60 капсул', code: 'MAG-006', brand: 'Magnox', price: 716, stock: 40, restricted: false },
+    { id: 'p1', name: 'HP CELL VITARAN I II (PN 20 мг/мл)', code: 'VIT-001', brand: 'Vitaran', priceUSD: 117.5, stock: 24, restricted: false },
+    { id: 'p2', name: 'Neuramis Deep Lidocaine',             code: 'NEU-002', brand: 'Neuramis', priceUSD: 67.5,  stock: 15, restricted: false },
+    { id: 'p3', name: 'Neuronox 100u',                       code: 'NRX-003', brand: 'Neuronox', priceUSD: 66.0,  stock: 8,  restricted: false },
+    { id: 'p4', name: 'Petaran 2ml',                         code: 'PET-004', brand: 'Petaran',  priceUSD: 74.7,  stock: 6,  restricted: true, restrictionReason: 'Необхідно: пройдено навчання Petaran' },
+    { id: 'p5', name: 'Vitaran 1ml',                         code: 'VIT-005', brand: 'Vitaran',  priceUSD: 48.8,  stock: 20, restricted: false },
+    { id: 'p6', name: 'MAGNOX 520 / 60 капсул',              code: 'MAG-006', brand: 'Magnox',   priceUSD: 17.3,  stock: 40, restricted: false },
 ];
 
 let orderCart = []; // { product, qty }
@@ -4023,7 +4063,8 @@ function renderOrders(filter) {
     const container = document.getElementById('orders-list');
     if (!container) return;
 
-    let orders = MOCK_ORDERS;
+    const isKyiv = currentUserRegion === 'kyiv' || currentUserRegion === 'київ';
+    let orders = isKyiv ? MOCK_ORDERS.filter(o => o.docType !== 'realization') : MOCK_ORDERS;
     if (activeOrderFilter === 'draft')       orders = orders.filter(o => o.docType === 'order' && !o.posted);
     if (activeOrderFilter === 'formed')      orders = orders.filter(o => o.docType === 'order' && o.posted);
     if (activeOrderFilter === 'realization') orders = orders.filter(o => o.docType === 'realization');
@@ -4268,14 +4309,17 @@ function initAddOrderForm() {
         if (!matches.length) { results.innerHTML = `<div style="font-size:13px;color:var(--text3);padding:6px 0;">Нічого не знайдено</div>`; return; }
         results.innerHTML = matches.map(p => `
             <div class="cart-item js-add-to-cart" data-id="${p.id}" style="cursor:pointer;${p.restricted ? 'opacity:.6;' : ''}">
-                <div>
+                <div style="flex:1;min-width:0;">
                     <div class="cart-item-name">${p.name}</div>
                     <div class="cart-item-meta">${p.brand} · ${p.code} · залишок: ${p.stock}</div>
                     ${p.restricted ? `<div style="font-size:11px;color:var(--red);font-weight:600;margin-top:2px;"><i class="bi bi-shield-exclamation"></i> ${p.restrictionReason}</div>` : ''}
                 </div>
                 <div class="cart-item-right">
-                    <div class="cart-item-price">₴ ${p.price.toLocaleString('uk-UA')}</div>
-                    ${!p.restricted ? `<button class="card-btn card-btn-primary" style="pointer-events:none;">+ Додати</button>` : `<span style="font-size:11px;color:var(--red);font-weight:700;">Заборонено</span>`}
+                    <div class="cart-item-price" style="text-align:right;">
+                        <div>$\u202f${p.priceUSD % 1 === 0 ? p.priceUSD : p.priceUSD.toFixed(2)}</div>
+                        <div style="font-size:11px;font-weight:600;color:var(--text3);">${Math.round(p.priceUSD * TODAY_RATE_USD).toLocaleString('uk-UA')}\u202fгрн</div>
+                    </div>
+                    ${!p.restricted ? `<button class="card-btn card-btn-primary" style="pointer-events:none;white-space:nowrap;">+ Додати</button>` : `<span style="font-size:11px;color:var(--red);font-weight:700;">Заборонено</span>`}
                 </div>
             </div>`).join('');
     });
@@ -4340,16 +4384,21 @@ function renderOrderCart() {
         return;
     }
 
-    let total = 0;
+    let totalUSD = 0;
     container.innerHTML = orderCart.map(({ product, qty }) => {
-        total += product.price * qty;
+        const lineUSD = (product.priceUSD || 0) * qty;
+        totalUSD += lineUSD;
+        const lineUAH = Math.round(lineUSD * TODAY_RATE_USD);
         return `<div class="cart-item">
-            <div>
+            <div style="flex:1;min-width:0;">
                 <div class="cart-item-name">${product.name}</div>
-                <div class="cart-item-meta">${product.brand} · ₴ ${product.price.toLocaleString('uk-UA')} / шт</div>
+                <div class="cart-item-meta">${product.brand} · $\u202f${product.priceUSD % 1 === 0 ? product.priceUSD : product.priceUSD?.toFixed(2) || '—'} / шт</div>
             </div>
             <div class="cart-item-right">
-                <div class="cart-item-price">₴ ${(product.price * qty).toLocaleString('uk-UA')}</div>
+                <div class="cart-item-price" style="text-align:right;">
+                    <div>$\u202f${lineUSD % 1 === 0 ? lineUSD : lineUSD.toFixed(2)}</div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text3);">${lineUAH.toLocaleString('uk-UA')}\u202fгрн</div>
+                </div>
                 <div class="cart-qty">
                     <button class="qty-btn js-cart-minus" data-id="${product.id}">−</button>
                     <span class="qty-val">${qty}</span>
@@ -4371,7 +4420,8 @@ function renderOrderCart() {
     }
 
     if (totalRow) totalRow.style.display = 'flex';
-    if (totalVal) totalVal.textContent = '₴ ' + total.toLocaleString('uk-UA');
+    const totalUAH = Math.round(totalUSD * TODAY_RATE_USD);
+    if (totalVal) totalVal.innerHTML = `$\u202f${totalUSD % 1 === 0 ? totalUSD : totalUSD.toFixed(2)}<br><span style="font-size:13px;font-weight:600;color:var(--text3);">${totalUAH.toLocaleString('uk-UA')}\u202fгрн</span>`;
 
     // Qty buttons
     container.querySelectorAll('.js-cart-minus').forEach(btn => btn.addEventListener('click', () => {
@@ -4389,7 +4439,7 @@ function renderOrderCart() {
 function resetOrderForm() {
     orderCart = [];
     renderOrderCart();
-    const fields = ['order-client-name','order-client-id','order-delivery-address','order-date-assembly','order-date-delivery','order-comment'];
+    const fields = ['order-client-name','order-client-id','order-delivery-address','order-date-assembly','order-date-delivery','order-comment','order-event'];
     fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     fillContractDropdown(null, null);
     document.querySelectorAll('.delivery-opt').forEach((d,i) => d.classList.toggle('active', i === 0));
