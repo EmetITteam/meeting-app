@@ -655,7 +655,11 @@ body {
             <p id="offcanvas-user-info" class="text-muted"></p>
             <ul class="list-group list-group-flush">
     <li class="list-group-item px-0">
-        <a href="#" class="text-decoration-none text-dark d-block">Отчеты</a>
+        <div class="text-muted" style="font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;padding-bottom:6px;">Звіти</div>
+        <a href="#" id="nav-debtors-link" class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1">
+            <i class="bi bi-journal-text" style="color:var(--primary);font-size:16px;"></i>
+            Дебіторська заборгованість
+        </a>
     </li>
 
 
@@ -1056,6 +1060,39 @@ body {
                 <i class="bi bi-check-lg me-2"></i>Провести
             </button>
         </div>
+    </div>
+
+    <!-- ══ PAGE: DEBTORS ══ -->
+    <div id="page-debtors" class="app-page">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <button class="btn btn-sm btn-outline-secondary" id="debtors-back-btn" style="border-radius:10px;padding:6px 12px;">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <h2 class="h5 fw-800 mb-0" style="letter-spacing:-0.3px">Дебіторська заборгованість</h2>
+        </div>
+
+        <!-- Summary -->
+        <div class="stat-widget mb-3" style="background:linear-gradient(135deg,#066aab,#2a9fd6);color:#fff;border:none;">
+            <div style="font-size:12px;opacity:.8;font-weight:600;letter-spacing:.5px;text-transform:uppercase;">Загальна заборгованість</div>
+            <div id="debtors-total" style="font-size:28px;font-weight:800;letter-spacing:-1px;margin-top:4px;">0 грн</div>
+            <div id="debtors-overdue-total" style="font-size:13px;opacity:.85;margin-top:2px;">з них прострочено: 0 грн</div>
+        </div>
+
+        <!-- Filters -->
+        <div class="d-flex gap-2 mb-3 flex-wrap">
+            <div class="input-group" style="max-width:260px;">
+                <span class="input-group-text" style="border-radius:10px 0 0 10px;border-color:var(--border);background:#fff;"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" id="debtors-search" class="form-control" placeholder="Пошук клієнта..." style="border-radius:0 10px 10px 0;border-color:var(--border);">
+            </div>
+            <div class="d-flex gap-1" style="flex-wrap:wrap;" id="debtors-filter-chips">
+                <button class="chip active" data-filter="all">Всі</button>
+                <button class="chip" data-filter="overdue" style="--chip-active-bg:#dc3545;">Прострочені</button>
+                <button class="chip" data-filter="ok">Поточні</button>
+            </div>
+        </div>
+
+        <!-- List -->
+        <div id="debtors-list"></div>
     </div>
 
     <!-- ══ NAV ══ -->
@@ -4204,12 +4241,121 @@ function initFabSheet() {
     });
 }
 
+// ══════════════════════════════════════════════════
+// DEBTORS MODULE
+// ══════════════════════════════════════════════════
+
+const MOCK_DEBTORS = [
+    { id: 1, client: 'Клініка Естет, ТОВ',       contract: 'Договір №112 від 01.02.2024', total: 84500,  overdue: 84500, overdueDays: 45, dueDate: '2025-01-26' },
+    { id: 2, client: 'Бьюті Лаб, ФОП',           contract: 'Договір №88 від 15.03.2024',  total: 32000,  overdue: 32000, overdueDays: 12, dueDate: '2025-02-28' },
+    { id: 3, client: 'МедЕстетік Центр, ТОВ',    contract: 'Договір №201 від 10.01.2024', total: 115000, overdue: 0,     overdueDays: 0,  dueDate: '2025-03-20' },
+    { id: 4, client: 'SkinLab Studio, ФОП',       contract: 'Договір №55 від 20.11.2023',  total: 27600,  overdue: 0,     overdueDays: 0,  dueDate: '2025-03-25' },
+    { id: 5, client: 'Клініка Краса та Здоров\u2019я', contract: 'Договір №173 від 05.06.2024', total: 58000,  overdue: 58000, overdueDays: 8,  dueDate: '2025-03-04' },
+    { id: 6, client: 'Aesthetica Clinic, ТОВ',    contract: 'Договір №99 від 22.04.2024',  total: 44000,  overdue: 0,     overdueDays: 0,  dueDate: '2025-04-01' },
+    { id: 7, client: 'ФОП Шевченко А.В.',         contract: 'Договір №144 від 09.07.2024', total: 19800,  overdue: 19800, overdueDays: 3,  dueDate: '2025-03-09' },
+    { id: 8, client: 'Wellness Pro, ТОВ',          contract: 'Договір №61 від 30.08.2024',  total: 73500,  overdue: 0,     overdueDays: 0,  dueDate: '2025-03-30' },
+];
+
+let activeDebtorFilter = 'all';
+
+function renderDebtors(filter = 'all', search = '') {
+    activeDebtorFilter = filter;
+    const list = document.getElementById('debtors-list');
+    if (!list) return;
+
+    let data = [...MOCK_DEBTORS];
+
+    if (filter === 'overdue') data = data.filter(d => d.overdueDays > 0);
+    if (filter === 'ok')      data = data.filter(d => d.overdueDays === 0);
+    if (search) {
+        const q = search.toLowerCase();
+        data = data.filter(d => d.client.toLowerCase().includes(q));
+    }
+
+    // Summary
+    const allData = filter === 'all' && !search ? MOCK_DEBTORS : data;
+    const totalAll    = MOCK_DEBTORS.reduce((s, d) => s + d.total, 0);
+    const overdueAll  = MOCK_DEBTORS.reduce((s, d) => s + d.overdue, 0);
+    const totalEl   = document.getElementById('debtors-total');
+    const overdueEl = document.getElementById('debtors-overdue-total');
+    if (totalEl)   totalEl.textContent   = totalAll.toLocaleString('uk-UA') + ' грн';
+    if (overdueEl) overdueEl.textContent = 'з них прострочено: ' + overdueAll.toLocaleString('uk-UA') + ' грн';
+
+    if (!data.length) {
+        list.innerHTML = `<div class="text-center text-muted py-5" style="font-size:14px;">Немає записів</div>`;
+        return;
+    }
+
+    list.innerHTML = data.map(d => {
+        const isOverdue = d.overdueDays > 0;
+        const badgeClass = isOverdue ? 'danger' : 'success';
+        const badgeText  = isOverdue ? `Прострочено ${d.overdueDays} дн.` : 'Поточна';
+        const dueFmt     = d.dueDate ? new Date(d.dueDate).toLocaleDateString('uk-UA', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+        return `
+        <div class="order-card mb-2" style="border-left:4px solid var(--${badgeClass === 'danger' ? 'red' : 'green'});">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+                <div style="font-weight:700;font-size:14px;line-height:1.3;">${d.client}</div>
+                <span class="badge bg-${badgeClass}-subtle text-${badgeClass} ms-2" style="font-size:11px;border-radius:8px;white-space:nowrap;">${badgeText}</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">${d.contract}</div>
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div style="font-size:18px;font-weight:800;color:${isOverdue ? 'var(--red)' : 'var(--text)'};">${d.total.toLocaleString('uk-UA')} грн</div>
+                    ${isOverdue && d.overdue < d.total ? `<div style="font-size:11px;color:var(--text-muted);">прострочено: ${d.overdue.toLocaleString('uk-UA')} грн</div>` : ''}
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:11px;color:var(--text-muted);">Дата оплати</div>
+                    <div style="font-size:13px;font-weight:600;">${dueFmt}</div>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function initDebtorsPage() {
+    const backBtn   = document.getElementById('debtors-back-btn');
+    const searchEl  = document.getElementById('debtors-search');
+    const filterWrap = document.getElementById('debtors-filter-chips');
+
+    backBtn?.addEventListener('click', () => {
+        // Go back to previous active page — close offcanvas just navigated from
+        window.history.back?.();
+        switchPageById('dashboard');
+    });
+
+    searchEl?.addEventListener('input', () => {
+        renderDebtors(activeDebtorFilter, searchEl.value);
+    });
+
+    filterWrap?.addEventListener('click', e => {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+        filterWrap.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderDebtors(chip.dataset.filter, searchEl?.value || '');
+    });
+
+    // Side menu link
+    document.getElementById('nav-debtors-link')?.addEventListener('click', e => {
+        e.preventDefault();
+        // Close offcanvas
+        const offcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('sideMenu'));
+        if (offcanvas) offcanvas.hide();
+        switchPageById('debtors');
+        renderDebtors('all');
+        // Reset filter chips
+        document.querySelectorAll('#debtors-filter-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.filter === 'all'));
+        if (searchEl) searchEl.value = '';
+    });
+}
+
 // ── INIT on DOMContentLoaded (appended to existing) ──
 document.addEventListener('DOMContentLoaded', () => {
     renderOrders('all');
     initOrdersPage();
     initAddOrderForm();
     initFabSheet();
+    initDebtorsPage();
 
     // Hook orders into main nav
     document.getElementById('nav-orders')?.addEventListener('click', () => {
