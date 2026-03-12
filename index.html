@@ -125,6 +125,7 @@ body {
     background: var(--surface);
     border-top: 1.5px solid var(--border);
     display: flex;
+    justify-content: center;
     align-items: stretch;
     padding-bottom: var(--safe-bottom);
     z-index: 1030;
@@ -133,9 +134,8 @@ body {
     display: flex;
     align-items: flex-start;
     width: 100%;
-    padding-top: 4px;
     max-width: 600px;
-    margin: 0 auto;
+    padding-top: 4px;
 }
 .nav-button {
     flex: 1;
@@ -1793,11 +1793,7 @@ clientListMask = IMask(clientListFilterInput, {
             renderDashboard(currentPeriod);
         });
 
-        document.getElementById('main-add-btn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            switchPage('dashboard');
-            showAddForm();
-        });
+        // main-add-btn is handled by initFabSheet() — action sheet overlay
 
         document.getElementById('login-form').addEventListener('submit', handleLogin);
         document.getElementById('meeting-form').addEventListener('submit', handleFormSubmit);
