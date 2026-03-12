@@ -115,9 +115,6 @@ body {
 
 @media (min-width: 768px) {
     .app-main { max-width: 600px; margin: 0 auto; }
-    .app-bottom-nav { justify-content: center; }
-    .app-bottom-nav .nav-button { flex: 0 0 80px; }
-    .app-bottom-nav .nav-fab-wrap { flex: 0 0 80px; }
 }
 
 /* ── BOTTOM NAV ── */
@@ -128,10 +125,17 @@ body {
     background: var(--surface);
     border-top: 1.5px solid var(--border);
     display: flex;
-    align-items: flex-start;
-    padding-top: 4px;
+    align-items: stretch;
     padding-bottom: var(--safe-bottom);
     z-index: 1030;
+}
+.nav-inner {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    padding-top: 4px;
+    max-width: 600px;
+    margin: 0 auto;
 }
 .nav-button {
     flex: 1;
@@ -913,7 +917,6 @@ body {
     <div id="client-category-filters"></div>
     <div id="client-list-container"></div>
 </div>
-    </main>
     <div id="page-add-client" class="app-page">
     <h2 class="h5 fw-800 mb-3" style="letter-spacing:-0.3px">Новий клієнт</h2>
     <form id="add-client-form" class="form-section-wrap">
@@ -1114,25 +1117,29 @@ body {
         <div id="debtors-list"></div>
     </div>
 
+    </main>
+
     <!-- ══ NAV ══ -->
     <nav class="app-bottom-nav">
-        <button class="nav-button d-none" data-page="analytics" id="nav-analytics">
-            <i class="bi bi-grid-fill"></i><span>Дашборд</span>
-        </button>
-        <button class="nav-button active" data-page="dashboard" id="nav-meetings">
-            <i class="bi bi-house-fill"></i><span>Зустрічі</span>
-        </button>
-        <div class="nav-fab-wrap" id="nav-fab-wrap">
-            <button id="main-add-btn" class="nav-fab" type="button">
-                <i class="bi bi-plus"></i>
+        <div class="nav-inner">
+            <button class="nav-button d-none" data-page="analytics" id="nav-analytics">
+                <i class="bi bi-grid-fill"></i><span>Дашборд</span>
+            </button>
+            <button class="nav-button active" data-page="dashboard" id="nav-meetings">
+                <i class="bi bi-house-fill"></i><span>Зустрічі</span>
+            </button>
+            <div class="nav-fab-wrap" id="nav-fab-wrap">
+                <button id="main-add-btn" class="nav-fab" type="button">
+                    <i class="bi bi-plus"></i>
+                </button>
+            </div>
+            <button class="nav-button" data-page="clients" id="nav-clients">
+                <i class="bi bi-people"></i><span>Клієнти</span>
+            </button>
+            <button class="nav-button" data-page="orders" id="nav-orders">
+                <i class="bi bi-bag"></i><span>Замовлення</span>
             </button>
         </div>
-        <button class="nav-button" data-page="clients" id="nav-clients">
-            <i class="bi bi-people"></i><span>Клієнти</span>
-        </button>
-        <button class="nav-button" data-page="orders" id="nav-orders">
-            <i class="bi bi-bag"></i><span>Замовлення</span>
-        </button>
     </nav>
 
     <!-- ══ FAB ACTION SHEET ══ -->
