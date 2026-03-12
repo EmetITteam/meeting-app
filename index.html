@@ -2676,30 +2676,41 @@ function updateNavForRole(role) {
     const navFabWrap   = document.getElementById('nav-fab-wrap');
     const trainingBlock = document.getElementById('training-block');
 
-    if (role === 'director' || role === 'owner' || role === 'ceo') {
-        // Director: show Analytics, hide Meetings & Clients & FAB
+    const isDirector = ['director', 'owner', 'ceo', 'керівник', 'директор'].includes(role);
+    const isRegManager = ['regional_manager', 'рег_менеджер', 'regional'].includes(role);
+    const isAdmin = role === 'admin';
+
+    if (isDirector) {
+        // Director: only Analytics, no Meetings/Clients/FAB
         if (navAnalytics) navAnalytics.classList.remove('d-none');
         if (navMeetings)  navMeetings.classList.add('d-none');
         if (navClients)   navClients.classList.add('d-none');
         if (navFabWrap)   navFabWrap.classList.add('d-none');
         if (trainingBlock) trainingBlock.classList.remove('d-none');
-        // Switch to analytics
         document.querySelector('.nav-button[data-page="analytics"]')?.click();
-    } else if (role === 'regional_manager') {
-        // Reg manager: show Analytics + Meetings + Clients + FAB
+    } else if (isRegManager) {
+        // Reg manager: Analytics + Meetings + Clients + FAB
         if (navAnalytics) navAnalytics.classList.remove('d-none');
         if (navMeetings)  navMeetings.classList.remove('d-none');
         if (navClients)   navClients.classList.remove('d-none');
         if (navFabWrap)   navFabWrap.classList.remove('d-none');
         if (trainingBlock) trainingBlock.classList.add('d-none');
+    } else if (isAdmin) {
+        // Admin: all tabs + Analytics + Training (full access for testing)
+        if (navAnalytics) navAnalytics.classList.remove('d-none');
+        if (navMeetings)  navMeetings.classList.remove('d-none');
+        if (navClients)   navClients.classList.remove('d-none');
+        if (navFabWrap)   navFabWrap.classList.remove('d-none');
+        if (trainingBlock) trainingBlock.classList.remove('d-none');
     } else {
-        // Manager (default): hide Analytics, show Meetings + Clients + FAB
+        // Manager (default): Meetings + Clients + FAB, no Analytics
         if (navAnalytics) navAnalytics.classList.add('d-none');
         if (navMeetings)  navMeetings.classList.remove('d-none');
         if (navClients)   navClients.classList.remove('d-none');
         if (navFabWrap)   navFabWrap.classList.remove('d-none');
         if (trainingBlock) trainingBlock.classList.add('d-none');
     }
+    console.log(`[CRM] Role: "${role}" → analytics: ${isDirector || isRegManager || isAdmin}`);
 }
 
     function handleClientInput(e) {
