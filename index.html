@@ -114,7 +114,10 @@ body {
 .app-main { padding: 14px 16px; }
 
 @media (min-width: 768px) {
-    .app-main { max-width: 720px; margin: 0 auto; }
+    .app-main { max-width: 600px; margin: 0 auto; }
+    .app-bottom-nav { justify-content: center; }
+    .app-bottom-nav .nav-button { flex: 0 0 80px; }
+    .app-bottom-nav .nav-fab-wrap { flex: 0 0 80px; }
 }
 
 /* ── BOTTOM NAV ── */
@@ -969,9 +972,25 @@ body {
         <div id="orders-list"></div>
     </div>
 
+    <!-- ══ PAGE: ORDER DETAIL ══ -->
+    <div id="page-order-detail" class="app-page">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <button class="btn btn-sm btn-outline-secondary" id="order-detail-back-btn" style="border-radius:10px;padding:6px 12px;">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <h2 id="order-detail-title" class="h5 fw-800 mb-0" style="letter-spacing:-0.3px">Замовлення</h2>
+        </div>
+        <div id="order-detail-content"></div>
+    </div>
+
     <!-- ══ PAGE: ADD ORDER ══ -->
     <div id="page-add-order" class="app-page">
-        <h2 class="h5 fw-800 mb-3" style="letter-spacing:-0.3px">Нове замовлення</h2>
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <button class="btn btn-sm btn-outline-secondary" id="add-order-back-btn" style="border-radius:10px;padding:6px 12px;">
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <h2 id="add-order-title" class="h5 fw-800 mb-0" style="letter-spacing:-0.3px">Нове замовлення</h2>
+        </div>
         <div class="form-section-wrap">
             <!-- Client + contract -->
             <div class="mb-3">
@@ -3898,12 +3917,42 @@ setInterval(() => {
 //  ORDERS MODULE
 // ═══════════════════════════════════════════
 
+// Mock clients with contracts (primary contract marked with isPrimary)
+const MOCK_ORDER_CLIENTS = [
+    { id: 'c1', name: 'Шаламова Аліна Вадимівна', contracts: [
+        { id: 'ct1', name: 'Основний з 2020, грн.', currency: 'UAH', isPrimary: true },
+        { id: 'ct2', name: 'Договір агентський, грн.', currency: 'UAH', isPrimary: false },
+    ]},
+    { id: 'c2', name: 'Петренко Валентина Іванівна', contracts: [
+        { id: 'ct3', name: 'Основний з 2020, грн.', currency: 'UAH', isPrimary: true },
+    ]},
+    { id: 'c3', name: 'Сирих Людмила (МЦ Дніпро)', contracts: [
+        { id: 'ct4', name: 'Співробітник, грн.', currency: 'UAH', isPrimary: true },
+    ]},
+    { id: 'c4', name: 'Коваль Олена Миколаївна', contracts: [
+        { id: 'ct5', name: 'Основний USD 2023', currency: 'USD', isPrimary: true },
+        { id: 'ct6', name: 'Готівка, грн.', currency: 'UAH', isPrimary: false },
+    ]},
+    { id: 'c5', name: 'Клініка Естет, ТОВ', contracts: [
+        { id: 'ct7', name: 'Основний з 2022, грн.', currency: 'UAH', isPrimary: true },
+    ]},
+];
+
+const MOCK_UAH_RATE = { USD: 41.5, EUR: 45.2 }; // mock exchange rates
+
+function formatPrice(amount, currency) {
+    if (!currency || currency === 'UAH') return amount.toLocaleString('uk-UA') + ' грн';
+    const sym = { USD: '$', EUR: '€' }[currency] || currency;
+    const uah = (amount * (MOCK_UAH_RATE[currency] || 1)).toFixed(0);
+    return `${sym}\u202f${amount.toLocaleString('uk-UA')} · ≈\u202f${Number(uah).toLocaleString('uk-UA')}\u202fгрн`;
+}
+
 const MOCK_ORDERS = [
     {
         id: 'ord-1', number: 'ЗИН00003082', docType: 'order', posted: true,
         date: '12.03.2026', time: '10:54',
         clientID: 'c1', clientName: 'Шаламова Аліна Вадимівна',
-        contractName: 'Основний з 2020, грн.', totalAmount: 19511, currency: 'грн',
+        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH', totalAmount: 19511, currency: 'грн',
         deliveryType: 'courier', deliveryAddress: 'Київ, А. Ахматової, 45',
         paymentType: 'cash', comment: 'ЖК Рів\'єра',
         items: [
@@ -3915,7 +3964,7 @@ const MOCK_ORDERS = [
         id: 'ord-2', number: 'ЗИН00003075', docType: 'order', posted: false,
         date: '11.03.2026', time: '14:22',
         clientID: 'c2', clientName: 'Петренко Валентина Іванівна',
-        contractName: 'Основний з 2020, грн.', totalAmount: 8340, currency: 'грн',
+        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH', totalAmount: 8340, currency: 'грн',
         deliveryType: 'pickup', deliveryAddress: '',
         paymentType: 'cash', comment: '',
         items: [
@@ -3927,7 +3976,7 @@ const MOCK_ORDERS = [
         id: 'rlz-1', number: 'РЛЗ00006744', docType: 'realization', posted: true,
         date: '10.03.2026', time: '09:18',
         clientID: 'c3', clientName: 'Сирих Людмила (МЦ Дніпро)',
-        contractName: 'Співробітник, грн.', totalAmount: 1432, currency: 'грн',
+        contractName: 'Співробітник, грн.', contractCurrency: 'UAH', totalAmount: 1432, currency: 'грн',
         deliveryType: 'nova_poshta', deliveryAddress: 'Дніпро, відд. №12',
         paymentType: 'cashless', comment: '',
         items: [
@@ -3939,12 +3988,12 @@ const MOCK_ORDERS = [
         id: 'ord-3', number: 'ЗИН00003060', docType: 'order', posted: true,
         date: '05.03.2026', time: '16:10',
         clientID: 'c4', clientName: 'Коваль Олена Миколаївна',
-        contractName: 'Основний з 2020, грн.', totalAmount: 12750, currency: 'грн',
+        contractName: 'Основний USD 2023', contractCurrency: 'USD', totalAmount: 307, currency: 'USD',
         deliveryType: 'courier', deliveryAddress: 'Київ, Хрещатик 22',
-        paymentType: 'cash', comment: '',
+        paymentType: 'cashless', comment: '',
         items: [
-            { name: 'Petaran 2ml', qty: 3, price: 3100, isGift: false },
-            { name: 'Vitaran 1ml', qty: 2, price: 2025, isGift: false },
+            { name: 'Petaran 2ml', qty: 3, price: 75, isGift: false },
+            { name: 'Vitaran 1ml', qty: 2, price: 49, isGift: false },
         ]
     },
 ];
@@ -4017,7 +4066,7 @@ function renderOrders(filter) {
                     <span class="order-meta"><i class="bi bi-truck"></i> ${deliveryLabels[o.deliveryType] || o.deliveryType}</span>
                     ${o.deliveryAddress ? `<span class="order-meta"><i class="bi bi-geo-alt"></i> ${o.deliveryAddress}</span>` : ''}
                 </div>
-                <div class="order-amount">₴ ${o.totalAmount.toLocaleString('uk-UA')} <span>${o.currency} · ${payLabels[o.paymentType] || ''}</span></div>
+                <div class="order-amount">${formatPrice(o.totalAmount, o.contractCurrency)} <span>· ${payLabels[o.paymentType] || ''}</span></div>
                 <div class="order-footer">
                     <button class="card-btn card-btn-primary js-order-view" data-id="${o.id}"><i class="bi bi-eye"></i> Деталі</button>
                     ${editBtn}
@@ -4046,24 +4095,163 @@ function initOrdersPage() {
         });
     });
 
-    // Delegated: view order
+    // Delegated: view / edit
     document.getElementById('orders-list')?.addEventListener('click', e => {
         const viewBtn = e.target.closest('.js-order-view');
+        const editBtn = e.target.closest('.js-order-edit');
         if (viewBtn) {
-            e.preventDefault();
             const order = MOCK_ORDERS.find(o => o.id === viewBtn.dataset.id);
             if (order) showOrderDetail(order);
         }
+        if (editBtn) {
+            const order = MOCK_ORDERS.find(o => o.id === editBtn.dataset.id);
+            if (order) openOrderEdit(order);
+        }
+    });
+
+    // Detail back
+    document.getElementById('order-detail-back-btn')?.addEventListener('click', () => {
+        switchPageById('orders');
+    });
+
+    // Add-order back
+    document.getElementById('add-order-back-btn')?.addEventListener('click', () => {
+        switchPageById('orders');
+        resetOrderForm();
     });
 }
 
 function showOrderDetail(order) {
-    // Switches to meetings page as placeholder; real detail page TBD when 1C is connected
-    showToast(`Замовлення ${order.number} · ₴${order.totalAmount.toLocaleString('uk-UA')}`);
+    const deliveryLabels = { courier: 'Кур\'єр', pickup: 'Самовивіз', nova_poshta: 'Нова Пошта', manager: 'Менеджер' };
+    const payLabels = { cash: 'Готівка', cashless: 'Безнал', deferred: 'Відстрочка' };
+
+    let badgeHtml = '';
+    if (order.docType === 'order' && order.posted)  badgeHtml = `<span class="badge badge-formed">Сформовано</span>`;
+    if (order.docType === 'order' && !order.posted) badgeHtml = `<span class="badge badge-draft">Чернетка</span>`;
+    if (order.docType === 'realization')            badgeHtml = `<span class="badge badge-realization">Реалізація</span>`;
+
+    const itemsHtml = order.items.map(it => `
+        <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--border);">
+            <div>
+                <div style="font-size:13px;font-weight:700;color:var(--text);">${it.isGift ? '<span class="item-tag-gift"><i class="bi bi-gift"></i> Подарунок</span> ' : ''}${it.name}</div>
+                ${!it.isGift ? `<div style="font-size:12px;color:var(--text3);">× ${it.qty} · ${formatPrice(it.price, order.contractCurrency)} / шт</div>` : ''}
+            </div>
+            ${!it.isGift ? `<div style="font-size:14px;font-weight:800;color:var(--primary);">${formatPrice(it.price * it.qty, order.contractCurrency)}</div>` : ''}
+        </div>`).join('');
+
+    document.getElementById('order-detail-title').textContent = order.number;
+    document.getElementById('order-detail-content').innerHTML = `
+        <div class="form-section-wrap mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--text3);">${order.date} · ${order.time}</div>
+                </div>
+                ${badgeHtml}
+            </div>
+            <div class="mb-2"><span style="font-size:12px;font-weight:700;color:var(--text3);">Клієнт:</span>
+                <div style="font-size:14px;font-weight:700;">${order.clientName}</div>
+            </div>
+            <div><span style="font-size:12px;font-weight:700;color:var(--text3);">Договір:</span>
+                <div style="font-size:13px;font-weight:600;">${order.contractName}</div>
+            </div>
+        </div>
+
+        <div class="form-section-wrap mb-3">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Товари</div>
+            ${itemsHtml}
+            <div class="d-flex justify-content-between align-items-center pt-3">
+                <div style="font-size:13px;font-weight:700;color:var(--text2);">Разом:</div>
+                <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;">${formatPrice(order.totalAmount, order.contractCurrency)}</div>
+            </div>
+        </div>
+
+        <div class="form-section-wrap mb-3">
+            <div class="mb-2"><span style="font-size:12px;font-weight:700;color:var(--text3);">Доставка:</span>
+                <div style="font-size:13px;font-weight:700;">${deliveryLabels[order.deliveryType] || order.deliveryType}${order.deliveryAddress ? ' · ' + order.deliveryAddress : ''}</div>
+            </div>
+            <div><span style="font-size:12px;font-weight:700;color:var(--text3);">Оплата:</span>
+                <div style="font-size:13px;font-weight:700;">${payLabels[order.paymentType] || order.paymentType}</div>
+            </div>
+            ${order.comment ? `<div class="mt-2"><span style="font-size:12px;font-weight:700;color:var(--text3);">Коментар:</span>
+                <div style="font-size:13px;">${order.comment}</div>
+            </div>` : ''}
+        </div>
+    `;
+
+    switchPageById('order-detail');
+}
+
+function openOrderEdit(order) {
+    // Pre-fill form with order data
+    const titleEl = document.getElementById('add-order-title');
+    if (titleEl) titleEl.textContent = 'Редагувати ' + order.number;
+
+    const clientInput = document.getElementById('order-client-name');
+    const clientIdInput = document.getElementById('order-client-id');
+    if (clientInput) clientInput.value = order.clientName;
+    if (clientIdInput) clientIdInput.value = order.clientID;
+
+    // Populate contracts for this client
+    const client = MOCK_ORDER_CLIENTS.find(c => c.id === order.clientID);
+    fillContractDropdown(client, order.contractName);
+
+    // Restore cart from order items
+    orderCart = order.items
+        .filter(it => !it.isGift)
+        .map(it => {
+            const product = MOCK_CATALOG.find(p => p.name === it.name) ||
+                { id: it.name, name: it.name, brand: '', price: it.price, stock: 99 };
+            return { product, qty: it.qty };
+        });
+    renderOrderCart();
+
+    switchPageById('add-order');
+}
+
+function fillContractDropdown(client, selectedName) {
+    const sel = document.getElementById('order-contract');
+    if (!sel) return;
+    if (!client) {
+        sel.innerHTML = '<option value="">— оберіть клієнта —</option>';
+        return;
+    }
+    sel.innerHTML = client.contracts.map(ct =>
+        `<option value="${ct.id}" data-currency="${ct.currency}" ${ct.isPrimary || ct.name === selectedName ? 'selected' : ''}>${ct.name}</option>`
+    ).join('');
 }
 
 // ── ADD ORDER FORM ──
 function initAddOrderForm() {
+    // Client autocomplete
+    const clientInput = document.getElementById('order-client-name');
+    const clientDropdown = document.getElementById('order-client-autocomplete');
+    clientInput?.addEventListener('input', () => {
+        const q = clientInput.value.toLowerCase();
+        clientDropdown.innerHTML = '';
+        if (q.length < 1) return;
+        const matches = MOCK_ORDER_CLIENTS.filter(c => c.name.toLowerCase().includes(q));
+        if (!matches.length) return;
+        clientDropdown.innerHTML = matches.map(c =>
+            `<button type="button" class="list-group-item list-group-item-action py-2" data-client-id="${c.id}" style="font-size:13px;font-weight:600;">${c.name}</button>`
+        ).join('');
+    });
+    clientDropdown?.addEventListener('click', e => {
+        const btn = e.target.closest('[data-client-id]');
+        if (!btn) return;
+        const client = MOCK_ORDER_CLIENTS.find(c => c.id === btn.dataset.clientId);
+        if (!client) return;
+        clientInput.value = client.name;
+        document.getElementById('order-client-id').value = client.id;
+        clientDropdown.innerHTML = '';
+        fillContractDropdown(client, null);
+    });
+    // Hide dropdown on outside click
+    document.addEventListener('click', e => {
+        if (!clientInput?.contains(e.target) && !clientDropdown?.contains(e.target)) {
+            if (clientDropdown) clientDropdown.innerHTML = '';
+        }
+    });
+
     // Product search
     document.getElementById('order-product-search')?.addEventListener('input', e => {
         const q = e.target.value.toLowerCase();
@@ -4196,10 +4384,13 @@ function resetOrderForm() {
     renderOrderCart();
     const fields = ['order-client-name','order-client-id','order-delivery-address','order-date-assembly','order-date-delivery','order-comment'];
     fields.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    fillContractDropdown(null, null);
     document.querySelectorAll('.delivery-opt').forEach((d,i) => d.classList.toggle('active', i === 0));
     document.querySelectorAll('.pay-chip').forEach((c,i) => c.classList.toggle('active', i === 0));
     const giftBanner = document.getElementById('order-gift-banner');
     if (giftBanner) giftBanner.style.display = 'none';
+    const titleEl = document.getElementById('add-order-title');
+    if (titleEl) titleEl.textContent = 'Нове замовлення';
 }
 
 function switchPageById(pageId) {
