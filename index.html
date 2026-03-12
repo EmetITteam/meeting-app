@@ -3999,48 +3999,52 @@ const MOCK_ORDERS = [
         id: 'ord-1', number: 'ЗИН00003082', docType: 'order', posted: true,
         date: '12.03.2026', time: '10:54',
         clientID: 'c1', clientName: 'Шаламова Аліна Вадимівна',
-        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH', totalAmount: 19511, currency: 'грн',
+        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH',
+        totalAmountUSD: 470, // 4 × $117.5
         deliveryType: 'courier', deliveryAddress: 'Київ, А. Ахматової, 45',
         paymentType: 'cash', comment: 'ЖК Рів\'єра',
         items: [
-            { name: 'HP CELL VITARAN I II (PN 20 мг/мл)', qty: 4, price: 4877.75, isGift: false },
-            { name: 'Пакет Emet п/е, 30×40 см', qty: 1, price: 0, isGift: true },
+            { name: 'HP CELL VITARAN I II (PN 20 мг/мл)', qty: 4, priceUSD: 117.5, isGift: false },
+            { name: 'Пакет Emet п/е, 30×40 см',           qty: 1, priceUSD: 0,     isGift: true  },
         ]
     },
     {
         id: 'ord-2', number: 'ЗИН00003075', docType: 'order', posted: false,
         date: '11.03.2026', time: '14:22',
         clientID: 'c2', clientName: 'Петренко Валентина Іванівна',
-        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH', totalAmount: 8340, currency: 'грн',
+        contractName: 'Основний з 2020, грн.', contractCurrency: 'UAH',
+        totalAmountUSD: 201, // 2×$67.5 + 1×$66
         deliveryType: 'pickup', deliveryAddress: '',
         paymentType: 'cash', comment: '',
         items: [
-            { name: 'Neuramis Deep Lidocaine', qty: 2, price: 2800, isGift: false },
-            { name: 'Neuronox 100u', qty: 1, price: 2740, isGift: false },
+            { name: 'Neuramis Deep Lidocaine', qty: 2, priceUSD: 67.5, isGift: false },
+            { name: 'Neuronox 100u',           qty: 1, priceUSD: 66.0, isGift: false },
         ]
     },
     {
         id: 'rlz-1', number: 'РЛЗ00006744', docType: 'realization', posted: true,
         date: '10.03.2026', time: '09:18',
         clientID: 'c3', clientName: 'Сирих Людмила (МЦ Дніпро)',
-        contractName: 'Співробітник, грн.', contractCurrency: 'UAH', totalAmount: 1432, currency: 'грн',
+        contractName: 'Співробітник, грн.', contractCurrency: 'UAH',
+        totalAmountUSD: 34.6, // 2×$17.3
         deliveryType: 'nova_poshta', deliveryAddress: 'Дніпро, відд. №12',
         paymentType: 'cashless', comment: '',
         items: [
-            { name: 'MAGNOX 520 / 60 капсул', qty: 2, price: 716, isGift: false },
-            { name: 'Пакет Emet п/е, 30×40 см', qty: 1, price: 0, isGift: true },
+            { name: 'MAGNOX 520 / 60 капсул', qty: 2, priceUSD: 17.3, isGift: false },
+            { name: 'Пакет Emet п/е, 30×40 см', qty: 1, priceUSD: 0,  isGift: true  },
         ]
     },
     {
         id: 'ord-3', number: 'ЗИН00003060', docType: 'order', posted: true,
         date: '05.03.2026', time: '16:10',
         clientID: 'c4', clientName: 'Коваль Олена Миколаївна',
-        contractName: 'Основний USD 2023', contractCurrency: 'USD', totalAmount: 307, currency: 'USD',
+        contractName: 'Основний USD 2023', contractCurrency: 'USD',
+        totalAmountUSD: 321.7, // 3×$74.7 + 2×$48.8
         deliveryType: 'courier', deliveryAddress: 'Київ, Хрещатик 22',
         paymentType: 'cashless', comment: '',
         items: [
-            { name: 'Petaran 2ml', qty: 3, price: 75, isGift: false },
-            { name: 'Vitaran 1ml', qty: 2, price: 49, isGift: false },
+            { name: 'Petaran 2ml', qty: 3, priceUSD: 74.7, isGift: false },
+            { name: 'Vitaran 1ml', qty: 2, priceUSD: 48.8, isGift: false },
         ]
     },
 ];
@@ -4114,7 +4118,11 @@ function renderOrders(filter) {
                     <span class="order-meta"><i class="bi bi-truck"></i> ${deliveryLabels[o.deliveryType] || o.deliveryType}</span>
                     ${o.deliveryAddress ? `<span class="order-meta"><i class="bi bi-geo-alt"></i> ${o.deliveryAddress}</span>` : ''}
                 </div>
-                <div class="order-amount">${formatPrice(o.totalAmount, o.contractCurrency)} <span>· ${payLabels[o.paymentType] || ''}</span></div>
+                <div class="order-amount">
+                    $\u202f${o.totalAmountUSD % 1 === 0 ? o.totalAmountUSD : o.totalAmountUSD.toFixed(1)}
+                    <span style="font-size:13px;font-weight:700;color:var(--text2);">· ${Math.round(o.totalAmountUSD * TODAY_RATE_USD).toLocaleString('uk-UA')}\u202fгрн</span>
+                    <span>· ${payLabels[o.paymentType] || ''}</span>
+                </div>
                 <div class="order-footer">
                     <button class="card-btn card-btn-primary js-order-view" data-id="${o.id}"><i class="bi bi-eye"></i> Деталі</button>
                     ${editBtn}
@@ -4178,14 +4186,21 @@ function showOrderDetail(order) {
     if (order.docType === 'order' && !order.posted) badgeHtml = `<span class="badge badge-draft">Чернетка</span>`;
     if (order.docType === 'realization')            badgeHtml = `<span class="badge badge-realization">Реалізація</span>`;
 
-    const itemsHtml = order.items.map(it => `
-        <div class="d-flex justify-content-between align-items-center py-2" style="border-bottom:1px solid var(--border);">
-            <div>
+    const itemsHtml = order.items.map(it => {
+        const lineUSD = (it.priceUSD || 0) * it.qty;
+        const lineUAH = Math.round(lineUSD * TODAY_RATE_USD);
+        return `
+        <div class="d-flex justify-content-between align-items-start py-2" style="border-bottom:1px solid var(--border);gap:10px;">
+            <div style="flex:1;min-width:0;">
                 <div style="font-size:13px;font-weight:700;color:var(--text);">${it.isGift ? '<span class="item-tag-gift"><i class="bi bi-gift"></i> Подарунок</span> ' : ''}${it.name}</div>
-                ${!it.isGift ? `<div style="font-size:12px;color:var(--text3);">× ${it.qty} · ${formatPrice(it.price, order.contractCurrency)} / шт</div>` : ''}
+                ${!it.isGift ? `<div style="font-size:12px;color:var(--text3);">× ${it.qty} · $\u202f${it.priceUSD % 1 === 0 ? it.priceUSD : it.priceUSD.toFixed(2)} / шт</div>` : ''}
             </div>
-            ${!it.isGift ? `<div style="font-size:14px;font-weight:800;color:var(--primary);">${formatPrice(it.price * it.qty, order.contractCurrency)}</div>` : ''}
-        </div>`).join('');
+            ${!it.isGift ? `<div style="text-align:right;flex-shrink:0;">
+                <div style="font-size:14px;font-weight:800;color:var(--primary);">$\u202f${lineUSD % 1 === 0 ? lineUSD : lineUSD.toFixed(2)}</div>
+                <div style="font-size:11px;font-weight:600;color:var(--text3);">${lineUAH.toLocaleString('uk-UA')}\u202fгрн</div>
+            </div>` : ''}
+        </div>`;
+    }).join('');
 
     document.getElementById('order-detail-title').textContent = order.number;
     document.getElementById('order-detail-content').innerHTML = `
@@ -4209,7 +4224,10 @@ function showOrderDetail(order) {
             ${itemsHtml}
             <div class="d-flex justify-content-between align-items-center pt-3">
                 <div style="font-size:13px;font-weight:700;color:var(--text2);">Разом:</div>
-                <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;">${formatPrice(order.totalAmount, order.contractCurrency)}</div>
+                <div style="text-align:right;">
+                    <div style="font-size:20px;font-weight:800;letter-spacing:-0.5px;">$\u202f${order.totalAmountUSD % 1 === 0 ? order.totalAmountUSD : order.totalAmountUSD.toFixed(2)}</div>
+                    <div style="font-size:13px;font-weight:700;color:var(--text3);">${Math.round(order.totalAmountUSD * TODAY_RATE_USD).toLocaleString('uk-UA')}\u202fгрн</div>
+                </div>
             </div>
         </div>
 
@@ -4248,7 +4266,7 @@ function openOrderEdit(order) {
         .filter(it => !it.isGift)
         .map(it => {
             const product = MOCK_CATALOG.find(p => p.name === it.name) ||
-                { id: it.name, name: it.name, brand: '', price: it.price, stock: 99 };
+                { id: it.name, name: it.name, brand: '', priceUSD: it.priceUSD || 0, stock: 99 };
             return { product, qty: it.qty };
         });
     renderOrderCart();
