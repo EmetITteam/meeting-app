@@ -1186,7 +1186,7 @@ function filterAndGroupMeetings() {
                                     <span class="badge badge-${badgeCls}">${statusLabel}</span>
                                 </div>
                                 <div class="card-meta-row">
-                                    <span class="meta-item"><i class="bi bi-telephone"></i> ${m.Phone || '—'}</span>
+                                    <span class="meta-item"><i class="bi bi-telephone"></i> ${m.Phone ? `<a href="tel:+${m.Phone.replace(/\D/g,'')}" style="color:inherit;text-decoration:none;">${m.Phone}</a>` : '—'}</span>
                                     <span class="meta-item"><i class="bi bi-geo-alt"></i> ${m.StartAddress || m.PlannedAddress || '—'}</span>
                                 </div>
                                 <div class="card-purpose-text">${m.Purpose || 'Мета не вказана'}</div>
