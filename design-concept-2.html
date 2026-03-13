@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Концепт 2 — Dark Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --primary: #2196f3;
+    --primary-glow: rgba(33, 150, 243, 0.15);
+    --accent: #066aab;
+    --bg: #0f1117;
+    --bg2: #1a1d27;
+    --card: #1e2130;
+    --card2: #252839;
+    --border: rgba(255,255,255,0.07);
+    --border-active: rgba(33,150,243,0.4);
+    --text-main: #f0f2f8;
+    --text-secondary: #8b92a8;
+    --text-muted: #555e78;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #f43f5e;
+    --blue: #3b82f6;
+    --header-h: 62px;
+    --nav-h: 68px;
+}
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    padding-top: var(--header-h);
+    padding-bottom: var(--nav-h);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* HEADER */
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+.header-left { display: flex; align-items: center; gap: 12px; }
+.hamburger {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+}
+.header-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text-main);
+    letter-spacing: -0.3px;
+}
+.header-right { display: flex; gap: 8px; align-items: center; }
+.header-add {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: var(--primary);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(33,150,243,0.35);
+}
+.header-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #066aab, #2196f3);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid var(--border-active);
+}
+
+/* MAIN */
+.main { padding: 16px; }
+
+/* WIDGETS */
+.widgets {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.widget {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+.widget::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 0 0 14px 14px;
+}
+.w-blue::after { background: var(--blue); }
+.w-green::after { background: var(--green); }
+.w-orange::after { background: var(--orange); }
+.w-red::after { background: var(--red); }
+
+.widget-val {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.widget-lbl {
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    line-height: 1.3;
+}
+.w-blue .widget-val { color: var(--blue); }
+.w-green .widget-val { color: var(--green); }
+.w-orange .widget-val { color: var(--orange); }
+.w-red .widget-val { color: var(--red); }
+
+/* SEARCH BAR */
+.search-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+.search-wrap {
+    flex: 1;
+    position: relative;
+}
+.search-wrap i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+}
+.search-input {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    padding: 0 12px 0 38px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input::placeholder { color: var(--text-muted); }
+.search-input:focus { border-color: var(--primary); background: var(--card2); }
+
+.filter-btn {
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 0.2s;
+}
+.filter-btn:hover { border-color: var(--primary); }
+
+/* DATE HEADER */
+.date-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 10px;
+}
+.date-header-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+.date-header-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* MEETING CARD */
+.meeting-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.15s;
+}
+.meeting-card:active { transform: scale(0.99); }
+
+.card-glow {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+}
+.card-planned .card-glow { background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+.card-active .card-glow { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.card-done .card-glow { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.card-cancelled .card-glow { background: var(--text-muted); }
+.card-overdue .card-glow { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+.card-planned { border-color: rgba(59,130,246,0.2); }
+.card-active { border-color: rgba(245,158,11,0.2); }
+.card-done { border-color: rgba(16,185,129,0.15); }
+.card-overdue { border-color: rgba(244,63,94,0.2); }
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+.card-client {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.3;
+    flex: 1;
+    padding-right: 8px;
+}
+.card-badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+}
+.badge-planned { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
+.badge-active { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+.badge-done { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+.badge-cancelled { background: rgba(139,146,168,0.1); color: #8b92a8; border: 1px solid rgba(139,146,168,0.2); }
+.badge-overdue { background: rgba(244,63,94,0.15); color: #fb7185; border: 1px solid rgba(244,63,94,0.25); }
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    padding-left: 10px;
+}
+.card-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.card-meta-item i { font-size: 13px; }
+
+.card-purpose {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    padding-left: 10px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 6px;
+    padding-left: 10px;
+    flex-wrap: wrap;
+}
+.card-btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card2);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+}
+.card-btn:hover { background: rgba(255,255,255,0.08); }
+.card-btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 2px 10px rgba(33,150,243,0.3);
+}
+.card-btn-primary:hover { background: #1976d2; }
+.card-btn i { font-size: 13px; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    padding: 0 8px;
+    backdrop-filter: blur(10px);
+}
+.nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 500;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.2s;
+    padding-bottom: 4px;
+    position: relative;
+}
+.nav-item i { font-size: 22px; }
+.nav-item.active { color: var(--primary); }
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 32px;
+    height: 2px;
+    background: var(--primary);
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 0 8px var(--primary);
+}
+</style>
+</head>
+<body>
+
+<div style="background:#066aab;color:white;text-align:center;padding:8px;font-size:13px;font-weight:600;font-family:Inter,sans-serif;position:relative;">
+    КОНЦЕПТ 2 — Dark Premium (Тёмная тема, сучасний)
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-left">
+        <button class="hamburger"><i class="bi bi-list"></i></button>
+        <span class="header-title">Рабочий стол</span>
+    </div>
+    <div class="header-right">
+        <button class="header-add"><i class="bi bi-plus"></i></button>
+        <div class="header-avatar">ІТ</div>
+    </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- WIDGETS -->
+    <div class="widgets">
+        <div class="widget w-blue">
+            <div class="widget-val">8</div>
+            <div class="widget-lbl">Всього</div>
+        </div>
+        <div class="widget w-orange">
+            <div class="widget-val">2</div>
+            <div class="widget-lbl">В роботі</div>
+        </div>
+        <div class="widget w-green">
+            <div class="widget-val">5</div>
+            <div class="widget-lbl">Завершено</div>
+        </div>
+        <div class="widget w-red">
+            <div class="widget-val">1</div>
+            <div class="widget-lbl">Прострочено</div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-row">
+        <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input class="search-input" type="text" placeholder="Пошук зустрічей...">
+        </div>
+        <button class="filter-btn">
+            <i class="bi bi-calendar3"></i> Сьогодні
+        </button>
+    </div>
+
+    <!-- DATE GROUP -->
+    <div class="date-header">
+        <span class="date-header-text">Сьогодні, 11 березня</span>
+        <div class="date-header-line"></div>
+    </div>
+
+    <!-- CARD 1 — Planned -->
+    <div class="meeting-card card-planned">
+        <div class="card-glow"></div>
+        <div class="card-top">
+            <div class="card-client">ТОВ "Краса та здоров'я"</div>
+            <span class="card-badge badge-planned">Заплановано</span>
+        </div>
+        <div class="card-meta">
+            <div class="card-meta-item"><i class="bi bi-clock"></i> 10:00</div>
+            <div class="card-meta-item"><i class="bi bi-telephone"></i> +380 67 123 45 67</div>
+        </div>
+        <div class="card-purpose">Ціль: Презентація нових продуктів</div>
+        <div class="card-actions">
+            <button class="card-btn card-btn-primary"><i class="bi bi-play-fill"></i> Старт</button>
+            <button class="card-btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="card-btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+        </div>
+    </div>
+
+    <!-- CARD 2 — Active -->
+    <div class="meeting-card card-active">
+        <div class="card-glow"></div>
+        <div class="card-top">
+            <div class="card-client">ФОП Петренко Олена</div>
+            <span class="card-badge badge-active">В роботі</span>
+        </div>
+        <div class="card-meta">
+            <div class="card-meta-item"><i class="bi bi-clock"></i> 12:30</div>
+            <div class="card-meta-item"><i class="bi bi-telephone"></i> +380 50 987 65 43</div>
+        </div>
+        <div class="card-purpose">Ціль: Повторна закупівля</div>
+        <div class="card-actions">
+            <button class="card-btn card-btn-primary"><i class="bi bi-stop-fill"></i> Завершити</button>
+            <button class="card-btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="card-btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+        </div>
+    </div>
+
+    <!-- CARD 3 — Done -->
+    <div class="meeting-card card-done">
+        <div class="card-glow"></div>
+        <div class="card-top">
+            <div class="card-client">Салон "Bellissimo"</div>
+            <span class="card-badge badge-done">Завершено</span>
+        </div>
+        <div class="card-meta">
+            <div class="card-meta-item"><i class="bi bi-clock"></i> 09:00</div>
+            <div class="card-meta-item"><i class="bi bi-telephone"></i> +380 63 456 78 90</div>
+        </div>
+        <div class="card-purpose">Ціль: Навчання персоналу</div>
+        <div class="card-actions">
+            <button class="card-btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="card-btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+            <button class="card-btn"><i class="bi bi-chat-left-text"></i> Підсумок</button>
+        </div>
+    </div>
+
+    <!-- DATE GROUP 2 -->
+    <div class="date-header">
+        <span class="date-header-text">Завтра, 12 березня</span>
+        <div class="date-header-line"></div>
+    </div>
+
+    <!-- CARD 4 — Overdue -->
+    <div class="meeting-card card-overdue">
+        <div class="card-glow"></div>
+        <div class="card-top">
+            <div class="card-client">ТОВ "Медіум Груп"</div>
+            <span class="card-badge badge-overdue">Прострочено</span>
+        </div>
+        <div class="card-meta">
+            <div class="card-meta-item"><i class="bi bi-clock"></i> 15:00</div>
+            <div class="card-meta-item"><i class="bi bi-telephone"></i> +380 44 111 22 33</div>
+        </div>
+        <div class="card-purpose">Ціль: Узгодження договору</div>
+        <div class="card-actions">
+            <button class="card-btn card-btn-primary"><i class="bi bi-arrow-clockwise"></i> Перенести</button>
+            <button class="card-btn"><i class="bi bi-pencil"></i> Редагувати</button>
+        </div>
+    </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <button class="nav-item active">
+        <i class="bi bi-house-fill"></i>
+        Зустрічі
+    </button>
+    <button class="nav-item">
+        <i class="bi bi-people"></i>
+        Клієнти
+    </button>
+    <button class="nav-item">
+        <i class="bi bi-bar-chart-line"></i>
+        Звіти
+    </button>
+    <button class="nav-item">
+        <i class="bi bi-grid-3x3-gap"></i>
+        Ще
+    </button>
+</nav>
+
+</body>
+</html>

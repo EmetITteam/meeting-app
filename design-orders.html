@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emet CRM — Замовлення (концепт)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; }
+:root {
+    --primary: #066aab; --primary2: #2a9fd6;
+    --grad: linear-gradient(135deg, #066aab 0%, #2a9fd6 100%);
+    --bg: #f5f6fa; --surface: #ffffff; --surface2: #eef0f6;
+    --border: #e4e7f0; --text: #181c2e; --text2: #52587a; --text3: #9398b0;
+    --green: #00b37e; --orange: #f59e0b; --red: #f43f5e; --purple: #8b5cf6;
+    --header-h: 62px; --nav-h: 68px;
+}
+body { font-family: 'Manrope', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-top: var(--header-h); padding-bottom: var(--nav-h); -webkit-font-smoothing: antialiased; }
+
+/* ── HEADER ── */
+.app-header { position: fixed; top:0; left:0; right:0; height:var(--header-h); background:var(--surface); border-bottom:1.5px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 16px; z-index:1030; }
+.header-logo { display:flex; align-items:center; gap:10px; }
+.header-logo-icon { width:30px; height:30px; border-radius:8px; background:var(--grad); color:white; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; }
+.header-title { font-size:16px; font-weight:800; color:var(--text); letter-spacing:-0.4px; }
+.header-right { display:flex; align-items:center; gap:8px; }
+.header-avatar { width:34px; height:34px; border-radius:10px; background:var(--grad); color:white; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; }
+
+/* ── BOTTOM NAV ── */
+.app-bottom-nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:var(--surface); border-top:1.5px solid var(--border); display:flex; align-items:flex-start; padding-top:4px; z-index:1030; }
+.nav-button { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; border:none; background:none; color:var(--text3); font-size:10px; font-weight:700; cursor:pointer; font-family:'Manrope',sans-serif; padding:4px 4px 0; transition:color .15s; position:relative; text-decoration:none; }
+.nav-button i { font-size:22px; }
+.nav-button.active { color:var(--primary); }
+.nav-button.active::after { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:28px; height:2px; background:var(--grad); border-radius:0 0 3px 3px; }
+.nav-fab-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding-bottom:6px; }
+.nav-fab { width:48px; height:48px; border-radius:14px; background:var(--grad); border:none; display:flex; align-items:center; justify-content:center; color:white; font-size:26px; cursor:pointer; box-shadow:0 4px 14px rgba(6,106,171,.35); text-decoration:none; margin-top:-2px; transition:transform .15s; }
+.nav-fab:hover { transform:scale(1.08); }
+
+/* ── SEARCH PANEL ── */
+.search-panel { background:var(--surface); border:1.5px solid var(--border); border-radius:16px; padding:12px; margin-bottom:14px; }
+.search-row { display:flex; gap:8px; align-items:center; }
+.search-wrap { flex:1; position:relative; }
+.search-wrap i { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:15px; pointer-events:none; }
+.search-input { width:100%; height:40px; border-radius:10px; border:1.5px solid var(--border); background:var(--surface2); padding:0 11px 0 34px; font-size:14px; font-family:'Manrope',sans-serif; font-weight:500; color:var(--text); outline:none; }
+.search-input:focus { border-color:var(--primary); background:var(--surface); }
+.search-input::placeholder { color:var(--text3); }
+
+/* ── STATUS CHIPS ── */
+.status-chips { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; margin-bottom:14px; }
+.status-chips::-webkit-scrollbar { display:none; }
+.s-chip { height:32px; padding:0 13px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:12px; font-weight:700; color:var(--text2); cursor:pointer; font-family:'Manrope',sans-serif; white-space:nowrap; transition:all .15s; }
+.s-chip.active { background:var(--grad); border-color:transparent; color:white; }
+
+/* ── ORDER CARD ── */
+.order-card { background:var(--surface); border:1.5px solid var(--border); border-radius:16px; margin-bottom:10px; overflow:hidden; transition:box-shadow .2s; }
+.order-card:active { opacity:.95; }
+.order-stripe { height:3px; width:100%; }
+.stripe-blue   { background:var(--primary); }
+.stripe-orange { background:var(--orange); }
+.stripe-purple { background:var(--purple); }
+.stripe-green  { background:var(--green); }
+.stripe-gray   { background:var(--text3); }
+
+.order-body { padding:12px 14px 14px; }
+.order-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:7px; }
+.order-num { font-size:13px; font-weight:800; color:var(--text); letter-spacing:-0.2px; }
+.order-date { font-size:11px; font-weight:600; color:var(--text3); margin-top:1px; }
+.order-client { font-size:14px; font-weight:700; color:var(--text); margin-bottom:6px; letter-spacing:-0.2px; }
+.order-meta-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+.order-meta { display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:var(--text2); }
+.order-meta i { font-size:12px; color:var(--text3); }
+.order-amount { font-size:18px; font-weight:800; color:var(--text); letter-spacing:-0.5px; margin-bottom:8px; }
+.order-amount span { font-size:12px; font-weight:600; color:var(--text3); margin-left:4px; }
+.order-footer { border-top:1px solid var(--border); padding-top:9px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+
+/* ── BADGES ── */
+.badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:7px; white-space:nowrap; }
+.badge-formed      { background:#e5f1fb; color:#066aab; }
+.badge-in_work     { background:#fff5d6; color:#b87000; }
+.badge-delivery    { background:#ede9fe; color:#6d28d9; }
+.badge-delivered   { background:#e0f9f2; color:#00845f; }
+.badge-cancelled   { background:#f0f1f5; color:#6b7280; }
+
+/* ── CARD BTN ── */
+.card-btn { height:30px; padding:0 11px; border-radius:8px; border:1.5px solid var(--border); background:none; font-size:12px; font-weight:700; color:var(--text2); cursor:pointer; display:inline-flex; align-items:center; gap:4px; font-family:'Manrope',sans-serif; text-decoration:none; transition:background .15s; white-space:nowrap; }
+.card-btn:hover { background:var(--surface2); color:var(--text2); }
+.card-btn i { font-size:12px; }
+.card-btn-primary { background:var(--grad); border-color:transparent; color:white; }
+.card-btn-primary:hover { opacity:.9; color:white; }
+.card-btn-danger { background:#ffe5ea; border-color:#fecdd3; color:#cc0022; }
+
+/* ── ITEMS PREVIEW ── */
+.items-preview { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px; }
+.item-tag { font-size:11px; font-weight:600; color:var(--text2); background:var(--surface2); border-radius:6px; padding:2px 8px; }
+.item-tag.gift { background:#e0f9f2; color:#00845f; }
+
+/* ── APP MAIN ── */
+.app-main { padding:14px 16px; max-width:720px; margin:0 auto; }
+
+/* ── ACTION SHEET (FAB menu) ── */
+.action-sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:1050; opacity:0; pointer-events:none; transition:opacity .2s; }
+.action-sheet-overlay.open { opacity:1; pointer-events:all; }
+.action-sheet { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-radius:20px 20px 0 0; padding:8px 16px 32px; z-index:1051; transform:translateY(100%); transition:transform .3s cubic-bezier(.32,1,.32,1); max-width:600px; margin:0 auto; }
+.action-sheet.open { transform:translateY(0); }
+.sheet-handle { width:40px; height:4px; border-radius:99px; background:var(--border); margin:8px auto 20px; }
+.sheet-title { font-size:12px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; }
+.sheet-btn { width:100%; height:56px; border-radius:14px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; gap:14px; padding:0 16px; font-size:15px; font-weight:700; color:var(--text); cursor:pointer; font-family:'Manrope',sans-serif; margin-bottom:10px; transition:background .15s; }
+.sheet-btn:hover { background:var(--surface2); }
+.sheet-btn-icon { width:40px; height:40px; border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+.sheet-btn-sub { font-size:12px; font-weight:500; color:var(--text3); }
+
+/* ── ADD ORDER FORM ── */
+.form-section-wrap { background:var(--surface); border:1.5px solid var(--border); border-radius:18px; padding:18px; margin-top:8px; }
+.form-label { font-size:13px; font-weight:700; color:var(--text2); margin-bottom:5px; }
+.form-control, .form-select { border:1.5px solid var(--border); border-radius:10px; font-family:'Manrope',sans-serif; font-size:14px; font-weight:500; color:var(--text); background:var(--surface); padding:8px 12px; transition:border-color .15s; }
+.form-control:focus, .form-select:focus { border-color:var(--primary); box-shadow:none; outline:none; }
+.section-label { font-size:11px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin:18px 0 10px; display:flex; align-items:center; gap:8px; }
+.section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+.btn { font-family:'Manrope',sans-serif; font-weight:700; border-radius:10px; }
+.btn-primary { background:var(--grad); border:none; }
+
+/* ── CART ITEM ── */
+.cart-item { display:flex; justify-content:space-between; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+.cart-item:last-child { border-bottom:none; }
+.cart-item-name { font-size:13px; font-weight:700; color:var(--text); }
+.cart-item-brand { font-size:11px; font-weight:600; color:var(--text3); margin-top:2px; }
+.cart-item-right { display:flex; flex-direction:column; align-items:flex-end; gap:4px; }
+.cart-item-price { font-size:13px; font-weight:800; color:var(--primary); }
+.cart-qty { display:flex; align-items:center; gap:8px; }
+.qty-btn { width:26px; height:26px; border-radius:7px; border:1.5px solid var(--border); background:none; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.qty-val { font-size:14px; font-weight:800; min-width:18px; text-align:center; }
+
+/* ── GIFT POPUP ── */
+.gift-banner { background:linear-gradient(135deg,#e0f9f2,#d1fae5); border:1.5px solid #6ee7b7; border-radius:14px; padding:12px 14px; margin-bottom:10px; display:flex; align-items:center; gap:10px; }
+.gift-icon { font-size:24px; }
+.gift-text { font-size:13px; font-weight:700; color:#065f46; }
+.gift-sub { font-size:11px; font-weight:500; color:#047857; margin-top:2px; }
+
+/* ── RESTRICTION BANNER ── */
+.restrict-banner { background:#ffe5ea; border:1.5px solid #fecdd3; border-radius:14px; padding:12px 14px; margin-bottom:10px; display:flex; align-items:flex-start; gap:10px; }
+.restrict-icon { font-size:20px; color:var(--red); flex-shrink:0; margin-top:2px; }
+.restrict-text { font-size:13px; font-weight:700; color:#9f1239; }
+.restrict-sub { font-size:11px; font-weight:500; color:#be123c; margin-top:2px; }
+
+/* ── DELIVERY SELECTOR ── */
+.delivery-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+.delivery-opt { border:1.5px solid var(--border); border-radius:12px; padding:10px 12px; cursor:pointer; text-align:center; transition:all .15s; }
+.delivery-opt.active { border-color:var(--primary); background:#e5f1fb; }
+.delivery-opt i { font-size:20px; color:var(--text3); display:block; margin-bottom:4px; }
+.delivery-opt.active i { color:var(--primary); }
+.delivery-opt span { font-size:12px; font-weight:700; color:var(--text2); }
+.delivery-opt.active span { color:var(--primary); }
+
+/* ── TABS ── */
+.page { display:none; }
+.page.active { display:block; }
+.tab-switcher { display:flex; gap:6px; margin-bottom:16px; }
+.tab-btn { height:36px; padding:0 16px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:13px; font-weight:700; color:var(--text2); cursor:pointer; font-family:'Manrope',sans-serif; }
+.tab-btn.active { background:var(--grad); border-color:transparent; color:white; }
+
+/* ── EMPTY STATE ── */
+.empty-state { text-align:center; padding:48px 20px; }
+.empty-state i { font-size:48px; color:var(--border); display:block; margin-bottom:14px; }
+.empty-state h4 { font-size:16px; font-weight:800; color:var(--text2); margin-bottom:6px; }
+.empty-state p { font-size:13px; color:var(--text3); }
+</style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<header class="app-header">
+    <div class="header-logo">
+        <div class="header-logo-icon">E</div>
+    </div>
+    <div class="header-title" id="page-title">Замовлення</div>
+    <div class="header-right">
+        <div class="header-avatar">ОМ</div>
+    </div>
+</header>
+
+<!-- ════ PAGES ════ -->
+<main class="app-main">
+
+    <!-- ══ PAGE: ORDERS LIST ══ -->
+    <div class="page active" id="pg-orders">
+
+        <!-- Search -->
+        <div class="search-panel">
+            <div class="search-row">
+                <div class="search-wrap">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Пошук замовлення або клієнта...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Status filter chips -->
+        <div class="status-chips">
+            <button class="s-chip active">Всі</button>
+            <button class="s-chip">Сформовано</button>
+            <button class="s-chip">В роботі</button>
+            <button class="s-chip">На доставці</button>
+            <button class="s-chip">Доставлено</button>
+            <button class="s-chip">Скасовано</button>
+        </div>
+
+        <!-- Orders list -->
+        <div id="orders-list">
+
+            <!-- ORDER 1 — formed -->
+            <div class="order-card">
+                <div class="order-stripe stripe-blue"></div>
+                <div class="order-body">
+                    <div class="order-head">
+                        <div>
+                            <div class="order-num">ЗИН00003082</div>
+                            <div class="order-date">12.03.2026 · 10:54</div>
+                        </div>
+                        <span class="badge badge-formed">Сформовано</span>
+                    </div>
+                    <div class="order-client"><i class="bi bi-person" style="color:var(--text3);font-size:13px;margin-right:5px;"></i>Шаламова Аліна Вадимівна</div>
+                    <div class="items-preview">
+                        <span class="item-tag">HP CELL VITARAN I II × 4</span>
+                        <span class="item-tag gift"><i class="bi bi-gift" style="margin-right:3px;font-size:10px;"></i>Пакет Emet</span>
+                    </div>
+                    <div class="order-meta-row">
+                        <span class="order-meta"><i class="bi bi-truck"></i> Кур'єрська доставка</span>
+                        <span class="order-meta"><i class="bi bi-geo-alt"></i> Київ, А. Ахматової, 45</span>
+                    </div>
+                    <div class="order-amount">₴ 19 511 <span>грн · нал</span></div>
+                    <div class="order-footer">
+                        <button class="card-btn card-btn-primary" onclick="showPage('pg-order-detail')"><i class="bi bi-eye"></i> Деталі</button>
+                        <button class="card-btn"><i class="bi bi-pencil"></i> Редагувати</button>
+                        <button class="card-btn"><i class="bi bi-box-seam"></i> В роботу</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER 2 — in_work -->
+            <div class="order-card">
+                <div class="order-stripe stripe-orange"></div>
+                <div class="order-body">
+                    <div class="order-head">
+                        <div>
+                            <div class="order-num">ЗИН00003075</div>
+                            <div class="order-date">11.03.2026 · 14:22</div>
+                        </div>
+                        <span class="badge badge-in_work">В роботі</span>
+                    </div>
+                    <div class="order-client"><i class="bi bi-person" style="color:var(--text3);font-size:13px;margin-right:5px;"></i>Петренко Валентина Іванівна</div>
+                    <div class="items-preview">
+                        <span class="item-tag">Neuramis Deep × 2</span>
+                        <span class="item-tag">Neuronox 100u × 1</span>
+                    </div>
+                    <div class="order-meta-row">
+                        <span class="order-meta"><i class="bi bi-house"></i> Самовивіз</span>
+                        <span class="order-meta"><i class="bi bi-cash"></i> Нал</span>
+                    </div>
+                    <div class="order-amount">₴ 8 340 <span>грн</span></div>
+                    <div class="order-footer">
+                        <button class="card-btn card-btn-primary"><i class="bi bi-eye"></i> Деталі</button>
+                        <button class="card-btn"><i class="bi bi-truck"></i> На доставку</button>
+                        <button class="card-btn card-btn-danger"><i class="bi bi-x"></i> Скасувати</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER 3 — sent_delivery -->
+            <div class="order-card">
+                <div class="order-stripe stripe-purple"></div>
+                <div class="order-body">
+                    <div class="order-head">
+                        <div>
+                            <div class="order-num">РЛЗ00006744</div>
+                            <div class="order-date">10.03.2026 · 09:18 · Реалізація</div>
+                        </div>
+                        <span class="badge badge-delivery">На доставці</span>
+                    </div>
+                    <div class="order-client"><i class="bi bi-person" style="color:var(--text3);font-size:13px;margin-right:5px;"></i>Сирих Людмила (МЦ Дніпро)</div>
+                    <div class="items-preview">
+                        <span class="item-tag">MAGNOX 520 × 2</span>
+                        <span class="item-tag gift"><i class="bi bi-gift" style="margin-right:3px;font-size:10px;"></i>Маркетингова акція</span>
+                    </div>
+                    <div class="order-meta-row">
+                        <span class="order-meta"><i class="bi bi-truck"></i> Нова Пошта</span>
+                        <span class="order-meta"><i class="bi bi-calendar3"></i> 13.03.2026</span>
+                    </div>
+                    <div class="order-amount">₴ 1 432 <span>грн · безнал</span></div>
+                    <div class="order-footer">
+                        <button class="card-btn card-btn-primary"><i class="bi bi-eye"></i> Деталі</button>
+                        <button class="card-btn" style="color:var(--green);border-color:var(--green)"><i class="bi bi-check2"></i> Доставлено</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER 4 — delivered -->
+            <div class="order-card">
+                <div class="order-stripe stripe-green"></div>
+                <div class="order-body">
+                    <div class="order-head">
+                        <div>
+                            <div class="order-num">ЗИН00003060</div>
+                            <div class="order-date">05.03.2026 · 16:10</div>
+                        </div>
+                        <span class="badge badge-delivered">Доставлено</span>
+                    </div>
+                    <div class="order-client"><i class="bi bi-person" style="color:var(--text3);font-size:13px;margin-right:5px;"></i>Коваль Олена Миколаївна</div>
+                    <div class="items-preview">
+                        <span class="item-tag">Petaran 2ml × 3</span>
+                        <span class="item-tag">Vitaran 1ml × 2</span>
+                    </div>
+                    <div class="order-meta-row">
+                        <span class="order-meta"><i class="bi bi-truck"></i> Кур'єр · Степанюк О.</span>
+                    </div>
+                    <div class="order-amount">₴ 12 750 <span>грн · нал</span></div>
+                    <div class="order-footer">
+                        <button class="card-btn"><i class="bi bi-eye"></i> Деталі</button>
+                        <button class="card-btn"><i class="bi bi-file-text"></i> Звіт</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══ PAGE: ORDER DETAIL ══ -->
+    <div class="page" id="pg-order-detail">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <button onclick="showPage('pg-orders')" style="border:none;background:none;font-size:22px;color:var(--text2);padding:0;cursor:pointer;"><i class="bi bi-arrow-left"></i></button>
+            <div>
+                <div style="font-size:16px;font-weight:800;">ЗИН00003082</div>
+                <div style="font-size:12px;color:var(--text3);font-weight:600;">12.03.2026 · <span class="badge badge-formed">Сформовано</span></div>
+            </div>
+        </div>
+
+        <!-- Client & contract -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                    <div style="font-size:12px;font-weight:600;color:var(--text3);margin-bottom:3px;">Контрагент</div>
+                    <div style="font-size:15px;font-weight:800;color:var(--text);">Шаламова Аліна Вадимівна</div>
+                    <div style="font-size:12px;font-weight:600;color:var(--text3);margin-top:2px;">Договір: Основний з 2020, грн.</div>
+                    <div style="font-size:11px;font-weight:600;color:var(--text3);">Тип: Спеціаліст лікар,косметолог</div>
+                </div>
+                <span class="badge badge-formed">Сформовано</span>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Товари</div>
+            <div class="cart-item">
+                <div>
+                    <div class="cart-item-name">HP CELL VITARAN I II (PN 20 мг/мл)</div>
+                    <div class="cart-item-brand">Vitaran · Серія 19.10.2028</div>
+                </div>
+                <div class="cart-item-right">
+                    <div class="cart-item-price">₴ 4 877,75</div>
+                    <div style="font-size:11px;color:var(--text3);font-weight:600;">4 шт · ₴ 19 511</div>
+                </div>
+            </div>
+            <div class="cart-item" style="background:#f0fdf4;border-radius:10px;padding:8px 10px;border-bottom:none;margin-top:6px;">
+                <div>
+                    <div class="cart-item-name" style="color:#065f46;"><i class="bi bi-gift" style="margin-right:5px;"></i>Пакет Emet п/е, 30×40 см</div>
+                    <div class="cart-item-brand">Подарунок · Акція «Vitaran 4+»</div>
+                </div>
+                <div class="cart-item-right">
+                    <div class="cart-item-price" style="color:var(--green);">Безкоштовно</div>
+                    <div style="font-size:11px;color:var(--text3);font-weight:600;">1 шт</div>
+                </div>
+            </div>
+            <div style="border-top:1.5px solid var(--border);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:13px;font-weight:700;color:var(--text2);">Всього</div>
+                <div style="font-size:20px;font-weight:800;color:var(--text);">₴ 19 511,00</div>
+            </div>
+        </div>
+
+        <!-- Delivery -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Доставка</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;font-weight:600;">
+                <div style="color:var(--text3);">Спосіб</div><div style="color:var(--text);">Кур'єрська</div>
+                <div style="color:var(--text3);">Кур'єр</div><div style="color:var(--text);">Степанюк Александр</div>
+                <div style="color:var(--text3);">Адреса</div><div style="color:var(--text);">Київ, А.Ахматової, 45</div>
+                <div style="color:var(--text3);">Телефон</div><div style="color:var(--text);">380679340823</div>
+                <div style="color:var(--text3);">Дата</div><div style="color:var(--text);">13.03.2026</div>
+            </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:16px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Оплата</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:13px;font-weight:600;">
+                <div style="color:var(--text3);">Тип</div><div style="color:var(--text);">Тільки готівка</div>
+                <div style="color:var(--text3);">Сума нал</div><div style="color:var(--text);">₴ 19 511,00</div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary flex-fill"><i class="bi bi-box-seam me-2"></i>В роботу</button>
+            <button class="btn btn-outline-secondary" onclick="showPage('pg-orders')"><i class="bi bi-pencil me-2"></i>Редагувати</button>
+        </div>
+    </div>
+
+    <!-- ══ PAGE: ADD ORDER ══ -->
+    <div class="page" id="pg-add-order">
+
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+            <button onclick="showPage('pg-orders')" style="border:none;background:none;font-size:22px;color:var(--text2);padding:0;cursor:pointer;"><i class="bi bi-arrow-left"></i></button>
+            <div style="font-size:16px;font-weight:800;">Нове замовлення</div>
+        </div>
+
+        <!-- Client -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div class="mb-3">
+                <label class="form-label">Клієнт</label>
+                <input type="text" class="form-control" placeholder="Почніть вводити ім'я або телефон..." value="Шаламова Аліна Вадимівна">
+            </div>
+            <div>
+                <label class="form-label">Договір</label>
+                <select class="form-select">
+                    <option selected>Основний з 2020, грн.</option>
+                    <option>Договір 2024, USD</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Товари</div>
+
+            <!-- Search -->
+            <div class="search-wrap" style="margin-bottom:12px;">
+                <i class="bi bi-search"></i>
+                <input type="text" class="search-input" placeholder="Пошук по назві або артикулу...">
+            </div>
+
+            <!-- Restriction warning -->
+            <div class="restrict-banner">
+                <i class="bi bi-shield-exclamation restrict-icon"></i>
+                <div>
+                    <div class="restrict-text">Petaran 2ml — продаж заборонено</div>
+                    <div class="restrict-sub">Необхідно: пройдено навчання Petaran. Зверніться до менеджера.</div>
+                </div>
+            </div>
+
+            <!-- Gift banner -->
+            <div class="gift-banner">
+                <div class="gift-icon">🎁</div>
+                <div>
+                    <div class="gift-text">Доступний подарунок!</div>
+                    <div class="gift-sub">Акція «Vitaran 4+» — оберіть подарунок</div>
+                </div>
+                <button class="card-btn card-btn-primary" style="margin-left:auto;white-space:nowrap;">Обрати</button>
+            </div>
+
+            <!-- Cart -->
+            <div class="cart-item">
+                <div>
+                    <div class="cart-item-name">HP CELL VITARAN I II</div>
+                    <div class="cart-item-brand">Vitaran · ₴ 4 877,75 / шт</div>
+                </div>
+                <div class="cart-item-right">
+                    <div class="cart-item-price">₴ 19 511</div>
+                    <div class="cart-qty">
+                        <button class="qty-btn">−</button>
+                        <span class="qty-val">4</span>
+                        <button class="qty-btn">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-item" style="background:#f0fdf4;border-radius:10px;padding:8px 10px;border-bottom:none;margin-top:6px;">
+                <div>
+                    <div class="cart-item-name" style="color:#065f46;"><i class="bi bi-gift" style="margin-right:5px;"></i>Пакет Emet п/е, 30×40</div>
+                    <div class="cart-item-brand">Подарунок · безкоштовно</div>
+                </div>
+                <div class="cart-item-right">
+                    <button style="border:none;background:none;color:var(--red);font-size:18px;cursor:pointer;"><i class="bi bi-x"></i></button>
+                </div>
+            </div>
+
+            <div style="border-top:1.5px solid var(--border);margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="font-size:13px;font-weight:700;color:var(--text2);">Всього</div>
+                <div style="font-size:20px;font-weight:800;color:var(--text);">₴ 19 511,00</div>
+            </div>
+        </div>
+
+        <!-- Delivery -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Доставка</div>
+            <div class="delivery-grid">
+                <div class="delivery-opt active">
+                    <i class="bi bi-truck"></i>
+                    <span>Кур'єр</span>
+                </div>
+                <div class="delivery-opt">
+                    <i class="bi bi-building"></i>
+                    <span>Самовивіз</span>
+                </div>
+                <div class="delivery-opt">
+                    <i class="bi bi-envelope"></i>
+                    <span>Нова Пошта</span>
+                </div>
+                <div class="delivery-opt">
+                    <i class="bi bi-person-walking"></i>
+                    <span>Менеджер</span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Адреса доставки</label>
+                <input type="text" class="form-control" value="Київ, А. Ахматової, дом №45">
+            </div>
+            <div class="row g-2">
+                <div class="col-6">
+                    <label class="form-label">Дата збірки</label>
+                    <input type="date" class="form-control" value="2026-03-12">
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Дата доставки</label>
+                    <input type="date" class="form-control" value="2026-03-13">
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:10px;">
+            <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">Оплата</div>
+            <div style="display:flex;gap:8px;margin-bottom:12px;">
+                <button class="s-chip active">Готівка</button>
+                <button class="s-chip">Безнал</button>
+                <button class="s-chip">Відстрочка</button>
+            </div>
+            <div>
+                <label class="form-label">Сума (грн)</label>
+                <input type="number" class="form-control" value="19511">
+            </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="form-section-wrap" style="margin-top:0;margin-bottom:16px;">
+            <label class="form-label">Коментар</label>
+            <textarea class="form-control" rows="2" placeholder="ЖК Рів'єра, Метро Славутич..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary flex-fill" style="font-size:15px;padding:12px;">
+                <i class="bi bi-check-lg me-2"></i>Зберегти замовлення
+            </button>
+            <button class="btn btn-outline-secondary" onclick="showPage('pg-orders')">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    </div>
+
+</main>
+
+<!-- ════ BOTTOM NAV ════ -->
+<nav class="app-bottom-nav">
+    <button class="nav-button" onclick="showPage('pg-orders');setActive(this);setTitle('Дашборд')">
+        <i class="bi bi-grid-fill"></i><span>Дашборд</span>
+    </button>
+    <button class="nav-button" onclick="showPage('pg-orders');setActive(this);setTitle('Зустрічі')">
+        <i class="bi bi-house-fill"></i><span>Зустрічі</span>
+    </button>
+    <div class="nav-fab-wrap">
+        <button class="nav-fab" onclick="openSheet()">
+            <i class="bi bi-plus"></i>
+        </button>
+    </div>
+    <button class="nav-button" onclick="showPage('pg-orders');setActive(this);setTitle('Клієнти')">
+        <i class="bi bi-people"></i><span>Клієнти</span>
+    </button>
+    <button class="nav-button active" onclick="showPage('pg-orders');setActive(this);setTitle('Замовлення')">
+        <i class="bi bi-bag"></i><span>Замовлення</span>
+    </button>
+</nav>
+
+<!-- ════ FAB ACTION SHEET ════ -->
+<div class="action-sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
+<div class="action-sheet" id="action-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Створити нове</div>
+    <button class="sheet-btn" onclick="closeSheet();showPage('pg-orders');setTitle('Зустрічі')">
+        <div class="sheet-btn-icon" style="background:#e5f1fb;color:var(--primary);">
+            <i class="bi bi-calendar-plus"></i>
+        </div>
+        <div>
+            <div>Нова зустріч</div>
+            <div class="sheet-btn-sub">Запланувати зустріч з клієнтом</div>
+        </div>
+    </button>
+    <button class="sheet-btn" onclick="closeSheet();showPage('pg-add-order');setTitle('Нове замовлення')">
+        <div class="sheet-btn-icon" style="background:#e0f9f2;color:var(--green);">
+            <i class="bi bi-bag-plus"></i>
+        </div>
+        <div>
+            <div>Нове замовлення</div>
+            <div class="sheet-btn-sub">Оформити замовлення для клієнта</div>
+        </div>
+    </button>
+</div>
+
+<script>
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+function setActive(btn) {
+    document.querySelectorAll('.nav-button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+function setTitle(t) { document.getElementById('page-title').textContent = t; }
+function openSheet() {
+    document.getElementById('sheet-overlay').classList.add('open');
+    document.getElementById('action-sheet').classList.add('open');
+}
+function closeSheet() {
+    document.getElementById('sheet-overlay').classList.remove('open');
+    document.getElementById('action-sheet').classList.remove('open');
+}
+// Status chip filter
+document.querySelectorAll('.s-chip').forEach(c => {
+    c.addEventListener('click', () => {
+        c.closest('.status-chips').querySelectorAll('.s-chip').forEach(x => x.classList.remove('active'));
+        c.classList.add('active');
+    });
+});
+// Delivery opt
+document.querySelectorAll('.delivery-opt').forEach(d => {
+    d.addEventListener('click', () => {
+        d.closest('.delivery-grid').querySelectorAll('.delivery-opt').forEach(x => x.classList.remove('active'));
+        d.classList.add('active');
+    });
+});
+</script>
+</body>
+</html>

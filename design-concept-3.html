@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Концепт 3 — Modern SaaS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --primary: #066aab;
+    --primary-hover: #0558901;
+    --primary-bg: #f0f7ff;
+    --bg: #f7f8fc;
+    --surface: #ffffff;
+    --surface2: #f3f4f8;
+    --border: #e8eaef;
+    --border-strong: #d1d5e0;
+    --text: #0f1623;
+    --text-2: #4b5263;
+    --text-3: #8990a5;
+    --green: #00b37e;
+    --orange: #f58d00;
+    --red: #e93030;
+    --purple: #7c5cfc;
+    --header-h: 58px;
+    --nav-h: 64px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-top: var(--header-h);
+    padding-bottom: var(--nav-h);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    z-index: 100;
+}
+.h-left { display: flex; align-items: center; gap: 10px; }
+.h-menu {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-2);
+    font-size: 17px;
+    cursor: pointer;
+}
+.h-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.4px;
+}
+.h-right { display: flex; align-items: center; gap: 8px; }
+.h-add {
+    display: flex; align-items: center; gap: 6px;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: var(--primary);
+    border: none;
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.2px;
+}
+.h-add i { font-size: 15px; }
+.h-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #066aab 0%, #38b2f0 100%);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ── MAIN ── */
+.main { padding: 14px 16px; }
+
+/* ── STATS ROW ── */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 8px;
+    text-align: center;
+}
+.stat-num {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+.stat-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-3);
+    line-height: 1.3;
+}
+.s-all .stat-num { color: var(--text); }
+.s-active .stat-num { color: var(--orange); }
+.s-done .stat-num { color: var(--green); }
+.s-over .stat-num { color: var(--red); }
+
+/* ── TOOLBAR ── */
+.toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+.search-box {
+    flex: 1;
+    position: relative;
+}
+.search-box i {
+    position: absolute;
+    left: 11px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    font-size: 15px;
+    pointer-events: none;
+}
+.search-box input {
+    width: 100%;
+    height: 40px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    padding: 0 12px 0 34px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+}
+.search-box input:focus { border-color: var(--primary); }
+.search-box input::placeholder { color: var(--text-3); }
+.date-chip {
+    display: flex; align-items: center; gap: 5px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+.date-chip i { font-size: 14px; color: var(--primary); }
+
+/* ── DATE GROUP ── */
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0 8px;
+}
+.group-date {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+}
+.group-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    background: var(--surface2);
+    border-radius: 20px;
+    padding: 1px 7px;
+}
+.group-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── CARD ── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.card-stripe {
+    height: 3px;
+    width: 100%;
+}
+.stripe-blue { background: #066aab; }
+.stripe-orange { background: var(--orange); }
+.stripe-green { background: var(--green); }
+.stripe-red { background: var(--red); }
+.stripe-gray { background: #c5cad8; }
+
+.card-body { padding: 12px 14px 14px; }
+
+.card-row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+}
+.card-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.2px;
+    line-height: 1.3;
+    flex: 1;
+    padding-right: 8px;
+}
+.badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 6px;
+    letter-spacing: 0.1px;
+}
+.b-planned { background: #e8f3fc; color: #066aab; }
+.b-active { background: #fff4e0; color: #c97000; }
+.b-done { background: #e6faf4; color: #007a54; }
+.b-cancelled { background: #f1f2f5; color: #6b7280; }
+.b-overdue { background: #fde8e8; color: #c40000; }
+
+.card-row2 {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 6px;
+}
+.meta-item {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 13px;
+    color: var(--text-2);
+}
+.meta-item i { font-size: 13px; color: var(--text-3); }
+
+.card-purpose {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.btn {
+    height: 30px;
+    padding: 0 11px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-2);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    font-family: 'Inter', sans-serif;
+    transition: background .15s;
+}
+.btn:hover { background: var(--border); }
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+.btn-primary:hover { background: #055a91; }
+.btn i { font-size: 12px; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+}
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    border: none;
+    background: none;
+    color: var(--text-3);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.2px;
+    padding-bottom: 6px;
+    position: relative;
+    transition: color .15s;
+}
+.nav-btn i { font-size: 21px; }
+.nav-btn.active { color: var(--primary); }
+.nav-btn.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 28px; height: 2px;
+    background: var(--primary);
+    border-radius: 0 0 3px 3px;
+}
+
+/* LABEL */
+.concept-tag {
+    background: var(--primary);
+    color: white;
+    text-align: center;
+    padding: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="concept-tag">КОНЦЕПТ 3 — Modern SaaS (Linear / Stripe style)</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="h-left">
+        <button class="h-menu"><i class="bi bi-list"></i></button>
+        <span class="h-title">Зустрічі</span>
+    </div>
+    <div class="h-right">
+        <button class="h-add"><i class="bi bi-plus"></i> Додати</button>
+        <div class="h-avatar">ІТ</div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat s-all">
+            <div class="stat-num">8</div>
+            <div class="stat-label">Всього</div>
+        </div>
+        <div class="stat s-active">
+            <div class="stat-num">2</div>
+            <div class="stat-label">В роботі</div>
+        </div>
+        <div class="stat s-done">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Завершено</div>
+        </div>
+        <div class="stat s-over">
+            <div class="stat-num">1</div>
+            <div class="stat-label">Прострочено</div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Пошук клієнта або зустрічі...">
+        </div>
+        <button class="date-chip"><i class="bi bi-calendar3"></i> Сьогодні</button>
+    </div>
+
+    <!-- GROUP 1 -->
+    <div class="group-header">
+        <span class="group-date">Сьогодні · 11 берез.</span>
+        <span class="group-count">3</span>
+        <div class="group-line"></div>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="card">
+        <div class="card-stripe stripe-blue"></div>
+        <div class="card-body">
+            <div class="card-row1">
+                <div class="card-name">ТОВ "Краса та здоров'я"</div>
+                <span class="badge b-planned">Заплановано</span>
+            </div>
+            <div class="card-row2">
+                <div class="meta-item"><i class="bi bi-clock"></i> 10:00</div>
+                <div class="meta-item"><i class="bi bi-telephone"></i> +380 67 123 45 67</div>
+            </div>
+            <div class="card-purpose">Ціль: Презентація нових продуктів</div>
+            <div class="card-actions">
+                <button class="btn btn-primary"><i class="bi bi-play-fill"></i> Старт</button>
+                <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+                <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card">
+        <div class="card-stripe stripe-orange"></div>
+        <div class="card-body">
+            <div class="card-row1">
+                <div class="card-name">ФОП Петренко Олена</div>
+                <span class="badge b-active">В роботі</span>
+            </div>
+            <div class="card-row2">
+                <div class="meta-item"><i class="bi bi-clock"></i> 12:30</div>
+                <div class="meta-item"><i class="bi bi-telephone"></i> +380 50 987 65 43</div>
+            </div>
+            <div class="card-purpose">Ціль: Повторна закупівля</div>
+            <div class="card-actions">
+                <button class="btn btn-primary"><i class="bi bi-stop-fill"></i> Завершити</button>
+                <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+                <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card">
+        <div class="card-stripe stripe-green"></div>
+        <div class="card-body">
+            <div class="card-row1">
+                <div class="card-name">Салон "Bellissimo"</div>
+                <span class="badge b-done">Завершено</span>
+            </div>
+            <div class="card-row2">
+                <div class="meta-item"><i class="bi bi-clock"></i> 09:00</div>
+                <div class="meta-item"><i class="bi bi-telephone"></i> +380 63 456 78 90</div>
+            </div>
+            <div class="card-purpose">Ціль: Навчання персоналу</div>
+            <div class="card-actions">
+                <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+                <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+                <button class="btn"><i class="bi bi-chat-left-text"></i> Підсумок</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GROUP 2 -->
+    <div class="group-header">
+        <span class="group-date">Завтра · 12 берез.</span>
+        <span class="group-count">1</span>
+        <div class="group-line"></div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card">
+        <div class="card-stripe stripe-red"></div>
+        <div class="card-body">
+            <div class="card-row1">
+                <div class="card-name">ТОВ "Медіум Груп"</div>
+                <span class="badge b-overdue">Прострочено</span>
+            </div>
+            <div class="card-row2">
+                <div class="meta-item"><i class="bi bi-clock"></i> 15:00</div>
+                <div class="meta-item"><i class="bi bi-telephone"></i> +380 44 111 22 33</div>
+            </div>
+            <div class="card-purpose">Ціль: Узгодження договору</div>
+            <div class="card-actions">
+                <button class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i> Перенести</button>
+                <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- NAV -->
+<nav class="bottom-nav">
+    <button class="nav-btn active"><i class="bi bi-house-fill"></i> Зустрічі</button>
+    <button class="nav-btn"><i class="bi bi-people"></i> Клієнти</button>
+    <button class="nav-btn"><i class="bi bi-bar-chart-line"></i> Звіти</button>
+    <button class="nav-btn"><i class="bi bi-grid-3x3-gap"></i> Ще</button>
+</nav>
+
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Концепт — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+    --primary: #066aab;
+    --primary2: #2a9fd6;
+    --grad: linear-gradient(135deg, #066aab 0%, #2a9fd6 100%);
+    --grad-green: linear-gradient(135deg, #00b37e 0%, #00d4a0 100%);
+    --grad-orange: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+    --grad-red: linear-gradient(135deg, #f43f5e 0%, #fb7185 100%);
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #eef0f6;
+    --border: #e4e7f0;
+    --text: #181c2e;
+    --text2: #52587a;
+    --text3: #9398b0;
+    --green: #00b37e;
+    --orange: #f59e0b;
+    --red: #f43f5e;
+    --header-h: 62px;
+    --nav-h: 68px;
+}
+body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-top: var(--header-h);
+    padding-bottom: var(--nav-h);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 18px;
+    z-index: 100;
+}
+.h-left { display: flex; align-items: center; gap: 12px; }
+.hamburger {
+    width: 36px; height: 36px; border-radius: 10px;
+    border: 1.5px solid var(--border); background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2); font-size: 18px; cursor: pointer;
+}
+.h-logo { display: flex; align-items: center; gap: 8px; }
+.h-logo-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--grad); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800;
+}
+.h-title { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+.h-right { display: flex; align-items: center; gap: 8px; }
+.h-avatar {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--grad); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+}
+
+/* MAIN */
+.main { padding: 16px 18px; }
+
+/* SECTION TITLE */
+.section-title {
+    font-size: 13px; font-weight: 700; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 10px; margin-top: 20px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.section-title:first-child { margin-top: 0; }
+.section-link {
+    font-size: 12px; font-weight: 700; color: var(--primary);
+    text-decoration: none; text-transform: none; letter-spacing: 0;
+}
+
+/* PLAN CARD — головна */
+.plan-card {
+    background: var(--surface);
+    border-radius: 18px;
+    border: 1.5px solid var(--border);
+    padding: 18px;
+    margin-bottom: 10px;
+}
+.plan-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 14px;
+}
+.plan-label { font-size: 12px; font-weight: 600; color: var(--text3); margin-bottom: 2px; }
+.plan-value { font-size: 26px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.plan-sub { font-size: 12px; font-weight: 600; color: var(--text3); }
+.plan-percent-badge {
+    background: #e0f9f2; color: #00845f;
+    font-size: 13px; font-weight: 800;
+    padding: 4px 10px; border-radius: 10px;
+}
+.plan-percent-badge.warn { background: #fff5d6; color: #b87000; }
+.plan-percent-badge.danger { background: #ffe5ea; color: #cc0022; }
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom: 14px; }
+.progress-track {
+    width: 100%; height: 10px;
+    background: var(--surface2);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+.progress-fill {
+    height: 100%; border-radius: 99px;
+    background: var(--grad);
+    transition: width .6s ease;
+    position: relative;
+}
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 99px;
+}
+.progress-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; font-weight: 600; color: var(--text3);
+}
+
+/* PLAN ROW ITEMS */
+.plan-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px; margin-top: 2px;
+}
+.plan-mini {
+    background: var(--surface2);
+    border-radius: 12px; padding: 10px;
+    text-align: center;
+}
+.pm-val { font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
+.pm-lbl { font-size: 10px; font-weight: 600; color: var(--text3); margin-top: 2px; }
+
+/* BRANDS */
+.brand-list { display: flex; flex-direction: column; gap: 8px; }
+.brand-item {
+    background: var(--surface);
+    border-radius: 14px; border: 1.5px solid var(--border);
+    padding: 12px 14px;
+}
+.brand-row1 {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+}
+.brand-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.brand-pct { font-size: 13px; font-weight: 800; }
+.pct-good { color: var(--green); }
+.pct-warn { color: var(--orange); }
+.pct-bad { color: var(--red); }
+.brand-row2 {
+    display: flex; align-items: center; gap: 10px;
+}
+.brand-track {
+    flex: 1; height: 7px;
+    background: var(--surface2); border-radius: 99px; overflow: hidden;
+}
+.brand-fill { height: 100%; border-radius: 99px; }
+.fill-good { background: var(--grad-green); }
+.fill-warn { background: var(--grad-orange); }
+.fill-bad { background: var(--grad-red); }
+.brand-nums { font-size: 11px; font-weight: 600; color: var(--text3); white-space: nowrap; }
+
+/* REGION */
+.region-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.region-card {
+    background: var(--surface);
+    border-radius: 14px; border: 1.5px solid var(--border);
+    padding: 12px;
+}
+.region-name { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
+.region-val { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
+.region-sub { font-size: 11px; font-weight: 600; color: var(--text3); margin-bottom: 8px; }
+.region-bar { width: 100%; height: 5px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.region-bar-fill { height: 100%; border-radius: 99px; background: var(--grad); }
+
+/* CLIENTS STATS */
+.clients-top {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;
+}
+.cl-big {
+    background: var(--surface);
+    border-radius: 14px; border: 1.5px solid var(--border);
+    padding: 14px;
+}
+.cl-big-val { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.cl-big-lbl { font-size: 11px; font-weight: 600; color: var(--text3); }
+.cl-big-trend {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 700;
+    background: #e0f9f2; color: #00845f;
+    border-radius: 6px; padding: 2px 6px; margin-top: 4px;
+}
+.cl-big-trend.down { background: #ffe5ea; color: #cc0022; }
+
+/* DONUT CHART */
+.donut-card {
+    background: var(--surface);
+    border-radius: 14px; border: 1.5px solid var(--border);
+    padding: 14px;
+}
+.donut-title { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 12px; }
+.donut-wrap { display: flex; align-items: center; gap: 14px; }
+.donut-chart-box { width: 90px; height: 90px; flex-shrink: 0; }
+.donut-legend { flex: 1; }
+.legend-item {
+    display: flex; align-items: center; gap: 7px;
+    margin-bottom: 5px;
+}
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legend-text { font-size: 11px; font-weight: 600; color: var(--text2); flex: 1; }
+.legend-val { font-size: 11px; font-weight: 800; color: var(--text); }
+
+/* BUYERS CARD */
+.buyers-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+}
+.buyer-card {
+    background: var(--surface);
+    border-radius: 14px; border: 1.5px solid var(--border);
+    padding: 12px 8px; text-align: center;
+}
+.buyer-val { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.buyer-lbl { font-size: 10px; font-weight: 600; color: var(--text3); margin-top: 2px; line-height: 1.3; }
+.bv-blue { color: var(--primary); }
+.bv-green { color: var(--green); }
+.bv-orange { color: var(--orange); }
+
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h); background: var(--surface);
+    border-top: 1.5px solid var(--border);
+    display: flex; z-index: 100; padding: 0 10px;
+}
+.nav-btn {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px;
+    border: none; background: none;
+    color: var(--text3); font-size: 10px; font-weight: 700;
+    cursor: pointer; font-family: 'Manrope', sans-serif;
+    padding-bottom: 4px; transition: color .15s;
+}
+.nav-btn i { font-size: 22px; }
+.nav-btn.active { color: var(--primary); }
+.nav-center { flex: 1; display: flex; align-items: center; justify-content: center; padding-bottom: 4px; }
+.nav-fab {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--grad); border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 24px; cursor: pointer;
+    box-shadow: 0 4px 14px rgba(6,106,171,0.35); margin-bottom: 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="h-left">
+        <button class="hamburger"><i class="bi bi-list"></i></button>
+        <div class="h-logo">
+            <div class="h-logo-icon">E</div>
+            <span class="h-title">Emet CRM</span>
+        </div>
+    </div>
+    <div class="h-right">
+        <div class="h-avatar">ІТ</div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- ПЛАН ПРОДАЖІВ -->
+    <div class="section-title">
+        План продажів — березень 2026
+        <a href="#" class="section-link">Деталі →</a>
+    </div>
+
+    <div class="plan-card">
+        <div class="plan-header">
+            <div>
+                <div class="plan-label">Виконано</div>
+                <div class="plan-value">₴ 1 248 500</div>
+                <div class="plan-sub">з ₴ 2 000 000 план</div>
+            </div>
+            <div class="plan-percent-badge warn">62%</div>
+        </div>
+        <div class="progress-wrap">
+            <div class="progress-track">
+                <div class="progress-fill" style="width: 62%"></div>
+            </div>
+            <div class="progress-labels">
+                <span>0</span>
+                <span style="color: var(--orange); font-weight:700">62% / ціль 100%</span>
+                <span>₴ 2M</span>
+            </div>
+        </div>
+        <div class="plan-row">
+            <div class="plan-mini">
+                <div class="pm-val" style="color:var(--green)">+₴751K</div>
+                <div class="pm-lbl">Залишилось</div>
+            </div>
+            <div class="plan-mini">
+                <div class="pm-val">20</div>
+                <div class="pm-lbl">Днів у місяці</div>
+            </div>
+            <div class="plan-mini">
+                <div class="pm-val" style="color:var(--primary)">₴37.6K</div>
+                <div class="pm-lbl">/ день потрібно</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БРЕНДИ -->
+    <div class="section-title">
+        Виконання по брендах
+        <a href="#" class="section-link">Всі бренди →</a>
+    </div>
+
+    <div class="brand-list">
+        <div class="brand-item">
+            <div class="brand-row1">
+                <span class="brand-name">Mesoestetic</span>
+                <span class="brand-pct pct-good">87%</span>
+            </div>
+            <div class="brand-row2">
+                <div class="brand-track"><div class="brand-fill fill-good" style="width:87%"></div></div>
+                <span class="brand-nums">₴ 435K / 500K</span>
+            </div>
+        </div>
+        <div class="brand-item">
+            <div class="brand-row1">
+                <span class="brand-name">Janssen Cosmetics</span>
+                <span class="brand-pct pct-warn">54%</span>
+            </div>
+            <div class="brand-row2">
+                <div class="brand-track"><div class="brand-fill fill-warn" style="width:54%"></div></div>
+                <span class="brand-nums">₴ 270K / 500K</span>
+            </div>
+        </div>
+        <div class="brand-item">
+            <div class="brand-row1">
+                <span class="brand-name">Holy Land</span>
+                <span class="brand-pct pct-good">71%</span>
+            </div>
+            <div class="brand-row2">
+                <div class="brand-track"><div class="brand-fill fill-good" style="width:71%"></div></div>
+                <span class="brand-nums">₴ 213K / 300K</span>
+            </div>
+        </div>
+        <div class="brand-item">
+            <div class="brand-row1">
+                <span class="brand-name">Histolab</span>
+                <span class="brand-pct pct-bad">31%</span>
+            </div>
+            <div class="brand-row2">
+                <div class="brand-track"><div class="brand-fill fill-bad" style="width:31%"></div></div>
+                <span class="brand-nums">₴ 218K / 700K</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- РЕГІОНИ -->
+    <div class="section-title">По регіонах</div>
+    <div class="region-grid">
+        <div class="region-card">
+            <div class="region-name">Київ</div>
+            <div class="region-val">₴ 512K</div>
+            <div class="region-sub">78% від плану</div>
+            <div class="region-bar"><div class="region-bar-fill" style="width:78%"></div></div>
+        </div>
+        <div class="region-card">
+            <div class="region-name">Харків</div>
+            <div class="region-val">₴ 318K</div>
+            <div class="region-sub">63% від плану</div>
+            <div class="region-bar"><div class="region-bar-fill" style="width:63%"></div></div>
+        </div>
+        <div class="region-card">
+            <div class="region-name">Дніпро</div>
+            <div class="region-val">₴ 248K</div>
+            <div class="region-sub">49% від плану</div>
+            <div class="region-bar"><div class="region-bar-fill" style="width:49%"></div></div>
+        </div>
+        <div class="region-card">
+            <div class="region-name">Одеса</div>
+            <div class="region-val">₴ 170K</div>
+            <div class="region-sub">56% від плану</div>
+            <div class="region-bar"><div class="region-bar-fill" style="width:56%"></div></div>
+        </div>
+    </div>
+
+    <!-- КЛІЄНТИ -->
+    <div class="section-title">
+        База клієнтів
+        <a href="#" class="section-link">Клієнти →</a>
+    </div>
+
+    <div class="clients-top">
+        <div class="cl-big">
+            <div class="cl-big-val">347</div>
+            <div class="cl-big-lbl">Всього клієнтів</div>
+            <div class="cl-big-trend"><i class="bi bi-arrow-up-short"></i> +12 цього місяця</div>
+        </div>
+        <div class="cl-big">
+            <div class="cl-big-val">128</div>
+            <div class="cl-big-lbl">Купили цього місяця</div>
+            <div class="cl-big-trend down"><i class="bi bi-arrow-down-short"></i> -5 vs минулий</div>
+        </div>
+    </div>
+
+    <!-- DONUT — категорії -->
+    <div class="donut-card" style="margin-bottom:8px">
+        <div class="donut-title">Категорії клієнтів</div>
+        <div class="donut-wrap">
+            <div class="donut-chart-box">
+                <canvas id="donutChart"></canvas>
+            </div>
+            <div class="donut-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#066aab"></div>
+                    <span class="legend-text">Активні</span>
+                    <span class="legend-val">142</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#00b37e"></div>
+                    <span class="legend-text">Нові</span>
+                    <span class="legend-val">58</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#f59e0b"></div>
+                    <span class="legend-text">Сплячі</span>
+                    <span class="legend-val">84</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#f43f5e"></div>
+                    <span class="legend-text">Втрачені</span>
+                    <span class="legend-val">41</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#c5cad8"></div>
+                    <span class="legend-text">Без закупок</span>
+                    <span class="legend-val">22</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUYERS -->
+    <div class="buyers-row">
+        <div class="buyer-card">
+            <div class="buyer-val bv-blue">128</div>
+            <div class="buyer-lbl">Зробили замовлення</div>
+        </div>
+        <div class="buyer-card">
+            <div class="buyer-val bv-green">219</div>
+            <div class="buyer-lbl">Зустрічей проведено</div>
+        </div>
+        <div class="buyer-card">
+            <div class="buyer-val bv-orange">63%</div>
+            <div class="buyer-lbl">Конверсія в продаж</div>
+        </div>
+    </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <button class="nav-btn active"><i class="bi bi-grid-fill"></i> Дашборд</button>
+    <button class="nav-btn"><i class="bi bi-house"></i> Зустрічі</button>
+    <div class="nav-center">
+        <button class="nav-fab"><i class="bi bi-plus"></i></button>
+    </div>
+    <button class="nav-btn"><i class="bi bi-people"></i> Клієнти</button>
+    <button class="nav-btn"><i class="bi bi-grid-3x3-gap"></i> Ще</button>
+</nav>
+
+<script>
+const ctx = document.getElementById('donutChart').getContext('2d');
+new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        datasets: [{
+            data: [142, 58, 84, 41, 22],
+            backgroundColor: ['#066aab', '#00b37e', '#f59e0b', '#f43f5e', '#c5cad8'],
+            borderWidth: 0,
+            hoverOffset: 4
+        }]
+    },
+    options: {
+        cutout: '72%',
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        animation: { animateRotate: true, duration: 800 }
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Концепт 4 — Warm Modern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --primary: #066aab;
+    --primary2: #2196f3;
+    --grad: linear-gradient(135deg, #066aab 0%, #2a9fd6 100%);
+    --bg: #f5f6fa;
+    --surface: #ffffff;
+    --surface2: #eef0f6;
+    --border: #e4e7f0;
+    --text: #181c2e;
+    --text2: #52587a;
+    --text3: #9398b0;
+    --green: #00c48c;
+    --orange: #ffaa00;
+    --red: #ff4d6a;
+    --header-h: 62px;
+    --nav-h: 68px;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding-top: var(--header-h);
+    padding-bottom: var(--nav-h);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ── HEADER ── */
+.header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--header-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 18px;
+    z-index: 100;
+}
+.h-left { display: flex; align-items: center; gap: 12px; }
+.hamburger {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2);
+    font-size: 18px;
+    cursor: pointer;
+}
+.h-logo {
+    display: flex; align-items: center; gap: 8px;
+}
+.h-logo-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--grad);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+}
+.h-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+}
+.h-right { display: flex; align-items: center; gap: 8px; }
+.h-notif {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text2);
+    font-size: 17px;
+    cursor: pointer;
+    position: relative;
+}
+.notif-dot {
+    position: absolute;
+    top: 7px; right: 7px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 1.5px solid var(--surface);
+}
+.h-avatar {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--grad);
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* ── MAIN ── */
+.main { padding: 16px 18px; }
+
+/* ── GREETING ── */
+.greeting {
+    margin-bottom: 16px;
+}
+.greeting-sub {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 2px;
+}
+.greeting-name {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+}
+
+/* ── STATS ── */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.stat {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 12px 6px;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+.stat-icon {
+    font-size: 16px;
+    margin-bottom: 4px;
+    display: block;
+}
+.stat-num {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+.stat-lbl {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    line-height: 1.3;
+}
+.s-all .stat-icon { color: var(--primary); }
+.s-all .stat-num { color: var(--primary); }
+.s-work .stat-icon { color: var(--orange); }
+.s-work .stat-num { color: var(--orange); }
+.s-done .stat-icon { color: var(--green); }
+.s-done .stat-num { color: var(--green); }
+.s-over .stat-icon { color: var(--red); }
+.s-over .stat-num { color: var(--red); }
+
+/* ── FAB ADD BUTTON STRIP ── */
+.add-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--grad);
+    border-radius: 14px;
+    padding: 13px 16px;
+    margin-bottom: 14px;
+    cursor: pointer;
+}
+.add-strip-text {
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+.add-strip-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+/* ── TOOLBAR ── */
+.toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.search-wrap {
+    flex: 1;
+    position: relative;
+}
+.search-wrap i {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3);
+    font-size: 15px;
+}
+.search-input {
+    width: 100%;
+    height: 42px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    padding: 0 12px 0 36px;
+    font-size: 14px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 500;
+    color: var(--text);
+    outline: none;
+    transition: border-color .15s;
+}
+.search-input:focus { border-color: var(--primary); }
+.search-input::placeholder { color: var(--text3); }
+.date-pill {
+    height: 42px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    white-space: nowrap;
+    font-family: 'Manrope', sans-serif;
+}
+.date-pill i { font-size: 14px; }
+
+/* ── GROUP ── */
+.group-head {
+    padding: 14px 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.group-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+}
+.group-badge {
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--surface2);
+    color: var(--text3);
+    border-radius: 20px;
+    padding: 1px 7px;
+}
+.group-rule { flex: 1; height: 1px; background: var(--border); }
+
+/* ── CARD ── */
+.card {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: box-shadow .2s;
+}
+.card:hover { box-shadow: 0 4px 20px rgba(6,106,171,0.08); }
+
+.card-head {
+    padding: 14px 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+}
+.card-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+    flex: 1;
+    padding-right: 8px;
+}
+.badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 8px;
+}
+.b-plan { background: #e5f1fb; color: #066aab; }
+.b-work { background: #fff5d6; color: #b87000; }
+.b-done { background: #e0f9f2; color: #00845f; }
+.b-over { background: #ffe5ea; color: #cc0022; }
+.b-cancel { background: #f0f1f5; color: #6b7280; }
+
+.card-info {
+    padding: 0 16px;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 8px;
+}
+.info-item {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+}
+.info-item i { color: var(--text3); font-size: 13px; }
+
+.card-goal {
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.card-footer {
+    border-top: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.btn {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'Manrope', sans-serif;
+    transition: background .15s;
+}
+.btn:hover { background: var(--surface2); }
+.btn-primary {
+    background: var(--grad);
+    border-color: transparent;
+    color: white;
+}
+.btn-primary:hover { opacity: .9; }
+.btn i { font-size: 12px; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--surface);
+    border-top: 1.5px solid var(--border);
+    display: flex;
+    z-index: 100;
+    padding: 0 10px;
+}
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: none;
+    background: none;
+    color: var(--text3);
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Manrope', sans-serif;
+    padding-bottom: 4px;
+    transition: color .15s;
+}
+.nav-btn i { font-size: 22px; }
+.nav-btn.active { color: var(--primary); }
+.nav-btn.active i {
+    background: linear-gradient(135deg, #066aab, #2a9fd6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.nav-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 4px;
+}
+.nav-fab {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: var(--grad);
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(6,106,171,0.35);
+    margin-bottom: 6px;
+}
+
+.concept-tag {
+    background: var(--grad);
+    color: white;
+    text-align: center;
+    padding: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Manrope', sans-serif;
+}
+</style>
+</head>
+<body>
+
+<div class="concept-tag">КОНЦЕПТ 4 — Warm Modern (Manrope, градієнт, живий)</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="h-left">
+        <button class="hamburger"><i class="bi bi-list"></i></button>
+        <div class="h-logo">
+            <div class="h-logo-icon">E</div>
+            <span class="h-title">Emet CRM</span>
+        </div>
+    </div>
+    <div class="h-right">
+        <button class="h-notif">
+            <i class="bi bi-bell"></i>
+            <span class="notif-dot"></span>
+        </button>
+        <div class="h-avatar">ІТ</div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- GREETING -->
+    <div class="greeting">
+        <div class="greeting-sub">Вівторок, 11 березня</div>
+        <div class="greeting-name">Добрий день, Ірина 👋</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+        <div class="stat s-all">
+            <span class="stat-icon"><i class="bi bi-calendar3"></i></span>
+            <div class="stat-num">8</div>
+            <div class="stat-lbl">Всього</div>
+        </div>
+        <div class="stat s-work">
+            <span class="stat-icon"><i class="bi bi-play-circle"></i></span>
+            <div class="stat-num">2</div>
+            <div class="stat-lbl">В роботі</div>
+        </div>
+        <div class="stat s-done">
+            <span class="stat-icon"><i class="bi bi-check-circle"></i></span>
+            <div class="stat-num">5</div>
+            <div class="stat-lbl">Готово</div>
+        </div>
+        <div class="stat s-over">
+            <span class="stat-icon"><i class="bi bi-exclamation-circle"></i></span>
+            <div class="stat-num">1</div>
+            <div class="stat-lbl">Прострочено</div>
+        </div>
+    </div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+        <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input class="search-input" type="text" placeholder="Пошук зустрічі або клієнта...">
+        </div>
+        <button class="date-pill"><i class="bi bi-calendar3"></i> Сьогодні</button>
+    </div>
+
+    <!-- GROUP 1 -->
+    <div class="group-head">
+        <span class="group-label">Сьогодні, 11 березня</span>
+        <span class="group-badge">3</span>
+        <div class="group-rule"></div>
+    </div>
+
+    <!-- CARD 1 -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-name">ТОВ "Краса та здоров'я"</div>
+            <span class="badge b-plan">Заплановано</span>
+        </div>
+        <div class="card-info">
+            <div class="info-item"><i class="bi bi-clock"></i> 10:00</div>
+            <div class="info-item"><i class="bi bi-telephone"></i> +380 67 123 45 67</div>
+        </div>
+        <div class="card-goal">Ціль: Презентація нових продуктів</div>
+        <div class="card-footer">
+            <button class="btn btn-primary"><i class="bi bi-play-fill"></i> Старт</button>
+            <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+        </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-name">ФОП Петренко Олена</div>
+            <span class="badge b-work">В роботі</span>
+        </div>
+        <div class="card-info">
+            <div class="info-item"><i class="bi bi-clock"></i> 12:30</div>
+            <div class="info-item"><i class="bi bi-telephone"></i> +380 50 987 65 43</div>
+        </div>
+        <div class="card-goal">Ціль: Повторна закупівля</div>
+        <div class="card-footer">
+            <button class="btn btn-primary"><i class="bi bi-stop-fill"></i> Завершити</button>
+            <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+        </div>
+    </div>
+
+    <!-- CARD 3 -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-name">Салон "Bellissimo"</div>
+            <span class="badge b-done">Завершено</span>
+        </div>
+        <div class="card-info">
+            <div class="info-item"><i class="bi bi-clock"></i> 09:00</div>
+            <div class="info-item"><i class="bi bi-telephone"></i> +380 63 456 78 90</div>
+        </div>
+        <div class="card-goal">Ціль: Навчання персоналу</div>
+        <div class="card-footer">
+            <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+            <button class="btn"><i class="bi bi-bar-chart"></i> Звіт</button>
+            <button class="btn"><i class="bi bi-chat-left-text"></i> Підсумок</button>
+        </div>
+    </div>
+
+    <!-- GROUP 2 -->
+    <div class="group-head">
+        <span class="group-label">Завтра, 12 березня</span>
+        <span class="group-badge">1</span>
+        <div class="group-rule"></div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="card">
+        <div class="card-head">
+            <div class="card-name">ТОВ "Медіум Груп"</div>
+            <span class="badge b-over">Прострочено</span>
+        </div>
+        <div class="card-info">
+            <div class="info-item"><i class="bi bi-clock"></i> 15:00</div>
+            <div class="info-item"><i class="bi bi-telephone"></i> +380 44 111 22 33</div>
+        </div>
+        <div class="card-goal">Ціль: Узгодження договору</div>
+        <div class="card-footer">
+            <button class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i> Перенести</button>
+            <button class="btn"><i class="bi bi-pencil"></i> Редагувати</button>
+        </div>
+    </div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <button class="nav-btn active"><i class="bi bi-house-fill"></i> Зустрічі</button>
+    <button class="nav-btn"><i class="bi bi-people"></i> Клієнти</button>
+    <div class="nav-center">
+        <button class="nav-fab"><i class="bi bi-plus"></i></button>
+    </div>
+    <button class="nav-btn"><i class="bi bi-bar-chart-line"></i> Звіти</button>
+    <button class="nav-btn"><i class="bi bi-grid-3x3-gap"></i> Ще</button>
+</nav>
+
+</body>
+</html>

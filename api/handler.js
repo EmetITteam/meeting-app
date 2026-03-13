@@ -15,8 +15,30 @@ Sentry.init({
 
 // --- Основная функция-обработчик ---
 export default async function handler(request, response) {
+    // CORS — allow only our app domain
+    const allowedOrigins = [
+        'https://meeting-app-theta-bay.vercel.app',
+        'https://emet.crm.vercel.app', // add your production domain here
+    ];
+    const origin = request.headers['origin'] || '';
+    if (allowedOrigins.includes(origin)) {
+        response.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    response.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-App-Token');
+
+    if (request.method === 'OPTIONS') return response.status(200).end();
+
     if (request.method !== 'POST') {
         return response.status(405).json({ message: 'Only POST requests allowed' });
+    }
+
+    // Validate APP_SECRET_TOKEN — защита Vercel endpoint от прямых запросов
+    const APP_SECRET = process.env.APP_SECRET_TOKEN;
+    const clientToken = request.headers['x-app-token'];
+    if (APP_SECRET && clientToken !== APP_SECRET) {
+        console.warn('[AUTH] Invalid or missing X-App-Token from:', origin);
+        return response.status(401).json({ status: 'error', message: 'Unauthorized' });
     }
 
     const { action } = request.body;
@@ -66,6 +88,10 @@ async function forwardRequestToOneC(requestBody) {
     if (ONEC_LOGIN && ONEC_PASSWORD) {
         const token = Buffer.from(`${ONEC_LOGIN}:${ONEC_PASSWORD}`).toString('base64');
         headers['Authorization'] = `Basic ${token}`;
+    }
+    // Service token — 1C web service checks this to reject non-Vercel requests
+    if (process.env.ONEC_SERVICE_TOKEN) {
+        headers['X-Service-Token'] = process.env.ONEC_SERVICE_TOKEN;
     }
     const apiResponse = await axios.post(ONEC_API_URL, requestBody, { headers });
     return apiResponse.data;
