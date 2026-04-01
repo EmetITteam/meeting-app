@@ -705,20 +705,25 @@ async function handleSaveNewClient(e) {
     
     function checkActiveSession() {
     const savedSession = localStorage.getItem('crm_session');
-    if (!savedSession) {
-        window.showMainApp(false);
-        return;
-    };
-    const session = JSON.parse(savedSession);
-    const oneDay = 24 * 60 * 60 * 1000;
-    const isSessionExpired = (new Date().getTime() - session.loginTime) > oneDay;
-    if (isSessionExpired) {
+    if (!savedSession) { window.showMainApp(false); return; }
+
+    let session;
+    try { session = JSON.parse(savedSession); } catch(e) { session = null; }
+
+    // Validate session has required fields — clear corrupted session
+    if (!session || !session.user || !session.role) {
         localStorage.removeItem('crm_session');
         window.showMainApp(false);
         return;
     }
-    
-    // ДОБАВЛЯЕМ ПЕРЕДАЧУ session.auth
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    if ((new Date().getTime() - session.loginTime) > oneDay) {
+        localStorage.removeItem('crm_session');
+        window.showMainApp(false);
+        return;
+    }
+
     onLoginSuccess({ login: session.user, role: session.role, auth: session.auth });
 }
     
