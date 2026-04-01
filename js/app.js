@@ -2311,26 +2311,24 @@ function processYearlySalesData(yearlyReport) {
         showForm(true);
     }
 
-    // Expose showAddForm globally so orders.js / initFabSheet can call it
-    window.showAddForm = showAddForm;
+// showAddForm is global — expose on window for cross-module access (orders.js / initFabSheet)
+window.showAddForm = showAddForm;
 
-    function onActionComplete() { showForm(false); }
-    function handleCancelClick() { cancelConfirmModal.show(); }
-    function showForm(show) {
-        const viewMeetings = document.getElementById('view-meetings');
-        const formSection = document.getElementById('form-section');
-        if (viewMeetings && formSection) {
-            viewMeetings.classList.toggle(HIDDEN_CLASS, show);
-            formSection.classList.toggle(HIDDEN_CLASS, !show);
-        }
+function onActionComplete() { showForm(false); }
+function handleCancelClick() { cancelConfirmModal.show(); }
+function showForm(show) {
+    const viewMeetings = document.getElementById('view-meetings');
+    const formSection = document.getElementById('form-section');
+    if (viewMeetings && formSection) {
+        viewMeetings.classList.toggle(HIDDEN_CLASS, show);
+        formSection.classList.toggle(HIDDEN_CLASS, !show);
     }
+}
 
-    // Timer for active meetings
-    setInterval(() => {
-        document.querySelectorAll('.timer').forEach(timerEl => {
-            const startTime = parseInt(timerEl.dataset.startTime, 10);
-            if (startTime) timerEl.textContent = formatElapsedTime(Date.now() - startTime);
-        });
-    }, 1000);
-
-}); // end DOMContentLoaded
+// Timer for active meetings
+setInterval(() => {
+    document.querySelectorAll('.timer').forEach(timerEl => {
+        const startTime = parseInt(timerEl.dataset.startTime, 10);
+        if (startTime) timerEl.textContent = formatElapsedTime(Date.now() - startTime);
+    });
+}, 1000);
