@@ -3,7 +3,7 @@
 // Стратегія: Cache First для статики, Network First для API
 // ══════════════════════════════════════════════
 
-const CACHE_NAME = 'emet-crm-v3';
+const CACHE_NAME = 'emet-crm-v4';
 
 // Статичні ресурси що кешуються при встановленні
 const STATIC_ASSETS = [
@@ -14,7 +14,15 @@ const STATIC_ASSETS = [
     '/js/mock-data.js',
     '/js/orders.js',
     '/js/debtors.js',
+    '/js/dashboard.js',
+    '/js/meetings.js',
+    '/js/clients.js',
+    '/js/reports.js',
     '/js/app.js',
+    '/icons/icon-192.png',
+    '/icons/icon-512.png',
+    '/icons/apple-touch-icon.png',
+    '/manifest.json',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
