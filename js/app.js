@@ -1826,47 +1826,6 @@ function populateSurveyForm(data) {
     }
 }
 
-// Новая функция для заполнения формы из сохраненных данных
-function populateSurveyForm(data) {
-    const form = document.getElementById('outcome-survey-form');
-    // Обходим все ключи верхнего уровня (например, "Общая информация", "Портфель")
-    Object.keys(data).forEach(mainKey => {
-        const mainValue = data[mainKey];
-        // Обходим все под-ключи (например, "Стаж работы", "Процедуры")
-        Object.keys(mainValue).forEach(subKey => {
-            const nestedValue = mainValue[subKey];
-            const questionPath = `${mainKey}.${subKey}`;
-            
-            // Обрабатываем вложенные объекты (как в "Портфеле")
-            if (typeof nestedValue === 'object' && !Array.isArray(nestedValue)) {
-                Object.keys(nestedValue).forEach(brandKey => {
-                    const brandValue = nestedValue[brandKey];
-                    const brandPath = `${questionPath}.${brandKey}`;
-                    form.querySelectorAll(`[data-question="${brandPath}"]`).forEach(el => setFieldValue(el, brandValue));
-                });
-            } else {
-                // Обрабатываем простые значения и массивы
-                form.querySelectorAll(`[data-question="${questionPath}"]`).forEach(el => setFieldValue(el, nestedValue));
-            }
-        });
-    });
-
-    // Вспомогательная функция для установки значений
-    function setFieldValue(el, value) {
-        if (el.type === 'checkbox' || el.type === 'radio') {
-            if (Array.isArray(value) ? value.includes(el.value) : value === el.value) {
-                el.checked = true;
-                // Триггерим событие, чтобы показать условные поля
-                if (el.classList.contains('survey-trigger') || el.classList.contains('survey-trigger-next-steps')) {
-                    el.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            }
-        } else {
-            el.value = value;
-        }
-    }
-}
-
     async function handleGetLocationClick() {
         const btn = document.getElementById('get-meeting-location-btn');
         toggleButtonSpinner(btn, true);
