@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Emet CRM — Опис системи</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 14px; color: #000; background: #fff; margin: 40px; }
+  h1 { font-size: 22px; margin-bottom: 8px; }
+  h2 { font-size: 16px; margin-top: 28px; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  h3 { font-size: 14px; margin-top: 16px; margin-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 16px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; background: #fff; color: #000; }
+  th { background: #f0f0f0; font-weight: bold; }
+  ul { margin: 4px 0 8px 20px; }
+  li { margin-bottom: 3px; }
+  p { margin: 6px 0; }
+</style>
+</head>
+<body>
+
+<h1>Emet CRM — metting-4.0 · Опис системи</h1>
+<hr>
+
+<h2>Технічний стек</h2>
+<table>
+  <tr><th>Шар</th><th>Технологія</th></tr>
+  <tr><td>Frontend</td><td>SPA — index.html + css/main.css + js/app.js</td></tr>
+  <tr><td>UI Framework</td><td>Bootstrap 5, Bootstrap Icons</td></tr>
+  <tr><td>Charts</td><td>Chart.js</td></tr>
+  <tr><td>Шрифт</td><td>Manrope (Google Fonts)</td></tr>
+  <tr><td>Backend</td><td>Vercel Serverless Functions (Node.js 22)</td></tr>
+  <tr><td>Проксі</td><td>api/handler.js → 1С/БАС ЕРП (HTTP-сервіс)</td></tr>
+  <tr><td>Авторизація 1С</td><td>Basic Auth (login:password)</td></tr>
+  <tr><td>Календар</td><td>Google Calendar API (JWT, service account)</td></tr>
+  <tr><td>Моніторинг</td><td>Sentry (@sentry/node + profiling)</td></tr>
+  <tr><td>Хостинг</td><td>Vercel (GitHub auto-deploy з main)</td></tr>
+  <tr><td>Репозиторій</td><td>GitHub: EmetITteam/meeting-app</td></tr>
+</table>
+
+<h2>Що було у першій версії</h2>
+<ul>
+  <li>Один файл index.html (~2800 рядків) — HTML + CSS + JS в одному</li>
+  <li>Тільки сторінка зустрічей (Meetings)</li>
+  <li>Базові дії: створити / редагувати / скасувати / завершити зустріч</li>
+  <li>Прості картки без дизайн-системи</li>
+  <li>Без ролей, без дашборду, без замовлень</li>
+  <li>Без захисту API (endpoint відкритий)</li>
+  <li>Без Google Calendar sync</li>
+</ul>
+
+<h2>Що додали / переробили в 4.0</h2>
+
+<h3>Архітектура</h3>
+<ul>
+  <li>Розбивка на 3 файли: index.html (shell) + css/main.css + js/app.js</li>
+  <li>Vercel serverless proxy замість прямих запитів з браузера в 1С</li>
+  <li>api/config.js — окремий endpoint для передачі токена на фронтенд</li>
+  <li>Sentry для моніторингу помилок на бекенді</li>
+</ul>
+
+<h3>Безпека</h3>
+<ul>
+  <li>APP_SECRET_TOKEN — фронтенд отримує токен з /api/config, передає в кожний запит через X-App-Token</li>
+  <li>ONEC_SERVICE_TOKEN — Vercel передає токен в 1С через X-Service-Token (для відхилення прямих запитів)</li>
+  <li>CORS — allowedOrigins whitelist на бекенді</li>
+  <li>OPTIONS preflight підтримка</li>
+</ul>
+
+<h3>Дизайн — Warm Modern (Концепт 4)</h3>
+<ul>
+  <li>Повний редизайн: primary #066aab, градієнт, border-radius 14–18px</li>
+  <li>Картки зустрічей, клієнтів, замовлень, дебіторки — єдина дизайн-система</li>
+  <li>FAB кнопка + з action sheet (вибір: зустріч / замовлення)</li>
+  <li>Адаптивна нижня навігація, відцентрована через nav-inner wrapper</li>
+  <li>Mobile-first, коректне відображення до 600px і ширше</li>
+</ul>
+
+<h3>Ролева система</h3>
+<table>
+  <tr><th>Роль</th><th>Доступ</th></tr>
+  <tr><td>Менеджер</td><td>Зустрічі (свої), Клієнти, Звіти</td></tr>
+  <tr><td>Регіональний менеджер</td><td>Дашборд (регіон), Зустрічі, Клієнти, Звіти</td></tr>
+  <tr><td>Керівник / CEO / Власник</td><td>Повний дашборд + фільтри</td></tr>
+</table>
+
+<h3>Нові сторінки та модулі</h3>
+<ul>
+  <li><b>Дашборд</b> — виконання плану, відставання (з урахуванням робочих днів), бренди з розгортанням по клієнтах, категорії клієнтів (donut), конверсія, блок навчань (тільки для керівника) — поки моки</li>
+  <li><b>Замовлення</b> — список, деталі, форма створення/редагування
+    <ul>
+      <li>Два типи документів: "Заказ покупателя" (Київ) та "Реалізація" (регіони)</li>
+      <li>Регіон Київ — "Реалізація" приховані</li>
+      <li>Статуси замовлень з кольоровими бейджами</li>
+      <li>Реквізит "Мероприятие" (Навчання / Проекти)</li>
+    </ul>
+  </li>
+  <li><b>Клієнти</b> — список з пошуком, картки, телефон як tel: посилання, форма додавання клієнта</li>
+  <li><b>Дебіторська заборгованість</b> — окрема сторінка в бічному меню, картки з кольоровою смугою (прострочено / в нормі)</li>
+  <li><b>Звіти</b> — базова структура</li>
+</ul>
+
+<h3>Валюти</h3>
+<ul>
+  <li>Всі ціни в каталозі та замовленнях зберігаються в USD</li>
+  <li>Відображення скрізь: $X · Y грн (по курсу дня, TODAY_RATE_USD)</li>
+  <li>В деталях замовлення — підсумок в обох валютах</li>
+</ul>
+
+<h3>Google Calendar</h3>
+<ul>
+  <li>При створенні зустрічі → автоматично створюється подія в Google Calendar менеджера</li>
+  <li>При оновленні → подія оновлюється</li>
+  <li>При відміні/завершенні → подія видаляється</li>
+  <li>calendarEventId зберігається в 1С через окремий updateMeetingCalendarId запит</li>
+</ul>
+
+<h3>UX-деталі</h3>
+<ul>
+  <li>Телефон у картці зустрічі — tel: посилання (тап → дзвінок)</li>
+  <li>Телефон у картці клієнта — tel: посилання</li>
+  <li>Автодоповнення клієнтів у формі зустрічі та замовлення</li>
+  <li>Автовибір основного договору (isPrimary) при виборі клієнта</li>
+  <li>Маски введення номерів телефонів (IMask)</li>
+</ul>
+
+<h2>Що чекає підключення від 1С</h2>
+<ul>
+  <li>Реальні дані продажів для дашборду (getSalesData, getPlanData)</li>
+  <li>Реальні замовлення та каталог</li>
+  <li>Блок навчань (регістри Мероприятий + Виды обучений)</li>
+  <li>Перевірка X-Service-Token на стороні HTTP-сервісу 1С</li>
+</ul>
+
+</body>
+</html>

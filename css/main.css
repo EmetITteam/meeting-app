@@ -625,4 +625,66 @@ body {
 .debtor-date-label { font-size:11px; color:var(--text3); font-weight:500; text-align:right; }
 .debtor-date-val   { font-size:13px; font-weight:700; color:var(--text2); text-align:right; }
 .badge-overdue { background:#ffe5ea; color:#c0392b; font-size:11px; border-radius:8px; padding:3px 8px; font-weight:700; white-space:nowrap; }
-.badge-current { background:#e0f9f2; color:#00845f; font-size:11px; border-radius:8px; padding:3px 8px; font-weight:700; white-space:nowrap; }
+.badge-current { background:#e0f9f2; color:#00845f; font-size:11px; border-radius:8px; padding:3px 8px; font-weight:700; white-space:nowrap; }
+/* ── SKELETON LOADER ── */
+@keyframes skeleton-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position:  400px 0; }
+}
+.skeleton-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 10px;
+}
+.skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #e8edf2 25%, #f4f6f8 50%, #e8edf2 75%);
+    background-size: 800px 100%;
+    animation: skeleton-shimmer 1.4s infinite linear;
+}
+.skeleton-line.mt-2 { margin-top: 8px; }
+.skeleton-line.w-80 { width: 80%; }
+.skeleton-line.w-60 { width: 60%; }
+.skeleton-line.w-40 { width: 40%; }
+
+/* ── TOAST ── */
+#appToast { min-width: 260px; }
+.toast-error { background: #c0392b !important; color: white !important; }
+.toast-success { background: var(--green) !important; color: white !important; }
+
+/* ── EMPTY STATE ── */
+.empty-state {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--text3);
+}
+.empty-state i { font-size: 48px; display: block; margin-bottom: 12px; opacity: .5; }
+.empty-state-title { font-size: 15px; font-weight: 700; color: var(--text2); margin-bottom: 4px; }
+.empty-state-sub   { font-size: 13px; }
+
+/* ── PWA INSTALL BANNER ── */
+#pwa-install-banner {
+    position: fixed;
+    bottom: 72px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 560px;
+    width: calc(100% - 24px);
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 24px rgba(6,106,171,.15);
+    z-index: 1050;
+    animation: slideUp .3s ease;
+}
+@keyframes slideUp { from { transform: translateX(-50%) translateY(20px); opacity:0; } to { transform: translateX(-50%) translateY(0); opacity:1; } }
+#pwa-install-banner .pwa-icon { font-size: 28px; flex-shrink: 0; }
+#pwa-install-banner .pwa-text { flex: 1; font-size: 13px; font-weight: 600; color: var(--text); }
+#pwa-install-banner .pwa-text small { display: block; font-weight: 400; color: var(--text3); margin-top: 1px; }
