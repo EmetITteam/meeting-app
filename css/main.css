@@ -20,6 +20,7 @@
     --red: #f43f5e;
     --header-h: 62px;
     --nav-h: 68px;
+    --safe-top:    env(safe-area-inset-top, 0px);
     --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -27,7 +28,7 @@ body {
     font-family: 'Manrope', -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding-top: var(--header-h);
+    padding-top: calc(var(--header-h) + var(--safe-top));
     padding-bottom: calc(var(--nav-h) + var(--safe-bottom));
     -webkit-font-smoothing: antialiased;
 }
@@ -36,13 +37,14 @@ body {
 .app-header {
     position: fixed;
     top: 0; left: 0; right: 0;
-    height: var(--header-h);
+    height: calc(var(--header-h) + var(--safe-top));
     background: var(--surface);
     border-bottom: 1.5px solid var(--border);
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 16px calc(10px) 16px;
+    padding-top: var(--safe-top);
     z-index: 1030;
 }
 .header-logo { display: flex; align-items: center; gap: 10px; }
