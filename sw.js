@@ -3,7 +3,7 @@
 // Стратегія: Cache First для статики, Network First для API
 // ══════════════════════════════════════════════
 
-const CACHE_NAME = 'emet-crm-v1';
+const CACHE_NAME = 'emet-crm-v2';
 
 // Статичні ресурси що кешуються при встановленні
 const STATIC_ASSETS = [
