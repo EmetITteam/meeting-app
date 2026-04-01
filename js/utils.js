@@ -34,11 +34,13 @@ async function callApi(action, payload) {
         }
 
         const result = await response.json();
-        if (result && result.error) {
-            if (window.Sentry) Sentry.captureMessage(`1C Error: ${result.error}`, 'error');
-            throw new Error(result.error);
+        if (result && result.status === 'error') {
+            const msg = result.message || result.error || 'Помилка 1С';
+            if (window.Sentry) Sentry.captureMessage(`1C Error: ${msg}`, 'error');
+            throw new Error(msg);
         }
-        return result;
+        // Return result.data if present (matches old app.js contract), otherwise full result
+        return result.data !== undefined ? result.data : result;
     } catch (e) {
         if (window.Sentry) Sentry.captureException(e);
         throw e;
