@@ -36,7 +36,6 @@
         const bottomNav = document.querySelector('.app-bottom-nav');
         const loginContainer = document.getElementById('login-container');
         const bodyEl = document.querySelector('body');
-        // ВСТАВЬТЕ ЭТОТ БЛОК ВНУТРЬ DOMContentLoaded
 clientSearchModal = new bootstrap.Modal(document.getElementById('clientSearchModal'));
 
 const clientSearchInputEl = document.getElementById('clientSearchInput');
@@ -48,10 +47,7 @@ document.getElementById('clientSearchBtn').addEventListener('click', handleClien
 document.getElementById('clientSearchInput').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleClientSearch();
 });
-// ВСТАВЬТЕ ЭТОТ КОД ВНУТРЬ DOMContentLoaded
-
 // Логика для условного отображения под-вопросов в анкете
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 const surveyForm = document.getElementById('outcome-survey-form');
 if (surveyForm) {
     surveyForm.addEventListener('change', (e) => {
@@ -65,8 +61,6 @@ if (surveyForm) {
         }
     });
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-// ВСТАВЬТЕ ЭТОТ НОВЫЙ БЛОК
 const globalSearchTriggerBtn = document.getElementById('global-search-trigger-btn');
 if (globalSearchTriggerBtn) {
     globalSearchTriggerBtn.addEventListener('click', () => {
@@ -77,8 +71,6 @@ if (globalSearchTriggerBtn) {
         clientSearchModal.show();
     });
 }
-        // ВСТАВЬТЕ ЭТОТ БЛОК ВНУТРЬ DOMContentLoaded
-
 // --- Логика для новой формы создания клиента ---
 const newClientPhoneInput = document.getElementById('new-client-phone');
 newClientPhoneMask = IMask(newClientPhoneInput, { mask: '+{38} (000) 000-00-00' });
@@ -144,8 +136,7 @@ outcomeModalEl.addEventListener('change', (e) => {
         }
     }
 });
-        /// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-const clientListFilterInput = document.getElementById('client-list-filter');
+        const clientListFilterInput = document.getElementById('client-list-filter');
 clientListMask = IMask(clientListFilterInput, {
     mask: [
         {
@@ -167,8 +158,6 @@ clientListMask = IMask(clientListFilterInput, {
         return dynamicMasked.compiledMasks[1]; // Выбираем текстовую маску
     }
 });
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-
         // --- Затем определяем функции, которые с ними работают ---
         function showMainApp(show) {
             if (!header || !main || !bottomNav || !loginContainer || !bodyEl) {
@@ -298,7 +287,6 @@ clientListMask = IMask(clientListFilterInput, {
                 });
             }
         }
-        // ДОБАВЬТЕ ЭТОТ ОБРАБОТЧИК ВНУТРЬ DOMContentLoaded
 document.getElementById('confirmCompleteBtn').addEventListener('click', () => {
     if (!meetingToCompleteId) return;
 
@@ -339,7 +327,6 @@ document.getElementById('confirmCompleteBtn').addEventListener('click', () => {
         document.getElementById('saveOutcomeBtn').addEventListener('click', handleSaveOutcome);
         document.getElementById('client-name').addEventListener('input', handleClientInput);
 
-        // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 const clientListFilter = document.getElementById('client-list-filter');
 clientListFilter.addEventListener('input', () => {
     clearTimeout(searchTimeout); // Сбрасываем предыдущий таймер
@@ -358,8 +345,6 @@ clientListFilter.addEventListener('input', () => {
         renderClientList(filteredClients);
     }, 300); // Задержка в 300 миллисекунд
 });
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-
         const logoutBtnSideMenu = document.getElementById('logout-btn-side-menu');
         if (logoutBtnSideMenu) {
             logoutBtnSideMenu.addEventListener('click', handleLogout);
@@ -486,7 +471,6 @@ document.addEventListener('click', function(e) {
     
     // --- ВСЕ ОСТАЛЬНЫЕ ФУНКЦИИ ---
     
-    // ЗАМЕНИТЕ ЭТУ ФУНКЦИЮ
 async function loadClientsPage() {
     const container = document.getElementById('client-list-container');
     container.innerHTML = '<div class="text-center p-5"><div class="spinner-border text-primary"></div></div>';
@@ -504,7 +488,6 @@ async function loadClientsPage() {
         container.innerHTML = '<div class="alert alert-danger">Не удалось загрузить список клиентов.</div>';
     }
 }
-     // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 function renderCategoryFilters() {
     const filtersContainer = document.getElementById('client-category-filters');
     if (!filtersContainer) return;
@@ -581,9 +564,6 @@ async function handleClientSearch() {
         }
     });
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-       // ДОБАВЬТЕ ЭТУ НОВУЮ ФУНКЦИЮ
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 async function handleSaveNewClient(e) {
     e.preventDefault();
     const saveBtn = document.getElementById('save-new-client-btn');
@@ -643,7 +623,6 @@ async function handleSaveNewClient(e) {
         toggleButtonSpinner(saveBtn, false);
     }
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
     function renderClientList(clientsToRender) {
         const container = document.getElementById('client-list-container');
         if (!container) return;
@@ -744,12 +723,14 @@ async function handleSaveNewClient(e) {
 }
     
     function onLoginSuccess(result) {
-    currentUser = result.login;
-    const userRole = result.role;
+    // Handle both { login, role } and wrapped { status, data: { login, role } }
+    const data = (result && result.data) ? result.data : result;
+    currentUser = data.login;
+    const userRole = data.role;
 
     // 1. ОПРЕДЕЛЯЕМ AUTH (КЛЮЧ)
     // Если нам его передали из сессии — берем его. Если нет — кодируем из поля ввода.
-    let encodedAuth = result.auth; 
+    let encodedAuth = data.auth;
 if (!encodedAuth) {
     const passField = document.getElementById('password'); // ID из вашего HTML
     encodedAuth = passField && passField.value ? btoa(passField.value) : '';
@@ -954,8 +935,6 @@ function updateReclamationLink(email, auth, isAlreadyEncoded = true) {
             });
         }
     }
-    // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-
 function updateDashboardWidgets() {
     const widgetsContainer = document.getElementById('dashboard-widgets');
     if (!widgetsContainer) return;
@@ -1014,8 +993,6 @@ function updateDashboardWidgets() {
         </div>`;
 }
 
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 function filterAndGroupMeetings() {
     const searchTerm = document.getElementById('searchInput1').value.toLowerCase();
     const filtered = allMeetings.filter(m => m.Client.toLowerCase().includes(searchTerm));
@@ -1130,8 +1107,6 @@ function filterAndGroupMeetings() {
     document.querySelectorAll('.reschedule-btn').forEach(btn => btn.addEventListener('click', handleRescheduleClick));
     document.querySelectorAll('.outcome-btn').forEach(btn => btn.addEventListener('click', handleOutcomeClick));
 }
-
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
 
 // ═══════════════════════════════════════════
 //  ANALYTICS DASHBOARD
@@ -1498,9 +1473,6 @@ function applyRegionRules() {
             }
         }, 500);
     }
-    // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 function handleFormSubmit(e) {
     e.preventDefault();
     const saveBtn = document.getElementById('save-button');
@@ -1554,7 +1526,6 @@ function handleFormSubmit(e) {
         toggleButtonSpinner(saveBtn, false);
     });
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
     function handleEditClick(event) {
     event.preventDefault();
     const meetingId = event.currentTarget.dataset.id;
@@ -1591,7 +1562,6 @@ function handleFormSubmit(e) {
     }
 
 // НОВАЯ ФУНКЦИЯ ВМЕСТО handleCompleteClick
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 async function handleMeetingStateToggle(event) {
     const btn = event.target.closest('.js-state-toggle-btn');
     if (!btn) return;
@@ -1665,8 +1635,6 @@ async function handleMeetingStateToggle(event) {
         }
     }
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
     function handleRescheduleClick(event) {
         const meetingId = event.target.dataset.id;
         const meetingData = allMeetings.find(m => m.ID === meetingId);
@@ -1707,8 +1675,6 @@ async function handleMeetingStateToggle(event) {
     // ЗАМЕНИТЕ СТАРЫЕ ФУНКЦИИ НА ЭТИ ДВЕ
 
 // ЗАМЕНИТЕ ВАШУ ФУНКЦИЮ НА ЭТУ
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-
 // Новая логика для модального окна "Итоги встречи"
 function handleOutcomeClick(event) {
     activeMeetingId = event.target.closest('[data-id]').dataset.id;
@@ -1733,12 +1699,6 @@ function handleOutcomeClick(event) {
     
     outcomeModal.show();
 }
-
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
-
-// --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 
 function handleSaveOutcome() {
     const btn = document.getElementById('saveOutcomeBtn');
@@ -1820,7 +1780,46 @@ function handleSaveOutcome() {
         });
 }
 
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
+// Новая функция для заполнения формы из сохраненных данных
+function populateSurveyForm(data) {
+    const form = document.getElementById('outcome-survey-form');
+    // Обходим все ключи верхнего уровня (например, "Общая информация", "Портфель")
+    Object.keys(data).forEach(mainKey => {
+        const mainValue = data[mainKey];
+        // Обходим все под-ключи (например, "Стаж работы", "Процедуры")
+        Object.keys(mainValue).forEach(subKey => {
+            const nestedValue = mainValue[subKey];
+            const questionPath = `${mainKey}.${subKey}`;
+            
+            // Обрабатываем вложенные объекты (как в "Портфеле")
+            if (typeof nestedValue === 'object' && !Array.isArray(nestedValue)) {
+                Object.keys(nestedValue).forEach(brandKey => {
+                    const brandValue = nestedValue[brandKey];
+                    const brandPath = `${questionPath}.${brandKey}`;
+                    form.querySelectorAll(`[data-question="${brandPath}"]`).forEach(el => setFieldValue(el, brandValue));
+                });
+            } else {
+                // Обрабатываем простые значения и массивы
+                form.querySelectorAll(`[data-question="${questionPath}"]`).forEach(el => setFieldValue(el, nestedValue));
+            }
+        });
+    });
+
+    // Вспомогательная функция для установки значений
+    function setFieldValue(el, value) {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+            if (Array.isArray(value) ? value.includes(el.value) : value === el.value) {
+                el.checked = true;
+                // Триггерим событие, чтобы показать условные поля
+                if (el.classList.contains('survey-trigger') || el.classList.contains('survey-trigger-next-steps')) {
+                    el.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }
+        } else {
+            el.value = value;
+        }
+    }
+}
 
 // Новая функция для заполнения формы из сохраненных данных
 function populateSurveyForm(data) {
@@ -1863,52 +1862,6 @@ function populateSurveyForm(data) {
     }
 }
 
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-
-
-
-// Новая функция для заполнения формы из сохраненных данных
-function populateSurveyForm(data) {
-    const form = document.getElementById('outcome-survey-form');
-    // Обходим все ключи верхнего уровня (например, "Общая информация", "Портфель")
-    Object.keys(data).forEach(mainKey => {
-        const mainValue = data[mainKey];
-        // Обходим все под-ключи (например, "Стаж работы", "Процедуры")
-        Object.keys(mainValue).forEach(subKey => {
-            const nestedValue = mainValue[subKey];
-            const questionPath = `${mainKey}.${subKey}`;
-            
-            // Обрабатываем вложенные объекты (как в "Портфеле")
-            if (typeof nestedValue === 'object' && !Array.isArray(nestedValue)) {
-                Object.keys(nestedValue).forEach(brandKey => {
-                    const brandValue = nestedValue[brandKey];
-                    const brandPath = `${questionPath}.${brandKey}`;
-                    form.querySelectorAll(`[data-question="${brandPath}"]`).forEach(el => setFieldValue(el, brandValue));
-                });
-            } else {
-                // Обрабатываем простые значения и массивы
-                form.querySelectorAll(`[data-question="${questionPath}"]`).forEach(el => setFieldValue(el, nestedValue));
-            }
-        });
-    });
-
-    // Вспомогательная функция для установки значений
-    function setFieldValue(el, value) {
-        if (el.type === 'checkbox' || el.type === 'radio') {
-            if (Array.isArray(value) ? value.includes(el.value) : value === el.value) {
-                el.checked = true;
-                // Триггерим событие, чтобы показать условные поля
-                if (el.classList.contains('survey-trigger') || el.classList.contains('survey-trigger-next-steps')) {
-                    el.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-            }
-        } else {
-            el.value = value;
-        }
-    }
-}
-
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
     async function handleGetLocationClick() {
         const btn = document.getElementById('get-meeting-location-btn');
         toggleButtonSpinner(btn, true);
@@ -2001,7 +1954,6 @@ async function handleReportClick(btnElement) {
         toggleButtonSpinner(btnElement, false);
     }
 }
-  // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---
 function renderReport(data) {
     const reportModalBody = document.getElementById('reportModalBody');
     let content = '';
@@ -2198,8 +2150,6 @@ function renderReport(data) {
         });
     }
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-       
        // --- НАЧАЛО БЛОКА НА ЗАМЕНУ ---Новый блок для отчета за год
 function processYearlySalesData(yearlyReport) {
     if (!yearlyReport || !yearlyReport.brands || yearlyReport.brands.length === 0) return null;
@@ -2245,8 +2195,6 @@ function processYearlySalesData(yearlyReport) {
         grandTotal: yearlyReport.grandTotal
     };
 }
-// --- КОНЕЦ БЛОКА НА ЗАМЕНУ ---
-
     async function handleClientSearch() {
         const searchInput = document.getElementById('clientSearchInput');
         const resultContainer = document.getElementById('clientSearchResult');
